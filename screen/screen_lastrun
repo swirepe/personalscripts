@@ -1,4 +1,5 @@
 #!/usr/bin/env screen_python
+import sys
 
-print "hi!"
 
+print sys.argv
