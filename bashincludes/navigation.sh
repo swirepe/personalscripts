@@ -20,7 +20,7 @@ function science {
 }
 
 function scripts {
-  cd ~/code/script   
+  cd ~/scripts   
 }
 
 function envs {

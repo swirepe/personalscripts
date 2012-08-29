@@ -31,7 +31,16 @@ PS4='+ '
 # if the WINDOW variable is set, we are in screen
 if [ -n "$WINDOW" ];
 then
-    PS1="[$WINDOW] >"
+    # This is the escape sequence ESC k \w ESC \
+    #Use path as titel
+    #SCREENTITLE=’\[\ek\w\e\\\]‘
+    #Use program name as titel
+    SCREENTITLE='\[\ek\e\\\]'
+    
+    PS1="$SCREENTITLE($WINDOW) \w \$ "
+    
+
+    
     
 else
     #otherwise, we'll want to do some other stuff to get our prompt
