@@ -1,0 +1,7 @@
+source $SCRIPTS_DIR/cudaenvs.sh
+source $SCRIPTS_DIR/misc.sh
+source $SCRIPTS_DIR/navigation.sh
+source $SCRIPTS_DIR/projects.sh
+source $SCRIPTS_DIR/prompts.sh
+source $SCRIPTS_DIR/screens.sh
+source $SCRIPTS_DIR/virtualenvs.sh
