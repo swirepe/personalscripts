@@ -1,0 +1,4 @@
+#!/usr/bin/env screen_python
+
+print "hi!"
+
