@@ -1,0 +1,11 @@
+
+source $BASHINCLUDES_DIR/cudaenvs.sh
+source $BASHINCLUDES_DIR/misc.sh
+source $BASHINCLUDES_DIR/virtualenvs.sh
+source $BASHINCLUDES_DIR/navigation.sh
+source $BASHINCLUDES_DIR/projects.sh
+source $BASHINCLUDES_DIR/prompts.sh
+source $BASHINCLUDES_DIR/screens.sh
+
+
+
