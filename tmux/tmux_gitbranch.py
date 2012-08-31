@@ -70,14 +70,14 @@ def reportBranch():
     
 
     status = getStatus()
-    color = "#[fg=green]"
+    color = "#[fg=green bright]"
     
-    if len(status['M']) != 0:
-        color = "#[fg=cyan]"
+    if len(status["??"]) != 0:
+        color = "#[fg=white]"
     elif len(status['A']) + len(status['D']) != 0:
         color = "#[fg=magenta bright]"
-    elif len(status["??"]) != 0:
-        color = "#[fg=white]"
+    elif len(status['M']) != 0:
+        color = "#[fg=cyan bright]" 
         
         
     print "#[default]" + color + branch + "#[default]"
