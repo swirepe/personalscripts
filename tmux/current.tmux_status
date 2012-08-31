@@ -1,7 +1,7 @@
 
 # everything black on magenta
 set -g status-fg black
-set -g status-bg magenta
+set -g status-bg cyan
 
 set-option -g status-justify "left"
 
