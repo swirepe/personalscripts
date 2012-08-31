@@ -1,0 +1,12 @@
+
+function getname {
+  local name=$(whoami)
+
+
+  if [ "$name" == "root" ];
+  then
+     echo "#[default]#[fg=red]$name#[default]"
+  else
+     echo "#[default]#[fg=white]$name#[default]"
+  fi
+}

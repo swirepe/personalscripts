@@ -5,6 +5,7 @@ from collections import defaultdict
 import subprocess
 import sys
 
+
 def getBranch():
     """returns the currently selected branch, excluding the '* ' at the front of it"""
     output,error = subprocess.Popen(["git", "branch"], stdout = subprocess.PIPE, stderr= subprocess.PIPE).communicate()
@@ -83,6 +84,8 @@ def reportBranch():
     print color(branch)
     
     
-        
+# possible problem: this is running in some other directory        
 if __name__ == "__main__":
     reportBranch()
+
+        

@@ -1,3 +1,6 @@
+# add the tmux extensions to path
+PATH=$PATH:$SCRIPTS_DIR/tmux
+
 
 function parse_git_branch {
 	git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
@@ -27,23 +30,52 @@ PS4='+ '
 }
 
 
+function whichmultiplexer {
+   local MULTIPLEXER="none"
+   
+   if [ -n "$WINDOW" ];
+   then
+       MULTIPLEXER="screen"
+   fi
+   
+   if [ -n "$TMUX" ];
+   then
+       MULTIPLEXER="tmux"    
+   fi
+   
+   echo "$MULTIPLEXER"
+}
+
+
+# changes the title for screen or tmux
+settitle() {
+    printf "\033k$1\033\\"
+}
+
+
 # set the prompt
 # if the WINDOW variable is set, we are in screen
-if [ -n "$WINDOW" ];
-then
-    # This is the escape sequence ESC k \w ESC \
-    #Use path as titel
-    #SCREENTITLE=’\[\ek\w\e\\\]‘
-    #Use program name as titel
-    SCREENTITLE='\[\ek\e\\\]'
-    
-    PS1="$SCREENTITLE($WINDOW) \w \$ "
-    
+case $(whichmultiplexer) in
+    screen)
+        PS1="($WINDOW) \w \$ "
+        
+        ;;
+    tmux)
+        PS1="\w \$  "
+        
+        # rename the window to what i've ssh'd into
+        # close that window once we are done connecting
+        function ssh {
+            settitle "ssh:$*"
+            command ssh "$@"
+            exit
+        }
+        proml
+        ;;
+    *)
+
+    ;;    
+esac
 
     
-    
-else
-    #otherwise, we'll want to do some other stuff to get our prompt
-    proml
-fi
     

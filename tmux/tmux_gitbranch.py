@@ -1,9 +1,9 @@
-#!/home/swirepe/envs/screen/bin/python
+#!/usr/bin/env screen_python
 
-from clint.textui import colored
 from collections import defaultdict
 import subprocess
 import sys
+
 
 def getBranch():
     """returns the currently selected branch, excluding the '* ' at the front of it"""
@@ -65,24 +65,24 @@ def reportBranch():
     
     branch = getBranch()
     if branch == "":
-        print ''
+        print '  ----  '
         return
     
 
     status = getStatus()
-    color = colored.green
+    color = "#[fg=green]"
     
     if len(status['M']) != 0:
-        color = colored.cyan
+        color = "#[fg=cyan]"
     elif len(status['A']) + len(status['D']) != 0:
-        color = colored.magenta
+        color = "#[fg=magenta bright]"
     elif len(status["??"]) != 0:
-        color = colored.white
+        color = "#[fg=white]"
         
         
-    print color(branch)
+    print "#[default]" + color + branch + "#[default]"
     
     
-        
+# possible problem: this is running in some other directory        
 if __name__ == "__main__":
     reportBranch()
