@@ -9,7 +9,7 @@ import time
 now = time.localtime()
 
 style = "#[fg=yellow]"
-if now.tm_hour > 17 or now.tm_hour < 7:
+if now.tm_hour >= 17 or now.tm_hour <= 7:
     style = "#[default]#[fg=red bright]"
 
 ampm = "am"
