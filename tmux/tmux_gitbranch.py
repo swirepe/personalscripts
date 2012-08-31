@@ -1,9 +1,18 @@
 #!/usr/bin/env screen_python
 
 from collections import defaultdict
+import os
+import shelve
 import subprocess
 import sys
 
+def getToDirectory():
+    shelfdir = os.path.join(os.environ["SCRIPTS_DIR"], "tmux")
+    shelfpath = os.path.join(shelfdir, ".tmux_env.shelf")
+    localenv = shelve.open(shelfpath)
+
+    os.chdir(localenv["CWD"])
+    
 
 def getBranch():
     """returns the currently selected branch, excluding the '* ' at the front of it"""
@@ -62,6 +71,7 @@ def reportBranch():
         
     prints an empty string of there is no branch
     """
+    getToDirectory()
     
     branch = getBranch()
     if branch == "":

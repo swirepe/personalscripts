@@ -7,7 +7,7 @@ import shelve
 os.chdir( os.path.join(os.environ["SCRIPTS_DIR"], "tmux")) 
 
 # use a shelf, because environments are weird here
-localenv = shelve.open(".current_tmux_status_index")
+localenv = shelve.open(".tmux_env.shelf")
 
 try:
     index = localenv["TMUX_CURRENT_STATUS"]
