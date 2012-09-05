@@ -6,6 +6,6 @@ source $BASHINCLUDES_DIR/navigation.sh
 source $BASHINCLUDES_DIR/projects.sh
 source $BASHINCLUDES_DIR/screens.sh
 source $BASHINCLUDES_DIR/prompts.sh
-
-
+source $BASHINCLUDES_DIR/pyg.sh
+source $BASHINCLUDES_DIR/pycharm.sh
 

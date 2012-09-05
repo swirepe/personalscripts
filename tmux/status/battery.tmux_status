@@ -1,0 +1,11 @@
+
+# everything black on magenta
+set -g status-fg blue
+set -g status-bg black
+
+set-option -g status-justify "left"
+
+set -g status-left-length 12
+set -g status-left '#(tmux_battery.py bars) '
+set -g status-right '#[fg=white]#(whoami)#[fg=yellow]@#[default]#[fg=cyan bright]#H#[default] #[default][B: #(tmux_battery.py capacity-percent)]'
+
