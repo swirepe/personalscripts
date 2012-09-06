@@ -28,3 +28,8 @@ SCIENCE_PATH="$SCIENCE_HOME/core:$SCIENCE_HOME/script:$SCIENCE_HOME:$BASE_PYTHON
 METADATA_PATH="$METADATA_HOME:$METADATA_HOME/tugboat:$METADATA_HOME/tugboat/clients:$METADATA_HOME/tugboat/models:$METADATA_HOME/tugboat/modules"
 BIGDATA_PATH="$BIGDATA_HOME/src/main/python:$BIGDATA_HOME/core/src/main/python:$BIGDATA_HOME/common/src/main/python:$SCIENCE_HOME:$BASE_PYTHONPATH:$BIGDATA_HOME/metrics/src/main/python:$METADATA_PATH"
 
+function tugboat-server {
+    activate bigdata
+    cd $METADATA_HOME
+    python tugboat/tugboat-server.py
+}

@@ -8,6 +8,7 @@ import time
 
 now = time.localtime()
 
+
 style = "#[fg=yellow]"
 if now.tm_hour >= 17 or now.tm_hour <= 7:
     style = "#[default]#[fg=red bright]"
@@ -15,7 +16,11 @@ if now.tm_hour >= 17 or now.tm_hour <= 7:
 ampm = "am"
 if now.tm_hour >= 12:
     ampm = "pm"
+    if now.tm_hour == 12:
+        hour = 12
+    else:
+        hour = now.tm_hour % 12
 
-nowstr = style + str(now.tm_hour % 12) + ":" + str(now.tm_min).zfill(2) + ampm + "#[default]"
+nowstr = style + str(hour) + ":" + str(now.tm_min).zfill(2) + ampm + "#[default]"
 
 print nowstr
