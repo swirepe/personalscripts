@@ -30,8 +30,7 @@ function metadata {
 }
 
 function tugboat {
-  activate bigdata
-  cd $TUGBOAT_HOME
+  metadata
 }
 
 
