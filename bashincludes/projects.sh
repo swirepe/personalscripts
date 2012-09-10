@@ -13,7 +13,7 @@ export SVN_EDITOR=$EDITOR
 export GIT_EDITOR=$EDITOR
 export SCIENCE_HOME=~/code/science
 export BIGDATA_HOME=~/code/bigdata
-export METADATA_HOME=~/code/metadata
+export METADATA_HOME=~/code/tugboat
 export RELEASE_HIVERC=$BIGDATA_HOME/target/hiverc
 export BASE_PYTHONPATH="$PYTHONPATH"
 export PYTHON_HOME=$(which python)
@@ -27,6 +27,7 @@ PATH=$PATH:~/bin:$HADOOP_HOME/bin:$JAVA_HOME/bin
 SCIENCE_PATH="$SCIENCE_HOME/core:$SCIENCE_HOME/script:$SCIENCE_HOME:$BASE_PYTHONPATH:$SCIENCE_HOME/metrics/src/main/python" 
 METADATA_PATH="$METADATA_HOME:$METADATA_HOME/tugboat:$METADATA_HOME/tugboat/clients:$METADATA_HOME/tugboat/models:$METADATA_HOME/tugboat/modules"
 BIGDATA_PATH="$BIGDATA_HOME/src/main/python:$BIGDATA_HOME/core/src/main/python:$BIGDATA_HOME/common/src/main/python:$SCIENCE_HOME:$BASE_PYTHONPATH:$BIGDATA_HOME/metrics/src/main/python:$METADATA_PATH"
+
 
 function tugboat-server {
     activate bigdata

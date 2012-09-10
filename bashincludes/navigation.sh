@@ -1,4 +1,8 @@
 # fast navigation
+function cd.. {
+  cd ..
+}
+
 function code {
   cd ~/code
 }
@@ -23,6 +27,11 @@ function science {
 function metadata {
   activate bigdata
   cd $METADATA_HOME
+}
+
+function tugboat {
+  activate bigdata
+  cd $TUGBOAT_HOME
 }
 
 
