@@ -3,7 +3,7 @@ function cd.. {
   cd ..
 }
 
-function cd~{
+function cd~ {
   cd ~
 }
 
