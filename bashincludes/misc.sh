@@ -6,3 +6,7 @@ function lastrun {
 # dreampie with the current virtualenv
 # http://xion.org.pl/2012/05/10/dreampie-with-virtualenv/
 alias dream='(dreampie $(which python) &>/dev/null &)'
+
+function findinfiles {
+   find . | xargs grep $1 -sl
+}
