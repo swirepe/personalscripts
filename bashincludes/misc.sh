@@ -8,5 +8,10 @@ function lastrun {
 alias dream='(dreampie $(which python) &>/dev/null &)'
 
 function findinfiles {
-   find . | xargs grep $1 -sl
+   for searchString in "$@"
+   do
+       echo "Files containing $searchString"
+       echo "--------"
+       find . | xargs grep "$searchString" -sl
+   done
 }
