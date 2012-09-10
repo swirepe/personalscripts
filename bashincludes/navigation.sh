@@ -3,6 +3,10 @@ function cd.. {
   cd ..
 }
 
+function cd~{
+  cd ~
+}
+
 function code {
   cd ~/code
 }
