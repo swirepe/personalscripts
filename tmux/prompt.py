@@ -11,4 +11,4 @@ localenv = shelve.open(shelfpath)
 tpane = os.environ["TMUX_PANE"]
 
 localenv["TMUX_ACTIVE_PANE"] = tpane
-localenv["CWD"] = os.getcwd()
+localenv["CWD"] = {tpane: os.getcwd()}

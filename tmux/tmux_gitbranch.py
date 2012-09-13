@@ -11,7 +11,8 @@ def getToDirectory():
     shelfpath = os.path.join(shelfdir, ".tmux_env.shelf")
     localenv = shelve.open(shelfpath)
 
-    os.chdir(localenv["CWD"])
+    tpane = localenv["TMUX_ACTIVE_PANE"]
+    os.chdir(localenv["CWD"][tpane])
     
 
 def getBranch():
