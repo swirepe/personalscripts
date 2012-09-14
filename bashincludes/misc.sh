@@ -56,5 +56,11 @@ function findinfiles_git {
 }
 
 function finf {
-  grep -rHnT --exclude-from=$HOME/.grepignore $@ *
+  # r recursive
+  # H with filename
+  # n with line number
+  # T tab separated
+  # --binary-files=without-match  skip binary files
+  # --exclude-from  basically a gitignore file, but not skipping logs
+  grep -rHnT --binary-files=without-match --exclude-from=$HOME/.grepignore $@ *
 }
