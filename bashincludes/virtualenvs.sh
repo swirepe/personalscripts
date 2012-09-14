@@ -28,3 +28,8 @@ function activate () {
     fi      
 }
 
+
+# guess who just installed virtualenvwrapper?
+# http://virtualenvwrapper.readthedocs.org/en/latest/index.html
+export WORKON_HOME=$PYTHON_ENVS
+source /usr/local/bin/virtualenvwrapper.sh
