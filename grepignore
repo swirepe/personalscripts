@@ -1,0 +1,9 @@
+*~
+*.swp
+*.o
+\#*
+.DS_Store
+.DS_Store?
+.git
+.class
+Thumbs.db

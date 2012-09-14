@@ -54,3 +54,7 @@ function findinfiles_git {
        git ls-files | xargs grep "$searchString" -sl | xpipe "git status -s" "echo"
    done
 }
+
+function finf {
+  grep -rHnT --exclude-from=$HOME/.grepignore $@ *
+}
