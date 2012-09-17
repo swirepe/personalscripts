@@ -1,0 +1,4 @@
+#!/usr/bin/python
+from random import randint
+import sys
+print randint(int(sys.argv[1]), int(sys.argv[2]))
