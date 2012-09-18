@@ -16,10 +16,11 @@ if now.tm_hour >= 17 or now.tm_hour <= 7:
 ampm = "am"
 if now.tm_hour >= 12:
     ampm = "pm"
-    if now.tm_hour == 12:
-        hour = 12
-    else:
-        hour = now.tm_hour % 12
+
+if now.tm_hour == 12:
+    hour = 12
+else:
+    hour = now.tm_hour % 12
 
 nowstr = style + str(hour) + ":" + str(now.tm_min).zfill(2) + ampm + "#[default]"
 
