@@ -67,3 +67,7 @@ function finf {
 
 # for tiv - the view in terminal image thing:
 PATH="$PATH:/home/swirepe/scripts/src/tiv-2012.5"
+
+# requires xdg-utils
+# open a file using the system set preffered application
+alias actualize="xdg-open"
