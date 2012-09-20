@@ -71,3 +71,13 @@ PATH="$PATH:/home/swirepe/scripts/src/tiv-2012.5"
 # requires xdg-utils
 # open a file using the system set preffered application
 alias actualize="xdg-open"
+
+
+function lsabbrev {
+  ls $@ --color=always --group-directories-first -1 | head -n 3
+}
+
+# go into a folder and display its contents
+function c {
+   clear && cd $@ &&  ls --color=always --group-directories-first -x | head -n 3
+}

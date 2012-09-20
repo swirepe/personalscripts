@@ -12,7 +12,7 @@ parser.add_argument("-l", "--length", default=lineLength, help="The maximum leng
 parser.add_argument("-i", "--indicator", help="The string to append to show a line has gone over the maximum length.", default='', type=str)
 parser.add_argument("-c", "--color", help="Attempt to preserve colors as they come in.", default=False,  action='store_true')
 parser.add_argument("-s", "--strip-color", help="Strip out colors (ANSI escapes), no matter what.", default=False,  action='store_true')
-
+parser.add_argument("-p", "--pad", help="Fill the remaining length with whitespace", default=False,  action='store_true')
 
 args = parser.parse_args()
 lineLength = args.length
@@ -90,17 +90,28 @@ def colorAgnostic(line):
     return line
     
     
+def pad(line):
+    line += ' ' * (lineLength - len(line))
+    return line
+
 
 linefn = colorAgnostic
 if args.color:
     linefn = withColors
 elif args.strip_color:
     linefn = withoutColors
-    
+
+
+if args.pad:
+    padfn = pad
+else:
+    padfn = lambda line: line
+
 try:
     while True:
         line = raw_input()
-        line = linefn(line) 
+        line = linefn(line)
+        line = padfn(line)
         print line
 except:
     pass
