@@ -1,0 +1,56 @@
+#!/usr/bin/python
+import argparse
+import string
+import sys
+
+lineLength = 10
+
+parser = argparse.ArgumentParser(description="Clip lines down to a certain length.", conflict_handler='resolve')
+parser.add_argument("length", default=lineLength, help="The maximum length for each string.", type=int)
+parser.add_argument("-l", "--length", default=lineLength, help="The maximum length for each string.", type=int)
+parser.add_argument("-i", "--indicator", help="The string to append to show a line has gone over the maximum length.", default='', type=str)
+parser.add_argument("-c", "--color", help="Attempt to preserve colors as they come in.", default=False,  action='store_true')
+
+args = parser.parse_args()
+
+lineLength = args.length
+indicator = args.indicator
+indicatorLen = len(indicator)
+
+
+def withColors(line):
+    length = 0
+    newline = []
+    for c in line:
+        if c in string.printable and length < lineLength:
+            length += 1
+            newline.append(c)
+        else:
+            newline.append(c)
+
+    return "".join(newline)
+
+
+def withoutColors(line):
+    if len(line) > lineLength:
+        line = line[:lineLength]
+        
+        if indicatorLen > 0:
+            line = line[:-indicatorLen]
+            line += indicator
+            
+    return line
+
+
+if args.color:
+    linefn = withColors
+else:
+    linefn = withoutColors
+    
+try:
+    while True:
+        line = raw_input()
+        line = linefn(line) 
+        print line
+except:
+    pass
