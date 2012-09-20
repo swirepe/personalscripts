@@ -1,0 +1,32 @@
+#!/usr/bin/python
+import argparse
+import curses
+import strclip
+import sys
+
+numCols = 4
+
+curses.setupterm()
+screenWidth = curses.tigetnum('cols')
+
+
+colWidth = screenWidth / numCols
+
+try:
+    buff = ''
+    counter = 0
+    while True:
+        line = raw_input()
+        line = strclip.withColors(line, colWidth - 1, '...')
+        line = strclip.pad(line, colWidth)
+        
+        buff += line
+        counter += 1
+        
+        if counter == numCols:
+            counter = 0
+            print buff
+            buff = ''
+    
+except:
+    pass
