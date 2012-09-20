@@ -64,3 +64,6 @@ function finf {
   # --exclude-from  basically a gitignore file, but not skipping logs
   grep -rHnT --binary-files=without-match --exclude-from=$HOME/.grepignore $@ *
 }
+
+# for tiv - the view in terminal image thing:
+PATH="$PATH:/home/swirepe/scripts/src/tiv-2012.5"
