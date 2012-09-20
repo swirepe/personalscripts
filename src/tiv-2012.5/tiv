@@ -1,0 +1,389 @@
+#!/usr/bin/env perl
+
+# Copyright (C) 2009,2010,2011,2012  Xyne
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# (version 2) as published by the Free Software Foundation.
+#
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+# METADATA
+# Version: 1.1
+
+use strict;
+use warnings;
+
+use Image::Magick;
+
+# Constants
+
+my @color_int_values = qw/0 95 135 175 215 255/; # determined by direct measurement in urxvt-256color
+my @color_hex_values = map {sprintf("%02X", $_)} @color_int_values;
+my @greyscale_int_values = (); # same as above
+my $n = 8;
+while($n < 240)
+{
+  push(@greyscale_int_values,$n);
+  $n += 10;
+}
+my @greyscale_hex_values = map {sprintf("%02X", $_)} @greyscale_int_values;
+
+
+my %palette = ();
+my $palette_start = 16;
+my $palette_end = 255;
+
+
+
+
+my %options = (
+  '-w' => undef,
+  '-h' => undef,
+  '-r' => undef,
+  '-p' => 0,
+  '-a' => 0
+);
+
+my @switches = qw/-p -a --reset/;
+
+
+
+
+
+
+
+
+
+sub reset_colors
+{
+  foreach my $color ($palette_start .. $palette_end)
+  {
+    my $rgb = join('/', &term2hex($color));
+    print("\e]4;$color;rgb:$rgb\e\\");
+  }
+}
+
+
+
+
+
+
+sub term2hex
+{
+  my $arg = $_[0];
+  if ($arg > 15 and $arg < 232)
+  {
+    $arg -= 16;
+    my $b = $arg % 6;
+    my $g = int($arg/6) % 6;
+    my $r = int($arg/36) % 6;
+    ($r,$g,$b) = map {$color_hex_values[$_]} ($r,$g,$b);
+    #return '#' . join('',$r,$g,$b);
+    return ($r,$g,$b);
+  }
+  elsif ($arg > 231 and $arg < 256)
+  {
+    $arg -= 232;
+    #return '#' . ($greyscale_hex_values[$arg] x 3);
+    return (($greyscale_hex_values[$arg]) x 3);
+  }
+  #return '#000000'
+  return qw/0 0 0/
+}
+
+
+
+
+
+sub rgb2term
+{
+  my ($r,$g,$b) = map {255 * $_} @_;
+  my ($cr,$cg,$cb) = map {&get_closest_color($_)} ($r,$g,$b);
+  my ($gr,$gg,$gb) = map {&get_closest_greyscale($_)} ($r,$g,$b);
+
+  my @vectors = ([$cr,$cg,$cb],[($gr) x 3], [($gg) x 3], [($gb) x 3]);
+
+  my $shortest = 0x1000000;
+  my $closest = 0;
+  for(my $i=0; $i<scalar(@vectors); $i++)
+  {
+    my ($vr,$vg,$vb) = @{ $vectors[$i] };
+    my $d = &get_vector_distance_squared($r,$g,$b,$vr,$vg,$vb);
+    if ($d < $shortest)
+    {
+      $closest = $i;
+      $shortest = $d;
+    }
+  }
+  ($r,$g,$b) = @{ $vectors[$closest] };
+  if ($closest == 0)
+  {
+    ($r,$g,$b) = map {&get_index($_,@color_int_values)} ($r,$g,$b);
+    return 16 + $b + 6*$g + 36*$r;
+  }
+  else
+  {
+    my $color;
+    if ($r == 0) {$color = 16;}
+    elsif ($r == 255) {$color = 231;}
+    else {$color = &get_index($r,@greyscale_int_values) + 232}
+    return $color;
+  }
+}
+
+
+
+
+sub get_closest_color
+{
+  return &get_closest(@_,@color_int_values);
+}
+
+
+
+
+sub get_closest_greyscale
+{
+  return &get_closest(@_,@greyscale_int_values);
+}
+
+
+
+
+sub get_closest
+{
+  my ($arg,@int_values) = @_;
+  my $closest = 0;
+  my $shortest = 256;
+  foreach my $val (@int_values)
+  {
+    my $d = abs($arg - $val);
+    if ($d < $shortest)
+    {
+      $closest = $val;
+      $shortest = $d;
+    }
+  }
+  return $closest;
+}
+
+
+
+sub get_index
+{
+  my $arg = shift;
+  return (grep {$arg eq $_[$_]} (0..scalar(@_)-1))[0];
+}
+
+sub get_vector_distance_squared
+{
+  my ($a,$b,$c,$u,$v,$w) = @_;
+  return ($a-$u)**2 + ($b-$v)**2 + ($c-$w)**2;
+}
+
+sub print_pixel
+{
+  my $color;
+  if ($options{'-a'})
+  {
+    my $rgb = sprintf ("%04X/%04X/%04X", (map {$_ * 0xffff} @_));
+    if (defined($palette{$rgb}))
+    {
+      $color = $palette{$rgb};
+    }
+    else
+    {
+      $color = $palette_start + scalar (keys (%palette));
+      $palette{$rgb} = $color;
+      # "rgb" is used instead of "rgbi" to avoid Xlib's gamma correction.
+      print("\e]4;$color;rgb:$rgb\e\\");
+    }
+  }
+  else
+  {
+    $color = &rgb2term(@_);
+  }
+  print "\x1b[0;48;5;${color}m ";
+}
+
+
+
+
+sub get_term_width
+{
+  if ($ENV{COLUMNS})
+  {
+    return $ENV{COLUMNS};
+  }
+  foreach my $path (split ':', $ENV{PATH})
+  {
+    $path =~ s|/$||;
+    my $tput = $path . '/tput';
+    if (-x $tput)
+    {
+      my $cols = `$tput cols`;
+      chomp  $cols;
+      return $cols;
+    }
+  }
+  return 80;
+}
+
+
+
+
+sub display_help
+{
+  print <<'HELP';
+USAGE
+  tiv [options] [paths]
+
+OPTIONS
+  --help
+    Display this message and exit.
+
+  -a
+    Adapt colors to image palette. This will change the rgb values of terminal
+    color in the range 16-255 to match the colors in the image after it is
+    quantized to 240 colors. The changes will persist until they are reset using
+    the "--reset" option.
+
+    When viewing multiple images with this option, the "-p" option is
+    implied because the adapation of the color palette is applied globally and
+    thus affects previous images.
+
+  -h <int>
+    Set the maximum output height. To maximize the image while keeping all of it
+    on the screen, use with "-h $LINES" or "-h `tput lines`". Leave this blank
+    to maximize by width and allow the image to scroll.
+
+  -p
+    Pause after displaying the image to prevent the prompt from pushing it up.
+    Press enter to continue.
+
+  --reset
+    Reset the terminal colors to their default RGB values.
+
+  -r <float>
+    The aspect ratio of the output. Each "pixel" is the width of a space and the
+    height of a line, which will depend on your font settings. The ratio should
+    be given as <font width>/<font height>, e.g. 0.5.
+
+  -w <int>
+    Set the maximum output width. This should not exceed the current number of
+    columns. To get the maximum width, use "-w $COLUMNS" if your terminal sets
+    this variable, or "-w `tput cols`" if you have tput installed, otherwise
+    guess. If not given, tiv will try to use tput to get the columns, otherwise
+    it will default to 80.
+
+HELP
+exit($_[0]);
+}
+
+
+my @fpaths = ();
+while (@ARGV)
+{
+  my $arg = shift @ARGV;
+  if (grep {$arg eq $_} @switches)
+  {
+    $options{$arg} = 1;
+  }
+  elsif (exists($options{$arg}))
+  {
+    $options{$arg} = shift @ARGV;
+  }
+  elsif ($arg eq '--help')
+  {
+    &display_help(0);
+  }
+  elsif (substr($arg,0,1) ne '-')
+  {
+    push(@fpaths,$arg);
+  }
+}
+
+if ($options{'--reset'})
+{
+  &reset_colors();
+  exit;
+}
+
+my $c = $options{'-w'};
+if (not $c)
+{
+  $c = &get_term_width();
+}
+my $l = $options{'-h'};
+my $ratio = $options{'-r'};
+my $pause = 1 if $options{'-p'} or ($options{'-a'} and scalar @fpaths > 1);
+
+&display_help(1) if not (@fpaths and $c);
+
+foreach my $fpath (@fpaths)
+{
+  my $image = Image::Magick->new();
+  $image->Read($fpath);
+  my $w;
+  my $h;
+  if (defined($ratio))
+  {
+    $w = $image->Get('width');
+    $h = $image->Get('height');
+
+    $l = int($c * $h / $w) if not defined($l);
+
+    if ($ratio < 1) { $w /= $ratio; }
+    else { $h *= $ratio; }
+    my $f1 = $l/$h;
+    my $f2 = $c/$w;
+    my $f = ($f1 > $f2) ? $f2 : $f1;
+    $w = int($f*$w);
+    $h = int($f*$h);
+    $image->Scale('width'=>$w, 'height'=>$h);
+  }
+  else
+  {
+    # If the number of rows have been specified, scale to fit within limits...
+    if (defined($l))
+      { $image->Scale('width'=>$c, 'height'=>$l); }
+    # else scale to width and allow height to fill scrollback.
+    else
+      { $image->Resize('geometry'=>$c.'x'); }
+  }
+  if ($options{'-a'})
+  {
+    %palette = ();
+    my $colors = $image->Get('colors');
+    my $range = 1 + $palette_end - $palette_start;
+    if ($colors > $range)
+    {
+      $image->Quantize(colors=>($range), dither=>0);
+      #$image->Write('/tmp/sandbox-xyne/tiv.png');
+    }
+  }
+  $w = $image->Get('width');
+  $h = $image->Get('height');
+  for (my $y=1;$y<=$h;$y++)
+  {
+    for (my $x=1;$x<=$w;$x++)
+    {
+      my @rgb = $image->GetPixel('x'=>$x, 'y'=>$y, 'channel'=>'RGB');
+      &print_pixel(@rgb);
+    }
+    print "\x1b[0;49;m";
+    print "\n" if $y < $h;
+  }
+  if ($pause) {<STDIN>}
+  else {print "\n";}
+}
+
