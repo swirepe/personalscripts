@@ -79,5 +79,5 @@ function lsabbrev {
 
 # go into a folder and display its contents
 function c {
-   clear && cd $@ &&  ls --color=always --group-directories-first -x | head -n 3
+   clear && cd $@ &&  ls --color=always --group-directories-first  | colfmt | head -n 3
 }

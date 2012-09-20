@@ -5,20 +5,37 @@ import strclip
 import sys
 
 numCols = 4
+clipIndicator = '...'
 
-curses.setupterm()
-screenWidth = curses.tigetnum('cols')
+parser = argparse.ArgumentParser(description="Format an input stream into columns.")
+parser.add_argument("cols", nargs="?", default = numCols, help="Number of columns.  Defaults to " + str(numCols))
+parser.add_argument("-c", "--columns", default=numCols, help="Number of columns.  Defaults to " + str(numCols), type=int)
+parser.add_argument("-w", "--width", help="Screen width.  Default to guessing", type=int)
+parser.add_argument("-s", "--separator", help="Column separator", type=str, default='')
+parser.add_argument("-i", "--clip-indicator", help="Append this to a string to show it has been clipped.", default=clipIndicator, type=str)
+args = parser.parse_args()
 
 
+if args.width == None:
+    curses.setupterm()
+    screenWidth = curses.tigetnum('cols')
+else:
+    screenWidth = args.width
+    
+
+numCols = args.columns
 colWidth = screenWidth / numCols
+clipIndicator = args.clip_indicator
+separator = args.separator
 
 try:
     buff = ''
     counter = 0
+    separatorLen = len(separator)
     while True:
         line = raw_input()
-        line = strclip.withColors(line, colWidth - 1, '...')
-        line = strclip.pad(line, colWidth)
+        line = strclip.withColors(line, colWidth - separatorLen - 1, clipIndicator)
+        line = strclip.pad(line, colWidth - separatorLen) 
         
         buff += line
         counter += 1
@@ -27,6 +44,8 @@ try:
             counter = 0
             print buff
             buff = ''
+        else:
+            buff += separator
     
 except:
     pass
