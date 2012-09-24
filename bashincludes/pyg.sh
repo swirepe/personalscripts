@@ -2,7 +2,10 @@
 # http://pygments.org/download/
 # http://www.ralfebert.de/blog/tools/cat_syntax_highlighting/
 
-alias pcat=pygmentize
+function pcat {
+   # redirect to cat if we can't find a lexer
+   pygmentize $@ 2> /dev/null || cat $@
+}
 
 function pless() {
     pcat "$1" | less -R
