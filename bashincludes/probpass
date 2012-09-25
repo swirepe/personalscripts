@@ -1,0 +1,17 @@
+#!/usr/bin/python
+
+from random import random
+import sys
+
+prob = 0.5
+if len(sys.argv) > 1:
+    prob = float(sys.argv[1])
+
+try:
+    while True:
+        line = raw_input()
+        if random() < prob:
+            print line
+
+except:
+    pass
