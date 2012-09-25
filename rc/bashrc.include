@@ -1,4 +1,4 @@
-
+source $BASHINCLUDES_DIR/color.sh
 source $BASHINCLUDES_DIR/misc.sh
 source $BASHINCLUDES_DIR/virtualenvs.sh
 source $BASHINCLUDES_DIR/navigation.sh
