@@ -6,11 +6,13 @@ function alwaysontop {
         export OLD_PROMPT_COMMAND="$PROMPT_COMMAND"
         if [ "$PROMPT_COMMAND" ]
         then
-            PROMPT_COMMAND="$PRMOPT_COMMAND ;  _notjustrun ; tput cup 0 0 ; tput el ; tput el1 ; _justrun"
+            PROMPT_COMMAND="$PRMOPT_COMMAND ; tput cup 0 0 ; tput el ; tput el1 "
         else
-            PROMPT_COMMAND="_notjustrun ; tput cup 0 0 ; tput el ; tput el1 ; _justrun"
+            PROMPT_COMMAND="tput cup 0 0 ; tput el ; tput el1 "
         fi
     fi
+    
+    bind 'RETURN: "\e[1~clearallbuttop && \e[4~\n"'
 }
 
 
@@ -23,32 +25,20 @@ function unalwaysontop {
             ALWAYSONTOP="FALSE"
         fi
     fi
-    trap DEBUG
+   bind 'RETURN: "\n'
 }
 
-
-
-
-function _clearonjustrun {
-
-    if [ "$JUSTRUN" == "TRUE" ] 
-    then
-        clear
-    fi
-    
+function clearallbuttop {
+    for (( i=1; i <= $LINES; i++ ))
+    do
+        tput cup $i 0
+        tput el
+        tput el1 
+    done
+    tput cup 0 0 
 }
 
-function _justrun {
-    export JUSTRUN="TRUE"   
-}
+export clearallbuttop
 
-function _notjustrun {
-    export JUSTRUN="FALSE"
-}
 
-# make this visible
-export _clearonjustrun
-
-# run before each command
-trap '_clearonjustrun' DEBUG
 
