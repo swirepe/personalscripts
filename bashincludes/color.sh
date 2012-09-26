@@ -77,22 +77,20 @@ export COLOR_On_IWhite='\e[0;107m'   # White
 
 
 ## http://www.commandlinefu.com/commands/view/5879/show-numerical-values-for-each-of-the-256-colors-in-bash
-alias show_colors_cols='for i in {0..255}; do echo -e "\e[38;05;${i}m${i}"; done | column -c 80 -s "  "; echo -e "\e[m"'
+alias show_colors_cols='for i in {0..255}; do echo -e "\e[38;05;${i}m${i}"; done | column -c 80 -s "  " ; echo -e "\e[m"'
 
 function show_colors {
     for code in {0..255}; do show_color $code ; done
 }
 
 function show_color {
-    local $code = $1
-    echo -e "\e[38;05;${code}m $code: Test"
+    echo -e "\e[38;05;${1}m $1: Test"
     color_off
 }
 
 
 function color {
-    local $color = $1 
-    echo -en "\e[38;05;${color}m${color}"
+    echo -en "\e[38;05;${1}m${1}"
 }
 
 function color_off {

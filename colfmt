@@ -34,6 +34,11 @@ try:
     separatorLen = len(separator)
     while True:
         line = raw_input()
+        
+        # skip empty lines
+        if line.lstrip().rstrip() == "":
+            continue
+        
         line = strclip.withColors(line, colWidth - separatorLen - 1, clipIndicator)
         line = strclip.pad(line, colWidth - separatorLen) 
         
@@ -48,4 +53,5 @@ try:
             buff += separator
     
 except:
-    pass
+    if buff != '':
+        print buff

@@ -62,7 +62,7 @@ case $(whichmultiplexer) in
         ;;
     tmux)
         PS1=" \w \$(parse_git_branch) \$  "
-        PROMPT_COMMAND=$SCRIPTS_DIR/tmux/prompt.py
+        PROMPT_COMMAND=$SCRIPTS_DIR/tmux/prompt.py 
         # rename the window to what i've ssh'd into
         # close that window once we are done connecting
         function ssh {
