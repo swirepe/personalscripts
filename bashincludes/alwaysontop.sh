@@ -27,8 +27,11 @@ function unalwaysontop {
             PROMPT_COMMAND="$OLD_PRMOPT_COMMAND"
             ALWAYSONTOP="FALSE"
         fi
+        
+        PS1="$OLD_PS1"
     fi
    
+    
 }
 
 
