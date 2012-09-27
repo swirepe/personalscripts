@@ -1,0 +1,117 @@
+#!/usr/bin/python
+# This program finds all the .gitignore files that matter and
+# either doesn't pass them through stdout, or colors them
+
+import fnmatch
+import os
+import re
+import subprocess
+import sys
+import fnmatch
+
+# via strclip
+asciiEscapes = re.compile('\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]')
+
+def withoutColors(line):
+    return re.sub(asciiEscapes, '', line)
+
+
+def getGlobalIgnoreFile():
+    # git config --get core.excludesfile
+    try:
+        return subprocess.Popen(["git", "config", "--get", "core.excludesfile"], 
+                                 stderr=subprocess.STDOUT,
+                                 stdout=subprocess.PIPE).communicate()[0].strip()
+    except:
+        return None
+
+
+
+def removeComments(line, sep="#"):
+    if sep in line:
+        index = line.index(sep)
+        
+        # if the line starts with a comment, leave
+        if index == 0:
+            return ''
+            
+        # otherwise, find the first non-escaped separator
+        for index, char in enumerate(line):
+            if char == sep and line[index-1] != '\\':
+                line = line[:index]
+                break
+        
+    return line.strip()
+
+
+def parseIgnoreFile(ignoreFile):
+    rules = []
+    f = open(ignoreFile)
+    for line in f.readlines():
+        line = removeComments(line)
+        if line == '':
+            continue
+        rules.append(line)
+        
+    return rules
+
+
+def inGitRepository():
+    """The subprocess call will fail if we are not in a git repo, exit status nonzero"""
+    null = open(os.devnull, 'w')
+    return subprocess.call(["git", "status"], stdout=null, stderr=null) == 0
+    
+
+def localGitFiles():
+    here = os.getcwd()
+    # start:
+    #   if this directory is not a git respository -> done
+    #   else
+    #        if this directory contains a .gitignore, parse it
+    #        if this directory contains a .git, parse .git/info/exclude, done
+    #           else check parent
+
+
+def matches(line, rules):
+    # i can't think of how to use any() here, but whatever
+    for rule in rules:
+        if fnmatch.fnmatch(withoutColors(line), rule):
+            return True
+    
+    return False
+
+
+
+def getRules():
+    # global and local, but just global for now
+    
+    rules = []
+    globalfile = getGlobalIgnoreFile()
+    rules.extend(parseIgnoreFile(globalfile))
+    
+    # local would be here
+    ##
+    ##
+    
+    return rules
+    
+
+if __name__ == "__main__":
+    color = len(sys.argv) >1 and sys.argv[1] == "--color"
+    black = "\033[0;30m"
+    off  = "\033[0m"
+    
+    rules = getRules()
+    
+    try:
+        while True:
+            line = raw_input()
+            if matches(line, rules):
+                if color:
+                    print black + line + off 
+                
+            else:
+                print line
+
+    except:
+        pass
