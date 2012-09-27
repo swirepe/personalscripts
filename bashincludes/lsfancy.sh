@@ -9,5 +9,6 @@ function lsfancy {
 
 function unlsfancy {
     unalias "ls"
+    alias "ls"=ls --color=auto
 }
 
