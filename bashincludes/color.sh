@@ -3,6 +3,8 @@
 # Reset
 export COLOR_off='\e[0m'       # Text Reset
 
+# if you forget to close some colors, it will mess with the way text wraps
+export COLOR_REALLY_OFF="$COLOR_offCOLOR_offCOLOR_offCOLOR_off$COLOR_offCOLOR_offCOLOR_offCOLOR_off$COLOR_offCOLOR_offCOLOR_offCOLOR_off"
 
 # Regular Colors
 export COLOR_Black='\e[0;30m'        # Black

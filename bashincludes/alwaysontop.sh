@@ -11,9 +11,9 @@ function alwaysontop {
         then
             # before showing the prompt and doing whatever you're supposed to do
             # when you do that, go to the top of the screen and clear in both directions
-            PROMPT_COMMAND="$PROMPT_COMMAND ; tput cup 0 0 ; tput el ; tput el1 "
+            PROMPT_COMMAND="$PROMPT_COMMAND ; tput cup 0 0 ; tput el ; tput el1"
         else
-            PROMPT_COMMAND="tput cup 0 0 ; tput el ; tput el1 "
+            PROMPT_COMMAND="tput cup 0 0 ; tput el ; tput el1"
         fi
         
         PS1="$ALWAYSONTOP_INDICATOR$PS1"

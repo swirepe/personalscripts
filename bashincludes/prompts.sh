@@ -57,11 +57,11 @@ settitle() {
 # if the WINDOW variable is set, we are in screen
 case $(whichmultiplexer) in
     screen)
-        PS1="($WINDOW) \w \$ "
+        PS1="($WINDOW) \w \$ $COLOR_REALLY_OFF"
         
         ;;
     tmux)
-        PS1=" \w \$(parse_git_branch) \$  "
+        PS1=" \w \$(parse_git_branch) \$  $COLOR_REALLY_OFF"
         PROMPT_COMMAND=$SCRIPTS_DIR/tmux/prompt.py 
         # rename the window to what i've ssh'd into
         # close that window once we are done connecting
@@ -77,4 +77,4 @@ case $(whichmultiplexer) in
 esac
 
     
-    
+PS1="$PS1$COLOR_REALLY_OFF"
