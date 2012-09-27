@@ -22,7 +22,7 @@ function alwaysontop {
 function unalwaysontop {
     if [ "$ALWAYSONTOP" == "TRUE"  ]
     then
-        if [ -n $OLD_PROMPT_COMMAND ]
+        if [ -n $OLD_PRMOPT_COMMAND_AOT ]
         then
             PROMPT_COMMAND="$OLD_PRMOPT_COMMAND_AOT"
         fi
