@@ -78,7 +78,7 @@ def localGitIgnoreRules():
         here = os.getcwd()
         
         # if you somehow have a git repository in your root directory...
-        if her == "/":
+        if here == "/":
             return rules
             
         possibleGitIgnore = os.path.join(here, ".gitignore")
