@@ -62,15 +62,42 @@ def inGitRepository():
     return subprocess.call(["git", "status"], stdout=null, stderr=null) == 0
     
 
-def localGitFiles():
-    here = os.getcwd()
+def localGitIgnoreRules():
+    rules = []
+    
+    
+    
     # start:
     #   if this directory is not a git respository -> done
     #   else
     #        if this directory contains a .gitignore, parse it
     #        if this directory contains a .git, parse .git/info/exclude, done
     #           else check parent
+    
+    while inGitRepository():
+        here = os.getcwd()
+        
+        # if you somehow have a git repository in your root directory...
+        if her == "/":
+            return rules
+            
+        possibleGitIgnore = os.path.join(here, ".gitignore")
+        if os.path.exists( possibleGitIgnore ):
+            rules.extend(parseIgnoreFile(possibleGitIgnore))
+            
+     
+        possibleGit = os.path.join(here, ".git")
+        possibleNestedGitIgnore =  os.path.join(here, ".git", 'info', 'exclude')
+        if os.path.exists(possibleGit) and os.path.exists(possibleNestedGitIgnore):
+            rules.extend( parseIgnoreFile(possibleNestedGitIgnore) )
 
+        
+        os.chdir( os.path.dirname(here) )
+
+    return rules
+        
+    
+    
 
 def matches(line, rules):
     # i can't think of how to use any() here, but whatever
@@ -83,21 +110,19 @@ def matches(line, rules):
 
 
 def getRules():
-    # global and local, but just global for now
+    # global and local, 
     
     rules = []
     globalfile = getGlobalIgnoreFile()
     rules.extend(parseIgnoreFile(globalfile))
     
-    # local would be here
-    ##
-    ##
-    
+    rules.extend(localGitIgnoreRules())
     return rules
     
 
 if __name__ == "__main__":
-    color = len(sys.argv) >1 and sys.argv[1] == "--color"
+    color = len(sys.argv) > 1 and sys.argv[1] == "--color"
+    
     black = "\033[0;30m"
     off  = "\033[0m"
     
@@ -109,7 +134,6 @@ if __name__ == "__main__":
             if matches(line, rules):
                 if color:
                     print black + line + off 
-                
             else:
                 print line
 
