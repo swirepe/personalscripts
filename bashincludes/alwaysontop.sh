@@ -44,6 +44,8 @@ function autoclear {
         bind 'RETURN: "\C-l\C-j"'
         PS1="$AUTOCLEAR_INDICATOR$PS1"
     fi
+    
+    alias "cd"=cdls
         
 }
 
@@ -51,6 +53,8 @@ function unautoclear {
     export AUTOCLEAR="FALSE"
     bind 'RETURN: "\C-j"'
     PS1=$(strremove.py "$PS1" "$AUTOCLEAR_INDICATOR" )
+    
+    unalias "cd"
 }
 
 function autotop {
@@ -62,4 +66,8 @@ function autotop {
 function unautotop {
     unalwaysontop
     unautoclear
+}
+
+function cdls {
+    command cd $@ && ls
 }
