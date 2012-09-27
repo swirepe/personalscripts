@@ -69,5 +69,5 @@ function unautotop {
 }
 
 function cdls {
-    command cd $@ && ls
+    command cd $@ && ls --color=always | colfmt | head -n$LINES
 }
