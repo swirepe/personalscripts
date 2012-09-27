@@ -46,7 +46,7 @@ function autoclear {
     fi
     
     alias "cd"=cdls
-        
+    renavigate    
 }
 
 function unautoclear {
@@ -55,6 +55,7 @@ function unautoclear {
     PS1=$(strremove.py "$PS1" "$AUTOCLEAR_INDICATOR" )
     
     unalias "cd"
+    renavigate
 }
 
 function autotop {
@@ -70,4 +71,8 @@ function unautotop {
 
 function cdls {
     command cd $@ && ((git status -bs 2>/dev/null && hr) ; ls --color=always | colfmt | head -n$LINES )
+}
+
+function renavigate {
+    source $BASHINCLUDES_DIR/navigation.sh
 }
