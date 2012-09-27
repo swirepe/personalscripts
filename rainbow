@@ -1,0 +1,60 @@
+#!/usr/bin/python
+
+from random import randint
+import sys
+
+OFF = '\033[0m'
+
+colors = None
+colorCode = None
+
+def rainbow(line):
+    global OFF
+    nl = []
+    for char in line:
+        nl.append( nextColor() )
+        nl.append( char )
+        nl.append( OFF )
+
+    return ''.join(nl)
+
+
+def colorIntGenerator(low, high, rand):
+    i = 93
+    while True:
+        yield i
+        if rand:
+            i = randint(low, high)
+        else:
+            i += 1     
+            if i > high:
+                i = low
+
+
+def nextColor():
+    global colors
+    global colorCode
+    return colorCode(colors.next())
+
+
+
+if __name__ == "__main__":
+    rand = False
+  
+    if "--random" in sys.argv:
+        rand = True
+        
+    if "--extended" in sys.argv:
+        colors = colorIntGenerator(low = 0, high=255, rand=rand)
+        colorCode = lambda colorInt: "\033[38;05;" + str(colorInt) + "m"
+        
+    else:
+        colors = colorIntGenerator(low = 90, high=97, rand=rand)
+        colorCode = lambda colorInt: '\033[1;' + str(colorInt) + 'm'
+
+    try:
+        while True:
+            line = raw_input()
+            print rainbow(line)
+    except:
+        pass
