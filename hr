@@ -1,0 +1,7 @@
+#!/bin/bash
+# I probably could have just done this myself,
+# but
+# http://wiki.bash-hackers.org/snipplets/print_horizontal_line
+echo -en $COLOR_IBlack
+eval printf '%.0s-' {1..$(tput cols)}
+echo -en $COLOR_off

@@ -69,5 +69,5 @@ function unautotop {
 }
 
 function cdls {
-    command cd $@ && ls --color=always | colfmt | head -n$LINES
+    command cd $@ && ((git status -bs 2>/dev/null && hr) ; ls --color=always | colfmt | head -n$LINES )
 }
