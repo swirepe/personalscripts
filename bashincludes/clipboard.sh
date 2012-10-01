@@ -1,3 +1,3 @@
 
 # cat something | toclipboard
-alias "toclipboard"=xclip -selection clipboard
+alias "toclipboard"="xclip -selection clipboard"
