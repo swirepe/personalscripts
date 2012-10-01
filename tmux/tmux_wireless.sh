@@ -5,3 +5,6 @@ else
    : 
 fi
 
+
+
+## http://www.cyberciti.biz/tips/linux-find-out-wireless-network-speed-signal-strength.html
