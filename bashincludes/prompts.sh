@@ -78,3 +78,8 @@ esac
 
     
 PS1="$PS1$COLOR_REALLY_OFF"
+
+# for the tmux powerline
+# https://github.com/erikw/tmux-powerline
+PS1="$PS1"'$([ -n "$TMUX" ] && tmux setenv TMUXPWD_$(tmux display -p "#I_#P") "$PWD")'
+
