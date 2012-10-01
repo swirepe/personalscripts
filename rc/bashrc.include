@@ -12,3 +12,4 @@ source $BASHINCLUDES_DIR/believe.sh
 source $BASHINCLUDES_DIR/timekey.sh
 source $BASHINCLUDES_DIR/lsfancy.sh
 source $BASHINCLUDES_DIR/colorman.sh
+source $BASHINCLUDES_DIR/clipboard.sh
