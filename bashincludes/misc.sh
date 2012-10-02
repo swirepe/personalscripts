@@ -85,4 +85,4 @@ function c {
    clear && cd $@ &&  ls --color=always --group-directories-first  | colfmt | head -n 3
 }
 
-alias "mirror"="wget -mk -w20"
+alias "wmirror"="wget -mk -w20"
