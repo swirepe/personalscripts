@@ -24,7 +24,7 @@ TITLEBAR=""
 esac
 PS1="${TITLEBAR}\
 \u@\h:\w$WHITE\$(parse_git_branch)\
-$LIGHT_GRAY> "
+$LIGHT_GRAY>$COLOR_off$COLOR_off "
 PS2='> '
 PS4='+ '
 }
@@ -57,11 +57,11 @@ settitle() {
 # if the WINDOW variable is set, we are in screen
 case $(whichmultiplexer) in
     screen)
-        PS1="($WINDOW) \w \$ $COLOR_REALLY_OFF"
+        PS1="($WINDOW) \w \$ "
         
         ;;
     tmux)
-        PS1=" \w \$(parse_git_branch) \$  $COLOR_REALLY_OFF"
+        PS1=" \w \$(parse_git_branch) \$ "
         PROMPT_COMMAND=$SCRIPTS_DIR/tmux/prompt.py 
         # rename the window to what i've ssh'd into
         # close that window once we are done connecting
@@ -77,7 +77,7 @@ case $(whichmultiplexer) in
 esac
 
     
-PS1="$PS1$COLOR_REALLY_OFF"
+PS1="$PS1"
 
 # for the tmux powerline
 # https://github.com/erikw/tmux-powerline

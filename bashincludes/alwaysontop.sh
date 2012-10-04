@@ -1,4 +1,4 @@
-
+# removing those pretty indicatos seem to have fixed the text-wrapping issue
 export ALWAYSONTOP_INDICATOR="$COLOR_BIPurple^^$COLOR_off "
 export AUTOCLEAR_INDICATOR="$COLOR_BIYellow◎$COLOR_off  "
 
@@ -16,7 +16,9 @@ function alwaysontop {
             PROMPT_COMMAND="tput cup 0 0 ; tput el ; tput el1"
         fi
         
-        PS1="$ALWAYSONTOP_INDICATOR$PS1"
+        
+       # PS1="$ALWAYSONTOP_INDICATOR$PS1"
+        PS1="$PS1"
     fi
 }
 
@@ -48,7 +50,9 @@ function autoclear {
         
         # replace the enter key with a form feed (clears the screen) and an enter key
         bind 'RETURN: "\C-l\C-j"' 
-        PS1="$AUTOCLEAR_INDICATOR$PS1"
+       # PS1="$AUTOCLEAR_INDICATOR$PS1"
+        
+        PS1="$PS1"
     fi
     
     # since we are going to be clearing the screen after every command, might as well have cd also be an ls
