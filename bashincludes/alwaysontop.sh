@@ -1,9 +1,9 @@
 # removing those pretty indicatos seem to have fixed the text-wrapping issue
-#export ALWAYSONTOP_INDICATOR="$COLOR_BIPurple^^$COLOR_off "
-#export AUTOCLEAR_INDICATOR="$COLOR_BIYellow@$COLOR_off "
+export ALWAYSONTOP_INDICATOR="\[${COLOR_BIPurple}\]^^\[${COLOR_off}\] "
+export AUTOCLEAR_INDICATOR="\[${COLOR_BIYellow}\]@\[${COLOR_off}\] "
 
-export ALWAYSONTOP_INDICATOR="↑↑ "
-export AUTOCLEAR_INDICATOR="◎ "
+#export ALWAYSONTOP_INDICATOR="↑↑ "
+#export AUTOCLEAR_INDICATOR="◎ "
 
 function alwaysontop {
     if [ "$ALWAYSONTOP" != "TRUE" ]
