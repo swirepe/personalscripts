@@ -15,3 +15,5 @@ source $BASHINCLUDES_DIR/colorman.sh
 source $BASHINCLUDES_DIR/clipboard.sh
 source $BASHINCLUDES_DIR/gitfns.sh
 source $BASHINCLUDES_DIR/vagrant.sh
+source $BASHINCLUDES_DIR/jlanguage.sh
+   
