@@ -76,10 +76,30 @@ case $(whichmultiplexer) in
     ;;    
 esac
 
-    
-PS1="$PS1"
+PS1=" \w \$(parse_git_branch) \$ "
 
 # for the tmux powerline
 # https://github.com/erikw/tmux-powerline
 PS1="$PS1"'$([ -n "$TMUX" ] && tmux setenv TMUXPWD_$(tmux display -p "#I_#P") "$PWD")'
 
+
+function long_prompt {
+    PS1="$(retcolor) \u@\h $(parse_git_branch) \n\w \$ $(tput el)"
+
+}
+
+function time_run {
+    local this_time=$(($SECONDS))
+    echo $((this_time-LAST_TIME))
+    LAST_TIME=$(($SECONDS))
+    export LAST_TIME
+}
+
+function retcolor {
+    if [ $? == 0 ]
+    then
+        echo -e "\[${COLOR_Green}\]✔\[${COLOR_off}\]"
+    else
+        echo -e "\[${COLOR_Red}\]✖\[${COLOR_off}\]"
+    fi
+}
