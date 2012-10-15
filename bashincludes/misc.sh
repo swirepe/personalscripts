@@ -59,6 +59,7 @@ function findinfiles_git {
 }
 
 function finf {
+  ##  f.ind in f.iles
   # r recursive
   # H with filename
   # n with line number
@@ -90,3 +91,6 @@ alias "wmirror"="wget -mk -w1"
 
 # show a bash function definition
 alias "viewfn"="declare -f"
+
+# use cut to limit the length of a line
+alias "line-limit"="cut -c -$(tput cols)"
