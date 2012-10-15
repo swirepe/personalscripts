@@ -85,4 +85,8 @@ function c {
    clear && cd $@ &&  ls --color=always --group-directories-first  | colfmt | head -n 3
 }
 
+# make a mirror of a site using wget
 alias "wmirror"="wget -mk -w1"
+
+# show a bash function definition
+alias "viewfn"="declare -f"
