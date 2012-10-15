@@ -1,0 +1,17 @@
+#!/bin/bash
+
+
+echo -e "In Frink, the calculation becomes transparently simple.
+
+If you took the matter in a teaspoon of water, and converted that
+to energy, how many gallons of gasoline would that equal?
+$COLOR_Green
+     teaspoon water c^2 -> \"gallons gasoline\"
+     3164209.862836101 gallons gasoline
+$COLOR_off
+Unbelievable. The energy in a teaspoon of water, if we could extract it, is equal to burning more than 3 million gallons of gasoline. 
+"
+
+echo "( http://futureboy.us/frinkdocs/index.html#SampleCalculations )"
+
+java -cp $SCRIPTS_DIR/src/frink.jar frink.parser.Frink
