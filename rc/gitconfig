@@ -1,1 +1,10 @@
-/home/swirepe/.gitconfig
+[user]
+	name = Peter Swire
+	email = pswire@cargometrics.com
+[core]
+	excludesfile = /home/swirepe/.gitignore_global
+[color]
+	ui = true
+[alias]
+    lol = log --graph --decorate --pretty=oneline --abbrev-commit
+    lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
