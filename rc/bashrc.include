@@ -17,4 +17,4 @@ source $BASHINCLUDES_DIR/vagrant.sh
 source $BASHINCLUDES_DIR/jlanguage.sh
 source $BASHINCLUDES_DIR/remote.sh
 source $BASHINCLUDES_DIR/gitfn.sh
-   
+source $BASHINCLUDES_DIR/autonavigation.sh  
