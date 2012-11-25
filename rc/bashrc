@@ -106,16 +106,42 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
 
-PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
 
 # more colors?
 export TERM=xterm-256color
 
-export SCRIPTS_DIR=/home/swirepe/scripts
+
+#export PATH="$PATH:/home/swirepe/scripts"
+
+#export PATH="$PATH:/home/swirepe/pers/scripts"
+
+export PATH="$PATH:/home/swirepe/Matlab"
+export PATH="$PATH:/home/swirepe/Matlab/bin"
+
+
+# load these things into memory if we can
+export SCRIPTS_DIR=/home/swirepe/pers/scripts
 export BASHINCLUDES_DIR=$SCRIPTS_DIR/bashincludes
+if [[  -d "/tmp/ramdisk/bashincludes" ]]
+then
+   BASHINCLUDES_DIR="/tmp/ramdisk/bashincludes"
+else
+   BASHINCLUDES_DIR=$(/home/swirepe/pers/scripts/toramdisk.sh "$BASHINCLUDES_DIR")
+fi
+
+if [[ -d "/tmp/ramdisk/scripts" ]]
+then
+    SCRIPTS_DIR="/tmp/ramdisk/scripts"
+else
+    SCRIPTS_DIR=$(/home/swirepe/pers/scripts/toramdisk.sh "$SCRIPTS_DIR")
+fi
+
+export PATH="$PATH:$SCRIPTS_DIR"
 
 source $SCRIPTS_DIR/rc/bashrc.include
 
 
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 
+
+PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
