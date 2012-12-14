@@ -19,3 +19,4 @@ source $BASHINCLUDES_DIR/remote.sh
 source $BASHINCLUDES_DIR/gitfn.sh
 source $BASHINCLUDES_DIR/autonavigation.sh  
 source $BASHINCLUDES_DIR/firefox.sh
+source $BASHINCLUDES_DIR/headtail.sh
