@@ -31,4 +31,4 @@ Start it with `autotop`
 End it with `unautotop`
 Toggle screen clears with `autoclear` and `unautoclear`
 
-![AutotopScreenCap](autotopcap.png)
+![AutotopScreenCap](personalscripts/autotopcap.png)
