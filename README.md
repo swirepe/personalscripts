@@ -18,7 +18,7 @@ This starts everything up, and (of course) is symlinked to `~/.bashrc`  It loads
 
 I had a pretty long train commute, and I found that at the end of it, my neck would hurt from hunching.  I wrote a thing to keep the input line at the top of the screen in bash.
 
-While it's at it, `alwaysontop.sh`
+While it's at it, it:
 
 * keeps the prompt at the top of the screen
 * clears the screen automatically
@@ -34,3 +34,9 @@ End it with `unautotop`
 Toggle screen clears with `autoclear` and `unautoclear`
 
 ![AutotopScreenCap](https://github.com/swirepe/personalscripts/raw/master/autotopcap.png)
+
+### `bashincludes/believe.sh`
+
+[With some probability](https://en.wikipedia.org/wiki/Reinforcement#Intermittent_reinforcements), it will display either "Believe in yourself", a fortune, or nothing.
+
+
