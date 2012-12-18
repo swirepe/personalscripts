@@ -93,7 +93,7 @@ function cdls {
     # go into a directory
     # if that succees, print the git status and a horizontal rule (if we are in a git repository)
     # then print the directory contents, 4 columns, cropped to the screen
-    command cd $@ && ((git status -bs 2>/dev/null && hr) ; ls --color=always --group-directories-first | gitignorefilter --color | colfmt | head -n$LINES )
+    command cd "$@" && ((git status -bs 2>/dev/null && hr) ; ls --color=always --group-directories-first | gitignorefilter --color | colfmt | head -n$LINES )
 }
 
 

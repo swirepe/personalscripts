@@ -126,6 +126,8 @@ if [[  -d "/tmp/ramdisk/bashincludes" ]]
 then
    BASHINCLUDES_DIR="/tmp/ramdisk/bashincludes"
 else
+    # report this in purple
+   echo -e "\e[0;35mCopying bashincludes to memory.\e[0m"
    BASHINCLUDES_DIR=$(/home/swirepe/pers/scripts/toramdisk.sh "$BASHINCLUDES_DIR")
 fi
 
@@ -133,6 +135,8 @@ if [[ -d "/tmp/ramdisk/scripts" ]]
 then
     SCRIPTS_DIR="/tmp/ramdisk/scripts"
 else
+    # report this in purple
+    echo -e "\e[0;35mCopy scripts to memory.\e[0m"
     SCRIPTS_DIR=$(/home/swirepe/pers/scripts/toramdisk.sh "$SCRIPTS_DIR")
 fi
 
