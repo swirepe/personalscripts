@@ -1,23 +1,49 @@
-source $BASHINCLUDES_DIR/color.sh
-source $BASHINCLUDES_DIR/misc.sh
-source $BASHINCLUDES_DIR/alwaysontop.sh
-source $BASHINCLUDES_DIR/navigation.sh
-source $BASHINCLUDES_DIR/projects.sh
-source $BASHINCLUDES_DIR/prompts.sh
-source $BASHINCLUDES_DIR/pyg.sh
-source $BASHINCLUDES_DIR/vim.sh
-source $BASHINCLUDES_DIR/perl.sh
-source $BASHINCLUDES_DIR/believe.sh
-source $BASHINCLUDES_DIR/timekey.sh
-source $BASHINCLUDES_DIR/lsfancy.sh
-source $BASHINCLUDES_DIR/colorman.sh
-source $BASHINCLUDES_DIR/clipboard.sh
-source $BASHINCLUDES_DIR/gitfns.sh
-source $BASHINCLUDES_DIR/vagrant.sh
-source $BASHINCLUDES_DIR/jlanguage.sh
-source $BASHINCLUDES_DIR/remote.sh
-source $BASHINCLUDES_DIR/gitfn.sh
-source $BASHINCLUDES_DIR/autonavigation.sh  
-source $BASHINCLUDES_DIR/firefox.sh
-source $BASHINCLUDES_DIR/headtail.sh
-source $BASHINCLUDES_DIR/ramdiskscripts.sh
+
+if [ -f ~/.bashrc_verbose ]
+then
+    echo -e "\e[1;35m[bashrc.include] Including files.\e[0m"
+    VERBOSE="True"
+    rm ~/.bashrc_verbose
+else
+    VERBOSE=""
+fi
+
+function source_include {
+    if [ -n "$VERBOSE" ]
+    then        
+        START_TIME=$(date +%s)
+        source $@
+        END_TIME=$(date +%s)
+        echo -e "\e[0;35m$(echo "$END_TIME - $START_TIME" | bc -l)s \t$1\e[0m"
+    else
+        source $@
+    fi
+
+}
+
+
+source_include $BASHINCLUDES_DIR/color.sh
+source_include $BASHINCLUDES_DIR/misc.sh
+source_include $BASHINCLUDES_DIR/alwaysontop.sh
+source_include $BASHINCLUDES_DIR/navigation.sh
+source_include $BASHINCLUDES_DIR/projects.sh
+source_include $BASHINCLUDES_DIR/prompts.sh
+source_include $BASHINCLUDES_DIR/pyg.sh
+source_include $BASHINCLUDES_DIR/vim.sh
+source_include $BASHINCLUDES_DIR/perl.sh
+source_include $BASHINCLUDES_DIR/believe.sh
+source_include $BASHINCLUDES_DIR/timekey.sh
+source_include $BASHINCLUDES_DIR/lsfancy.sh
+source_include $BASHINCLUDES_DIR/colorman.sh
+source_include $BASHINCLUDES_DIR/clipboard.sh
+source_include $BASHINCLUDES_DIR/gitfns.sh
+source_include $BASHINCLUDES_DIR/vagrant.sh
+source_include $BASHINCLUDES_DIR/jlanguage.sh
+source_include $BASHINCLUDES_DIR/remote.sh
+source_include $BASHINCLUDES_DIR/gitfn.sh
+source_include $BASHINCLUDES_DIR/autonavigation.sh  
+source_include $BASHINCLUDES_DIR/firefox.sh
+source_include $BASHINCLUDES_DIR/headtail.sh
+source_include $BASHINCLUDES_DIR/ramdiskscripts.sh
+
+
