@@ -28,7 +28,9 @@ While it's at it, `alwaysontop.sh`
 * deemphasizes files that match `.gitignore` patterns
 
 Start it with `autotop`
+
 End it with `unautotop`
+
 Toggle screen clears with `autoclear` and `unautoclear`
 
-![AutotopScreenCap](https://swirepe.github.com/personalscripts/raw/master/autotopcap.png)
+![AutotopScreenCap](https://github.com/swirepe/personalscripts/raw/master/autotopcap.png)
