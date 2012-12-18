@@ -111,41 +111,47 @@ fi
 export TERM=xterm-256color
 
 
-#export PATH="$PATH:/home/swirepe/scripts"
-
-#export PATH="$PATH:/home/swirepe/pers/scripts"
-
-export PATH="$PATH:/home/swirepe/Matlab"
-export PATH="$PATH:/home/swirepe/Matlab/bin"
-
-
-# load these things into memory if we can
-export SCRIPTS_DIR=/home/swirepe/pers/scripts
-export BASHINCLUDES_DIR=$SCRIPTS_DIR/bashincludes
-if [[  -d "/tmp/ramdisk/bashincludes" ]]
+# we can short-circuit startup
+if [ -f ~/.skip_bashrc ]
 then
-   BASHINCLUDES_DIR="/tmp/ramdisk/bashincludes"
+   # report this in purple
+   echo -e "\e[0;35mSkipping bashrc loadup: ~/.skip_bashrc found.\e[0m"
+   rm ~/.skip_bashrc
 else
-    # report this in purple
-   echo -e "\e[0;35mCopying bashincludes to memory.\e[0m"
-   BASHINCLUDES_DIR=$(/home/swirepe/pers/scripts/toramdisk.sh "$BASHINCLUDES_DIR")
+
+    export PATH="$PATH:/home/swirepe/Matlab"
+    export PATH="$PATH:/home/swirepe/Matlab/bin"
+    
+    
+    # load these things into memory if we can
+    export SCRIPTS_DIR=/home/swirepe/pers/scripts
+    export BASHINCLUDES_DIR=$SCRIPTS_DIR/bashincludes
+    if [[  -d "/tmp/ramdisk/bashincludes" ]]
+    then
+       BASHINCLUDES_DIR="/tmp/ramdisk/bashincludes"
+    else
+        # report this in purple
+       echo -e "\e[0;35mCopying bashincludes to memory.\e[0m"
+       BASHINCLUDES_DIR=$(/home/swirepe/pers/scripts/toramdisk.sh "$BASHINCLUDES_DIR")
+    fi
+    
+    if [[ -d "/tmp/ramdisk/scripts" ]]
+    then
+        SCRIPTS_DIR="/tmp/ramdisk/scripts"
+    else
+        # report this in purple
+        echo -e "\e[0;35mCopy scripts to memory.\e[0m"
+        SCRIPTS_DIR=$(/home/swirepe/pers/scripts/toramdisk.sh "$SCRIPTS_DIR")
+    fi
+    
+    export PATH="$PATH:$SCRIPTS_DIR"
+    
+    source $SCRIPTS_DIR/rc/bashrc.include
+    
+    
+    [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
+    
+    
+    PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+    
 fi
-
-if [[ -d "/tmp/ramdisk/scripts" ]]
-then
-    SCRIPTS_DIR="/tmp/ramdisk/scripts"
-else
-    # report this in purple
-    echo -e "\e[0;35mCopy scripts to memory.\e[0m"
-    SCRIPTS_DIR=$(/home/swirepe/pers/scripts/toramdisk.sh "$SCRIPTS_DIR")
-fi
-
-export PATH="$PATH:$SCRIPTS_DIR"
-
-source $SCRIPTS_DIR/rc/bashrc.include
-
-
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
-
-
-PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
