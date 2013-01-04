@@ -1,0 +1,2 @@
+echo -e "{$COLOR_White}[git] Unmounting scripts." 
+unmount-scripts
