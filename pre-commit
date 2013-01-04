@@ -1,2 +1,3 @@
-echo -e "{$COLOR_White}[git] Unmounting scripts." 
-unmount-scripts
+## It has trouble calling a function.  oh well.
+# echo -e "{$COLOR_White}[git] Unmounting scripts." 
+# unmount-scripts

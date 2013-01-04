@@ -12,3 +12,18 @@ function unlsfancy {
     alias "ls"=ls --color=auto
 }
 
+function lsd {
+    ls -l --color=always "$@" | egrep '^d' | awk '{print $9}' | colfmt -c 3
+}
+
+function lsdir {
+   ls -l --color=always "$@" | egrep '^d' | awk '{print $9}'
+}
+
+function lsf {
+       ls -l --color=always "$@" | egrep -v '^d' | awk '{print $9}' | colfmt -c 3
+}
+
+function lsfiles {
+    ls -l --color=always "$@" | egrep -v '^d' | awk '{print $9}'
+}
