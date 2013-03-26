@@ -13,7 +13,8 @@ function unlsfancy {
 }
 
 function lsd {
-    ls -l --color=always "$@" | egrep '^d' | awk '{print $9}' | colfmt -c 3
+   ls -d */
+    # ls -l --color=always "$@" | egrep '^d' | awk '{print $9}' | colfmt -c 3
 }
 
 function lsdir {

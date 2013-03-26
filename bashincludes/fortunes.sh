@@ -33,10 +33,9 @@ function unmount-fortunes {
 }
 
 
+# load_fortunes
 
 ## This part actually displays the fortunes
-load_fortunes
-
 echo -en $COLOR_White
 (probexit 0.1 && echo "Believe in yourself.") ||
     (probexit 0.3 && fortune -s "$FORTUNES_DIR" | fold -s) ||
