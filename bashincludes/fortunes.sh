@@ -10,7 +10,7 @@ function load_fortunes {
     else
         # report this in purple
        echo -e "\e[0;35m[fortunes.sh] Copying fortunes to memory.\e[0m"
-       FORTUNES_DIR=$(/home/swirepe/pers/scripts/toramdisk.sh "$FORTUNES_DIR")
+       FORTUNES_DIR=$(. $TORAMDISK "$FORTUNES_DIR")
     fi
     
     if [[  -d "/tmp/ramdisk/fortunes_pers" ]]

@@ -20,9 +20,9 @@
 # $TORAMDISK         where the script toramdisk is.
 #                        if left empty, don't bother loading stuff into memory 
 
-export $BASHINCLUDES_DIR=~/personalscripts/bashincludes
-export $SCRIPTS_DIR=~/personalscripts
-export $TORAMDISK=~/personalscripts/src/toramdisk/toramdisk.sh
+export BASHINCLUDES_DIR="$HOME/personalscripts/bashincludes"
+export SCRIPTS_DIR="$HOME/personalscripts"
+export TORAMDISK="$HOME/personalscripts/src/toramdisk/toramdisk.sh"
 
 ################################################################################
 
