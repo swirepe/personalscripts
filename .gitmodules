@@ -1,0 +1,6 @@
+[submodule "src/stderred"]
+	path = src/stderred
+	url = git://github.com/sickill/stderred.git
+[submodule "src/toramdisk"]
+	path = src/toramdisk
+	url = git://github.com/swirepe/toramdisk.sh.git
