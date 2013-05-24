@@ -7,9 +7,13 @@
 ## exit on error
 set -e
 
-
+# since tar only works from a current working directory thing, change the directory
+pushd . > /dev/null
+cd $SCRIPTS_DIR/src
+tar -xzf $SCRIPTS_DIR/src/j701_b_source.tar.gz
 $SCRIPTS_DIR/src/jgplsrc/bin/build_libj
 $SCRIPTS_DIR/src/jgplsrc/bin/build_jconsole
 
 mkdir -p $SCRIPTS_DIR/j
 mv $SCRIPTS_DIR/src/jgplsrc/j/bin $SCRIPTS_DIR/j
+popd
