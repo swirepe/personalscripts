@@ -57,7 +57,7 @@ else
         else
             # report this in purple
            echo -e "\e[0;35m[bashrc] Copying bashincludes to memory.\e[0m"
-           BASHINCLUDES_DIR=$(. $TORAMDISK "$BASHINCLUDES_DIR")
+           BASHINCLUDES_DIR=$($TORAMDISK "$BASHINCLUDES_DIR")
         fi
         
         if [[ -d "/tmp/ramdisk/scripts" ]]
@@ -66,7 +66,7 @@ else
         else
             # report this in purple
             echo -e "\e[0;35m[bashrc] Copying scripts to memory.\e[0m"
-            SCRIPTS_DIR=$(. $TORAMDISK "$SCRIPTS_DIR")
+            SCRIPTS_DIR=$($TORAMDISK "$SCRIPTS_DIR")
         fi
         
         

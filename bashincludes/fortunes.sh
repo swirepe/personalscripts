@@ -12,7 +12,7 @@ function load_fortunes {
         else
             # report this in purple
            echo -e "\e[0;35m[fortunes.sh] Copying fortunes to memory.\e[0m"
-           FORTUNES_DIR=$(. $TORAMDISK "$FORTUNES_DIR")
+           FORTUNES_DIR=$($TORAMDISK "$FORTUNES_DIR")
         fi
         
         if [[  -d "/tmp/ramdisk/fortunes_pers" ]]
@@ -21,7 +21,7 @@ function load_fortunes {
         else
             # report this in purple
            echo -e "\e[0;35m[fortunes.sh] Copying personal fortunes to memory.\e[0m"
-           FORTUNES_PERS_DIR=$(. $TORAMDISK "$FORTUNES_PERS_DIR")
+           FORTUNES_PERS_DIR=$($TORAMDISK "$FORTUNES_PERS_DIR")
         fi
     fi
     
