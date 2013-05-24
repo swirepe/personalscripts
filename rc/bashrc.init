@@ -20,8 +20,8 @@
 # $TORAMDISK         where the script toramdisk is.
 #                        if left empty, don't bother loading stuff into memory 
 
-export BASHINCLUDES_DIR="$HOME/personalscripts/bashincludes"
 export SCRIPTS_DIR="$HOME/personalscripts"
+export BASHINCLUDES_DIR="$SCRIPTS_DIR/bashincludes"
 export TORAMDISK="$HOME/personalscripts/src/toramdisk/toramdisk.sh"
 
 ################################################################################
@@ -48,9 +48,6 @@ else
     if [[ -f "$TORAMDISK" ]]
     then
     
-        # load these things into memory if we can
-        export SCRIPTS_DIR=/home/swirepe/pers/scripts
-        export BASHINCLUDES_DIR=$SCRIPTS_DIR/bashincludes
         if [[  -d "/tmp/ramdisk/bashincludes" ]]
         then
            BASHINCLUDES_DIR="/tmp/ramdisk/bashincludes"
