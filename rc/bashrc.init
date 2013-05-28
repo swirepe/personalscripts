@@ -22,7 +22,7 @@
 
 export SCRIPTS_DIR="$HOME/personalscripts"
 export BASHINCLUDES_DIR="$SCRIPTS_DIR/bashincludes"
-export TORAMDISK="$HOME/personalscripts/src/toramdisk/toramdisk.sh"
+export TORAMDISK="$SCRIPTS_DIR/src/toramdisk/toramdisk.sh"
 
 ################################################################################
 
