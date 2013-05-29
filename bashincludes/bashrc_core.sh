@@ -112,5 +112,10 @@ fi
 # more colors?
 export TERM=xterm-256color
 
+    
 
+export JAVA_HOME=/usr/jdk1.7.0_03/
+export PATH=$PATH:$JAVA_HOME/bin:$TRTOP/scripts 
+
+export CATALINA_OPTS="-javaagent:/home/swirepe/jrebel/jrebel.jar -Drebel.remoting_plugin=true"
 
