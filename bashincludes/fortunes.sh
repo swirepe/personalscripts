@@ -3,23 +3,26 @@ export FORTUNES_PERS_DIR="/home/swirepe/pers/quotes/fortunes_pers"
 
 
 function load_fortunes {
-    # load the fortune files into memory
-    if [[  -d "/tmp/ramdisk/fortunes" ]]
+    # load the fortune files into memory, if necessary
+    if [[ -f "$TORAMDISK" ]]
     then
-       FORTUNES_DIR="/tmp/ramdisk/fortunes"
-    else
-        # report this in purple
-       echo -e "\e[0;35m[fortunes.sh] Copying fortunes to memory.\e[0m"
-       FORTUNES_DIR=$(/home/swirepe/pers/scripts/toramdisk.sh "$FORTUNES_DIR")
-    fi
-    
-    if [[  -d "/tmp/ramdisk/fortunes_pers" ]]
-    then
-       FORTUNES_PERS_DIR="/tmp/ramdisk/fortunes_pers"
-    else
-        # report this in purple
-       echo -e "\e[0;35m[fortunes.sh] Copying personal fortunes to memory.\e[0m"
-       FORTUNES_PERS_DIR=$(/home/swirepe/pers/scripts/toramdisk.sh "$FORTUNES_PERS_DIR")
+        if [[  -d "/tmp/ramdisk/fortunes" ]]
+        then
+           FORTUNES_DIR="/tmp/ramdisk/fortunes"
+        else
+            # report this in purple
+           echo -e "\e[0;35m[fortunes.sh] Copying fortunes to memory.\e[0m"
+           FORTUNES_DIR=$($TORAMDISK "$FORTUNES_DIR")
+        fi
+        
+        if [[  -d "/tmp/ramdisk/fortunes_pers" ]]
+        then
+           FORTUNES_PERS_DIR="/tmp/ramdisk/fortunes_pers"
+        else
+            # report this in purple
+           echo -e "\e[0;35m[fortunes.sh] Copying personal fortunes to memory.\e[0m"
+           FORTUNES_PERS_DIR=$($TORAMDISK "$FORTUNES_PERS_DIR")
+        fi
     fi
     
 }

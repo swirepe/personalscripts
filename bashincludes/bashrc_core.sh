@@ -1,30 +1,9 @@
+## This is more or less the default bashrc that comes with ubuntu
+
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 
-
-## This bashrc will check for the existance of a bashincludes
-## directory and a scripts in memory
-## Ff it doesn't find them it copies them in.
-## Those files then get sourced.
-
-## This bashrc behaves differently, based on the existance of 
-## certain files in the home directory.
-##       ~/.bashrc_time     output how long it takes to start up
-##       ~/.bashrc_verbose  output how long each included item takes to load up
-##       ~/.bashrc_skip     skip the includes
-
-
-# If not running interactively, don't do anything
-[ -z "$PS1" ] && return
-
-
-
-# we can time this
-if [ -f ~/.bashrc_time ]
-then
-    BASHRC_START_TIME=$(date +%s)
-fi
 
 
 # don't put duplicate lines or lines starting with space in the history.
@@ -134,55 +113,4 @@ fi
 export TERM=xterm-256color
 
 
-# we can short-circuit startup
-if [ -f ~/.bashrc_skip ]
-then
-   # report this in purple
-   echo -e "\e[0;35m[bashrc] Skipping bashrc loadup: ~/.skip_bashrc found.\e[0m"
-   rm ~/.bashrc_skip
-else
 
-    export PATH="$PATH:/home/swirepe/Matlab"
-    export PATH="$PATH:/home/swirepe/Matlab/bin"
-    
-    
-    # load these things into memory if we can
-    export SCRIPTS_DIR=/home/swirepe/pers/scripts
-    export BASHINCLUDES_DIR=$SCRIPTS_DIR/bashincludes
-    if [[  -d "/tmp/ramdisk/bashincludes" ]]
-    then
-       BASHINCLUDES_DIR="/tmp/ramdisk/bashincludes"
-    else
-        # report this in purple
-       echo -e "\e[0;35m[bashrc] Copying bashincludes to memory.\e[0m"
-       BASHINCLUDES_DIR=$(/home/swirepe/pers/scripts/toramdisk.sh "$BASHINCLUDES_DIR")
-    fi
-    
-    if [[ -d "/tmp/ramdisk/scripts" ]]
-    then
-        SCRIPTS_DIR="/tmp/ramdisk/scripts"
-    else
-        # report this in purple
-        echo -e "\e[0;35m[bashrc] Copying scripts to memory.\e[0m"
-        SCRIPTS_DIR=$(/home/swirepe/pers/scripts/toramdisk.sh "$SCRIPTS_DIR")
-    fi
-    
-    export PATH="$PATH:$SCRIPTS_DIR"
-    
-    source $SCRIPTS_DIR/rc/bashrc.include
-    
-    
-    [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
-    
-    
-    PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
-    
-fi
-
-
-# how long did this all take to run?
-if [ -f ~/.bashrc_time ]
-then
-    BASHRC_END_TIME=$(date +%s)
-    echo -e "${COLOR_Purple}[bashrc] Up in $(echo "$BASHRC_END_TIME - $BASHRC_START_TIME" | bc -l) seconds.$COLOR_off"
-fi

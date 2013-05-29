@@ -1,0 +1,92 @@
+## This is the first file you want to source.
+## It sets up the environment for everything else.
+
+## This bashrc behaves differently, based on the existance of 
+## certain files in the home directory.
+##       ~/.bashrc_time     output how long it takes to start up
+##       ~/.bashrc_verbose  output how long each included item takes to load up
+##       ~/.bashrc_skip     skip the includes
+
+
+
+# If not running interactively, don't do anything
+[ -z "$PS1" ] && return
+
+
+################################################################################
+## These three variables absolutely have to be defined
+# $SCRIPTS_DIR       where the scripts are located. can be hoisted into memory.
+# $BASHINCLUDES_DIR  where the extra rc stuff is.  can be hoisted into memory.
+# $TORAMDISK         where the script toramdisk is.
+#                        if left empty, don't bother loading stuff into memory 
+
+export SCRIPTS_DIR="$HOME/personalscripts"
+export BASHINCLUDES_DIR="$SCRIPTS_DIR/bashincludes"
+export TORAMDISK="$SCRIPTS_DIR/src/toramdisk/toramdisk.sh"
+
+################################################################################
+
+
+
+# we can time this
+if [ -f ~/.bashrc_time ]
+then
+    BASHRC_START_TIME=$(date +%s)
+fi
+
+
+
+
+# we can short-circuit startup
+if [ -f ~/.bashrc_skip ]
+then
+   # report this in purple
+   echo -e "\e[0;35m[bashrc] Skipping bashrc loadup: ~/.skip_bashrc found.\e[0m"
+   rm ~/.bashrc_skip
+else
+
+    if [[ -f "$TORAMDISK" ]]
+    then
+    
+        if [[  -d "/tmp/ramdisk/bashincludes" ]]
+        then
+           BASHINCLUDES_DIR="/tmp/ramdisk/bashincludes"
+        else
+            # report this in purple
+           echo -e "\e[0;35m[bashrc] Copying bashincludes to memory.\e[0m"
+           BASHINCLUDES_DIR=$($TORAMDISK "$BASHINCLUDES_DIR")
+        fi
+        
+        if [[ -d "/tmp/ramdisk/scripts" ]]
+        then
+            SCRIPTS_DIR="/tmp/ramdisk/scripts"
+        else
+            # report this in purple
+            echo -e "\e[0;35m[bashrc] Copying scripts to memory.\e[0m"
+            SCRIPTS_DIR=$($TORAMDISK "$SCRIPTS_DIR")
+        fi
+        
+        
+        
+    fi
+    
+    # now, continue with the rest of the bashincludes
+    export PATH="$PATH:$SCRIPTS_DIR"
+    source $BASHINCLUDES_DIR/INCLUDE.sh
+    
+
+fi
+
+
+
+
+
+
+
+
+# how long did this all take to run?
+if [ -f ~/.bashrc_time ]
+then
+    BASHRC_END_TIME=$(date +%s)
+    echo -e "${COLOR_Purple}[bashrc] Up in $(echo "$BASHRC_END_TIME - $BASHRC_START_TIME" | bc -l) seconds.$COLOR_off"
+fi
