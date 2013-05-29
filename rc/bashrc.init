@@ -6,7 +6,7 @@
 ##       ~/.bashrc_time     output how long it takes to start up
 ##       ~/.bashrc_verbose  output how long each included item takes to load up
 ##       ~/.bashrc_skip     skip the includes
-
+##       ~/.bashrc_nomem    skip loading stuff into a ramdisk
 
 
 # If not running interactively, don't do anything
@@ -25,7 +25,12 @@ export BASHINCLUDES_DIR="$SCRIPTS_DIR/bashincludes"
 export TORAMDISK="$SCRIPTS_DIR/src/toramdisk/toramdisk.sh"
 
 ################################################################################
-export TORAMDISK=""
+
+# skip loading things into memory
+if [ -f ~/.bashrc_nomem ]
+then
+    export TORAMDISK=""
+fi
 
 
 # we can time this
