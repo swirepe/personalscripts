@@ -12,7 +12,6 @@
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
-
 ################################################################################
 ## These three variables absolutely have to be defined
 # $SCRIPTS_DIR       where the scripts are located. can be hoisted into memory.
