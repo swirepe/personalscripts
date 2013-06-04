@@ -1,19 +1,20 @@
-set-titles-string "#S:#I:#W - "#T""
-status on
-status-attr none
-status-bg green
-status-fg black
-status-interval 15
-status-justify left
-status-left "[#S]"
-status-left-attr none
-status-left-bg default
-status-left-fg default
-status-left-length 10
-status-position bottom
-status-right ""#22T" %H:%M %d-%b-%y"
-status-right-attr none
-status-right-bg default
-status-right-fg default
-status-right-length 40
-status-utf8 on
+set-option -g set-titles on
+set-option -g set-titles-string '#H:#S.#I.#P #W #T' # window number,program name, active(or not)
+
+set -g status on
+set -g status-attr none
+set -g status-bg green
+set -g status-fg black
+set -g status-interval 15
+set -g status-justify left
+set -g status-left "[#S]"
+set -g status-left-attr none
+set -g status-left-bg default
+set -g status-left-fg default
+set -g status-left-length 10
+set -g status-right-attr none
+set -g status-right '#[fg=white bright]#(whoami)#[fg=yellow bright]@#[default]#[fg=cyan bright]#H#[default] #[default][#S] #(tmux_time.py)'
+set -g status-right-bg default
+set -g status-right-fg default
+set -g status-right-length 40
+set -g status-utf8 on

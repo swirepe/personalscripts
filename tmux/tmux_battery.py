@@ -122,26 +122,37 @@ def getCharging(batteryState):
 
        
 if __name__ == "__main__":
-    state = getBatteryState()
-    info = getBatteryInfo()
+    error = False
+    try:
+	state = getBatteryState()
+	info = getBatteryInfo()
+    except:
+	error = True
     
     if "charging" in sys.argv:
-        print getCharging(batteryState)
-        sys.exit(0)
-        
+	print getCharging(batteryState)
+	sys.exit(0)
+	
     if "capacity-percent" in sys.argv:
-        cp = getCapacityPercent(info, state)
-        print styleCapacityPercent(cp)
-        sys.exit(0)
-        
+	if error:
+	    print "??%"
+	else:
+	    cp = getCapacityPercent(info, state)
+	    print styleCapacityPercent(cp)
+	    sys.exit(0)
+	
     if "capacity-max" in sys.argv:
-        print getMaxCapacity(info)
-        sys.exit(0)
-        
+	print getMaxCapacity(info)
+	sys.exit(0)
+	
     if "capacity-current" in sys.argv:
-        print getCurrentCapacity(state)
-        sys.exit(0)
-        
+	print getCurrentCapacity(state)
+	sys.exit(0)
+	
     if "bars" in sys.argv:
-        cp = getCapacityPercent(info, state)
-        print getBars(cp)
+	if error:
+	    print "<no battery>"
+	else:
+	    cp = getCapacityPercent(info, state)
+	    print getBars(cp)
+    
