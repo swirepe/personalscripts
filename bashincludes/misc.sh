@@ -66,7 +66,7 @@ function finf {
   # T tab separated
   # --binary-files=without-match  skip binary files
   # --exclude-from  basically a gitignore file, but not skipping logs
-  grep -rHnT --binary-files=without-match --exclude-from=$HOME/.grepignore $@ *
+  grep -rHnT --binary-files=without-match --exclude-from=$HOME/.grepignore "$@" *
 }
 
 # for tiv - the view in terminal image thing:
