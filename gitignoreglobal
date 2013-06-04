@@ -1,3 +1,4 @@
+# git config --global core.excludesfile $SCRIPTS_DIR/gitignoreglobal
 *~
 \#*
 *.o
