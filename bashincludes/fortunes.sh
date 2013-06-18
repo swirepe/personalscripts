@@ -40,8 +40,11 @@ function unmount-fortunes {
 ## This part actually displays the fortunes
 # load_fortunes
 
-echo -en $COLOR_White
-(probexit 0.1 && echo "Believe in yourself.") ||
-    (probexit 0.3 && fortune -s "$FORTUNES_DIR" | fold -s) ||
-    (probexit 0.3 && fortune "$FORTUNES_PERS_DIR" | fold -s)
-echo -en $COLOR_off
+if [ ! -f ~/.hushlogin ]
+then 
+    echo -en $COLOR_White
+    (probexit 0.1 && echo "Believe in yourself.") ||
+	(probexit 0.3 && fortune -s "$FORTUNES_DIR" | fold -s) ||
+	(probexit 0.3 && fortune "$FORTUNES_PERS_DIR" | fold -s)
+    echo -en $COLOR_off
+fi
