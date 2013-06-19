@@ -40,11 +40,24 @@ function unmount-fortunes {
 ## This part actually displays the fortunes
 # load_fortunes
 
+## get the built-in fortunes:
+# sudo apt-get install fortune-mod fortunes-off
 if [ ! -f ~/.hushlogin ]
 then 
     echo -en $COLOR_White
-    (probexit 0.1 && echo "Believe in yourself.") ||
+	# default: believe in yourself
+	(probexit 0.1 && echo "Believe in yourself.") ||
+	# short
 	(probexit 0.3 && fortune -s "$FORTUNES_DIR" | fold -s) ||
-	(probexit 0.3 && fortune "$FORTUNES_PERS_DIR" | fold -s)
+	(probexit 0.3 && fortune -s "$FORTUNES_PERS_DIR" | fold -s) ||
+	# long
+	(probexit 0.1 && fortune  "$FORTUNES_DIR" | fold -s) ||
+	(probexit 0.1 && fortune  "$FORTUNES_PERS_DIR" | fold -s) ||
+	# short offensive
+	(probexit 0.1 && fortune -s -o "$FORTUNES_DIR" | fold -s) ||
+	(probexit 0.1 && fortune -s -o "$FORTUNES_PERS_DIR" | fold -s) ||
+	# long offensive
+	(probexit 0.1 && fortune -o "$FORTUNES_DIR" | fold -s) ||
+	(probexit 0.1 && fortune -o "$FORTUNES_PERS_DIR" | fold -s) 
     echo -en $COLOR_off
 fi
