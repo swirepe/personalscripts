@@ -17,5 +17,8 @@ function lstmux {
 
 if [ "$SSH_CONNECTION" ]
 then
+    if [ ! -f ~/.hushlogin ]
+    then
 	lstmux
+    fi
 fi
