@@ -80,7 +80,7 @@ PS1=" \w \$(parse_git_branch) \$ "
 
 # for the tmux powerline
 # https://github.com/erikw/tmux-powerline
-#PS1="$PS1"'$([ -n "$TMUX" ] && tmux setenv TMUXPWD_$(tmux display -p "#I_#P") "$PWD")'
+# PS1="$PS1"'$([ -n "$TMUX" ] && tmux setenv TMUXPWD_$(tmux display -p "#I_#P") "$PWD")'
 
 
 function long_prompt {

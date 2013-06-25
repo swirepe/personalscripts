@@ -1,9 +1,19 @@
+# this is basically an index into all the things we want to include 
+# when we start a new shell
+
+# verbose: call out the names of the included files
+# and mark them as executable so that we can see them afterwards
+
 
 if [ -f ~/.bashrc_verbose ]
 then
     echo -e "\e[1;35m[bashrc.include] Including files.\e[0m"
     VERBOSE="True"
     rm ~/.bashrc_verbose
+    
+    # unmark everything
+    chmod -x $BASHINCLUDES_DIR/*.sh
+    
 else
     VERBOSE=""
 fi
@@ -13,6 +23,7 @@ function source_include {
     then        
         START_TIME=$(date +%s)
         source $@
+        chmod +x $@   # now we can see what we ran
         END_TIME=$(date +%s)
         echo -e "\e[0;35m$(echo "$END_TIME - $START_TIME" | bc -l)s \t$1\e[0m"
     else
@@ -21,6 +32,8 @@ function source_include {
 
 }
 
+# best to start with the core
+source_include $BASHINCLUDES_DIR/bashrc_core.sh
 
 source_include $BASHINCLUDES_DIR/color.sh
 source_include $BASHINCLUDES_DIR/misc.sh
@@ -47,4 +60,4 @@ source_include $BASHINCLUDES_DIR/headtail.sh
 source_include $BASHINCLUDES_DIR/ramdiskscripts.sh
 source_include $BASHINCLUDES_DIR/virtualenvs.sh
 source_include $BASHINCLUDES_DIR/errorinred.sh
-
+source_include $BASHINCLUDES_DIR/lstmux.sh

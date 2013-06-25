@@ -1,3 +1,0 @@
-# 2010-09-15
-* added "-a" option to alter terminal color rgb values: makes some images smoother
-* added "--reset" option to undo changes from "-a" command

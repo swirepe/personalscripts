@@ -1,3 +1,0 @@
-https://aur.archlinux.org/packages.php?ID=33141
-
-http://xyne.archlinux.ca/projects/tiv

@@ -3,23 +3,26 @@ export FORTUNES_PERS_DIR="/home/swirepe/pers/quotes/fortunes_pers"
 
 
 function load_fortunes {
-    # load the fortune files into memory
-    if [[  -d "/tmp/ramdisk/fortunes" ]]
+    # load the fortune files into memory, if necessary
+    if [[ -f "$TORAMDISK" ]]
     then
-       FORTUNES_DIR="/tmp/ramdisk/fortunes"
-    else
-        # report this in purple
-       echo -e "\e[0;35m[fortunes.sh] Copying fortunes to memory.\e[0m"
-       FORTUNES_DIR=$(/home/swirepe/pers/scripts/toramdisk.sh "$FORTUNES_DIR")
-    fi
-    
-    if [[  -d "/tmp/ramdisk/fortunes_pers" ]]
-    then
-       FORTUNES_PERS_DIR="/tmp/ramdisk/fortunes_pers"
-    else
-        # report this in purple
-       echo -e "\e[0;35m[fortunes.sh] Copying personal fortunes to memory.\e[0m"
-       FORTUNES_PERS_DIR=$(/home/swirepe/pers/scripts/toramdisk.sh "$FORTUNES_PERS_DIR")
+        if [[  -d "/tmp/ramdisk/fortunes" ]]
+        then
+           FORTUNES_DIR="/tmp/ramdisk/fortunes"
+        else
+            # report this in purple
+           echo -e "\e[0;35m[fortunes.sh] Copying fortunes to memory.\e[0m"
+           FORTUNES_DIR=$($TORAMDISK "$FORTUNES_DIR")
+        fi
+        
+        if [[  -d "/tmp/ramdisk/fortunes_pers" ]]
+        then
+           FORTUNES_PERS_DIR="/tmp/ramdisk/fortunes_pers"
+        else
+            # report this in purple
+           echo -e "\e[0;35m[fortunes.sh] Copying personal fortunes to memory.\e[0m"
+           FORTUNES_PERS_DIR=$($TORAMDISK "$FORTUNES_PERS_DIR")
+        fi
     fi
     
 }
@@ -36,8 +39,27 @@ function unmount-fortunes {
 # load_fortunes
 
 ## This part actually displays the fortunes
-echo -en $COLOR_White
-(probexit 0.1 && echo "Believe in yourself.") ||
-    (probexit 0.3 && fortune -s "$FORTUNES_DIR" | fold -s) ||
-    (probexit 0.3 && fortune "$FORTUNES_PERS_DIR" | fold -s)
-echo -en $COLOR_off
+# load_fortunes
+
+## get the built-in fortunes:
+# sudo apt-get install fortune-mod fortunes-off
+if [ ! -f ~/.hushlogin ]
+then 
+    echo -en $COLOR_White
+	# default: believe in yourself
+	(probexit 0.1 && echo "Believe in yourself.") ||
+	# short
+	(probexit 0.3 && fortune -s "$FORTUNES_DIR" | fold -s) ||
+	(probexit 0.3 && fortune -s "$FORTUNES_PERS_DIR" | fold -s) ||
+	# long
+	(probexit 0.1 && fortune  "$FORTUNES_DIR" | fold -s) ||
+	(probexit 0.1 && fortune  "$FORTUNES_PERS_DIR" | fold -s) ||
+	# short offensive
+	(probexit 0.1 && fortune -s -o "$FORTUNES_DIR" | fold -s) ||
+	(probexit 0.1 && fortune -s -o "$FORTUNES_PERS_DIR" | fold -s) ||
+	# long offensive
+	(probexit 0.1 && fortune -o "$FORTUNES_DIR" | fold -s) ||
+	(probexit 0.1 && fortune -o "$FORTUNES_PERS_DIR" | fold -s) 
+    echo -en $COLOR_off
+fi
+

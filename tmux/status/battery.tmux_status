@@ -1,5 +1,5 @@
 
-# everything black on magenta
+# everything blue on black
 set -g status-fg blue
 set -g status-bg black
 

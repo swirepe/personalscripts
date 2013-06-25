@@ -1,5 +1,7 @@
+# git config --global core.excludesfile $SCRIPTS_DIR/gitignoreglobal
 *~
 \#*
 *.o
 *.pyc
 *.class
+.DS_Store
