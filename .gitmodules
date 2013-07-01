@@ -4,3 +4,6 @@
 [submodule "src/toramdisk"]
 	path = src/toramdisk
 	url = git://github.com/swirepe/toramdisk.sh.git
+[submodule "src/z"]
+	path = src/z
+	url = git://github.com/rupa/z.git
