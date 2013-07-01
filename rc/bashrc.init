@@ -81,11 +81,8 @@ else
 
 fi
 
-
-
-
-
-
+# svntr don't ask me for my login
+SVNTR_AUTH="cHN3aXJlOkNoZWFwR3VpdGFyczE="
 
 
 # how long did this all take to run?
