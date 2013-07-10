@@ -7,4 +7,6 @@
 .git
 *.class
 Thumbs.db
+*.svn-base
+.svn*
 *.pyc
