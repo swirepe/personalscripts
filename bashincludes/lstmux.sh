@@ -1,6 +1,12 @@
 #!/bin/bash
 
 function lstmux {
+# http://wi-fizzle.com/article/276
+# IFS: Coax a BASH shell script into splitting for-loop elements by newline
+# instead of whitespace (whitespace is the default behaviour).
+IFS="
+"
+
 	SESSIONS=$(tmux list-sessions 2> /dev/null)
 
 	if [[ "$TMUX" ]]
@@ -15,12 +21,18 @@ function lstmux {
 		echo "Available Tmux Sessions: "
 		echo -en "$COLOR_off"
 
-		echo -en "$COLOR_Green"
-		echo "$SESSIONS" | 
-		    ack --passthru --color --color-match=green ".*$CURRENT_SESSION:.*" |
-		    sed 's/^/    /'
-		
-		echo -en "$COLOR_off"
+		for session_line in $SESSIONS
+		do
+		    
+		    if [[ $(echo "$session_line" | grep "^$CURRENT_SESSION:" ) ]]
+		    then
+			echo -e "${COLOR_BYellow}=>  ${COLOR_off}${COLOR_Green}$session_line${COLOR_off}"
+
+		    else
+			echo -e "    ${COLOR_Green}$session_line${COLOR_off}"
+		    fi  		    
+
+		done
 
 	fi
 }

@@ -94,3 +94,9 @@ alias "viewfn"="declare -f"
 
 # use cut to limit the length of a line
 alias "line-limit"="cut -c -$(tput cols)"
+
+# http://unix.stackexchange.com/questions/366/convince-grep-to-output-all-lines-not-just-those-with-matches
+function highlight {
+    perl -pe "s/$1/$COLOR_BRed$&$COLOR_off/g"
+}
+
