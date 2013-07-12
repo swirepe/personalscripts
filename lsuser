@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+
+case "$1" in
+    -h|--help)
+	echo -e "lsuser\nusage: \n\t--short\tList users who have /home listed in /etc/passwd (default)\n\t--home\tls /home\n\t--long\tAll of the users.\n\t--help\tThis menu."
+	;;
+    -l|--long)
+	cat /etc/passwd | cut -d: -f1
+	;;
+    --home)
+	ls /home
+	;;
+    *|""|-s|--short)
+	cat /etc/passwd | grep "/home" |cut -d: -f1
+	;;
+esac
+
