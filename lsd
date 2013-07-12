@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+
+# ls -p "$@" | grep "/"
+
+MAXDEPTH="-maxdepth 1"
+DIR="."
+TYPE="d"
+
+NOOP="cat"
+BASE="$NOOP"
+NOROOT_FILTER="$NOOP"
+COLOR=""
+
+
+function di_color {
+    echo -e "\033[$(echo $LS_COLORS | grep -oh ":di=[0-9]*;[0-9]*" | sed 's/.*=//')m"
+}
+
+
+
+
+
+while [ $# -gt 0 ] 
+do
+    case "$1" in
+	--help|-h)
+echo -e "lsd - list directories
+--recursive\t-r\tRecursively show directories
+--no-root\t-n\tDon't show the directory named in the arguments.
+--basename\t-b\tOnly show the basename of the directories listed.
+--invert-match\t-v\tShow only files.
+--color\t-c\tDisplay in color."
+;;
+	-r|--recursive)
+	    MAXDEPTH=""
+	    ;;
+	--no-root|-n)
+	    NOROOT_FILTER="tail -n +2"
+	    ;;
+	--basename|-b)
+	    BASE="xargs -I DIR basename DIR"
+	    ;;
+	--invert-match|-v)
+	    TYPE="f"
+	    ;;
+	--color|-c)
+	    ## TODO: colors suck.
+	    if [[ $TYPE == "d" ]]
+	    then
+		COLOR="$(di_color)"
+	    fi
+	    ;;		
+	*)
+	    DIR="$1"
+	    ;;
+    esac
+    shift
+done
+
+if [[ ! -z "$COLOR" ]]
+then
+    echo -en "$COLOR" 
+fi
+
+find "$DIR" $MAXDEPTH -type $TYPE | $NOROOT_FILTER | $BASE
+
+if [[ ! -z "$COLOR" ]]
+then
+    echo -en "\033[0m"
+fi
