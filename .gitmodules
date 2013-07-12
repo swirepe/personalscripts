@@ -7,3 +7,6 @@
 [submodule "src/z"]
 	path = src/z
 	url = git://github.com/rupa/z.git
+[submodule "src/silversearcher"]
+	path = src/silversearcher
+	url = https://github.com/ggreer/the_silver_searcher
