@@ -1,0 +1,4 @@
+function lslan {
+    echo "nmap -sP 192.168.1.1-254"
+    nmap -sP 192.168.1.1-254
+}
