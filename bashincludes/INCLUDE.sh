@@ -27,7 +27,12 @@ function source_include {
         END_TIME=$(date +%s)
         echo -e "\e[0;35m$(echo "$END_TIME - $START_TIME" | bc -l)s \t$1\e[0m"
     else
-        source $@
+        if [[ -f $@ ]]
+        then
+            source $@
+        else
+            echo "[INCLUDE.sh] File not found: $@" 1>&2
+        fi
     fi
 
 }
@@ -61,4 +66,5 @@ source_include $BASHINCLUDES_DIR/ramdiskscripts.sh
 source_include $BASHINCLUDES_DIR/virtualenvs.sh
 source_include $BASHINCLUDES_DIR/errorinred.sh
 source_include $BASHINCLUDES_DIR/lstmux.sh
-source_include $BASHINCLUDES_DIR/lslan.sh
+source_include $BASHINCLUDES_DIR/_work_dummy.sh
+source_include $BASHINCLUDES_DIR/work.sh

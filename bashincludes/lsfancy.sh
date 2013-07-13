@@ -12,19 +12,18 @@ function unlsfancy {
     alias "ls"=ls --color=auto
 }
 
-function lsd {
-   ls -d */
-    # ls -l --color=always "$@" | egrep '^d' | awk '{print $9}' | colfmt -c 3
+function lsdirc {
+    ls -l --color=always "$@" | egrep '^d' | awk '{print $NF}' | colfmt -c 3
 }
 
 function lsdir {
-   ls -l --color=always "$@" | egrep '^d' | awk '{print $9}'
+   ls -l --color=always "$@" | egrep '^d' | awk '{print $NF}'
 }
 
 function lsf {
-       ls -l --color=always "$@" | egrep -v '^d' | awk '{print $9}' | colfmt -c 3
+       ls -l --color=always "$@" | egrep -v '^d' | awk '{print $NF}' | colfmt -c 3
 }
 
 function lsfiles {
-    ls -l --color=always "$@" | egrep -v '^d' | awk '{print $9}'
+    ls -l --color=always "$@" | egrep -v '^d' | awk '{print $NF}'
 }
