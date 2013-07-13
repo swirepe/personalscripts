@@ -3,16 +3,21 @@
 
 case "$1" in
     -h|--help)
-	echo -e "lsuser\nusage: \n\t--short\tList users who have /home listed in /etc/passwd (default)\n\t--home\tls /home\n\t--long\tAll of the users.\n\t--help\tThis menu."
+echo -e "lsuser
+usage:
+\t--short\t-s\tList users who have /home listed in /etc/passwd (default)
+\t--home\t\tls /home
+\t--all\t-a\tall of the users.
+\t--help\t-h\tThis menu."
 	;;
-    -l|--long)
-	cat /etc/passwd | cut -d: -f1
+    -a|--all)
+	  cat /etc/passwd | cut -d: -f1
 	;;
     --home)
-	ls /home
+	  ls /home
 	;;
-    *|""|-s|--short)
-	cat /etc/passwd | grep "/home" |cut -d: -f1
+    -s|--short|""|*)
+	  cat /etc/passwd | grep "/home" |cut -d: -f1
 	;;
 esac
 
