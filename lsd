@@ -30,6 +30,7 @@ echo -e "lsd - list directories
 --basename\t-b\tOnly show the basename of the directories listed.
 --invert-match\t-v\tShow only files.
 --color\t-c\tDisplay in color."
+exit
 ;;
 	-r|--recursive)
 	    MAXDEPTH=""
