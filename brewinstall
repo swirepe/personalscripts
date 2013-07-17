@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+CURRDIR=$(pwd)
+
+if [[ -z "$PERS_DIR" ]]
+then
+    PERS_DIR="$HOME/pers"
+fi
+
+
+BREWRECORD_DIR="$PERS_DIR/homebrew/$(hostname)"
+
+if [ ! -d $BREWRECORD_DIR ]
+then
+    echo "$BREWRECORD_DIR does not exist: creating."
+    mkdir -p $BREWRECORD_DIR
+    cd $BREWRECORD_DIR
+    git init
+fi
+
+
+brew install "$@" && cd "$BREWRECORD_DIR" && brew list > brewlist.txt && git add brewlist.txt && git commit -m "$@"
+cd "$CURRDIR"
