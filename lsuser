@@ -11,13 +11,13 @@ usage:
 \t--help\t-h\tThis menu."
 	;;
     -a|--all)
-	  cat /etc/passwd | cut -d: -f1
+	  cat /etc/passwd | cut -d: -f1 | sort
 	;;
     --home)
-	  ls /home
+	  ls /home | sort
 	;;
     -s|--short|""|*)
-	  cat /etc/passwd | grep "/home" |cut -d: -f1
+	  cat /etc/passwd | grep "/home" |cut -d: -f1 | sort
 	;;
 esac
 
