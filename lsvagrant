@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+
+CWD=$(pwd)
+
+# zsh has a builtin which, which behaves weirdly
+# greadlink is a mac thing: brewinstall coreutils
+#READLINK=$(/usr/bin/which greadlink 2>/dev/null || /usr/bin/which readlink 2>/dev/null)
+
+## NOTE: no longer trying to resolve full names
+##  find "$basedir" -name Vagrantfile | xargs -I BASEDIR $(eval $READLINK -f BASEDIR)
+
+
+##if [ -z READLINK ]
+##then
+##   echo "[lsvagrant] Error: readlink not found." > /dev/stderr
+##   exit 1
+##fi
+
+function vagrantstatus {
+    directory="$1"
+    cd "$directory"
+    echo -e "$directory\t$(vagrant status | sed -n '3p')"
+}
+
+export -f vagrantstatus
+
+
+if [ "$1" == "--help" ]
+then
+    echo "lsvagrant - list vagrant sessions."
+    echo "    Arguments are the root directories to start searching for Vagrantfiles."
+    exit 0
+fi
+
+
+# default to the current directory if no root is given
+if [ $# -eq 0 ]
+then
+    set -- '.' "$@"
+fi
+
+
+for basedir in "$@"
+do
+    if [ -d $basedir ]
+    then
+    #    echo $basedir
+        find "$basedir" -name Vagrantfile | xargs dirname | SHELL=/bin/bash parallel vagrantstatus {}
+    else
+        echo "[lsvagrant] Error: $basedir is not a directory." > /dev/stderr
+    fi
+done
+
+
+
+
+cd $CWD
