@@ -113,46 +113,5 @@ fi
 export TERM=xterm-256color
 
 
-# we can short-circuit startup
-if [ -f ~/.bashrc_skip ]
-then
-   # report this in purple
-   echo -e "\e[0;35m[bashrc] Skipping bashrc loadup: ~/.skip_bashrc found.\e[0m"
-   rm ~/.bashrc_skip
-else
-
-    export PATH="$PATH:/home/swirepe/Matlab"
-    export PATH="$PATH:/home/swirepe/Matlab/bin"
-    
-    
-    
-    export SCRIPTS_DIR=/home/swirepe/pers/scripts
-    export BASHINCLUDES_DIR=$SCRIPTS_DIR/bashincludes
-    
-    # load these things into memory if we can
-    ## UPDATE: We aren't doing that anymore.
-    #    if [[  -d "/tmp/ramdisk/bashincludes" ]]
-    #    then
-    #       BASHINCLUDES_DIR="/tmp/ramdisk/bashincludes"
-    #    else
-    #        # report this in purple
-    #       echo -e "\e[0;35m[bashrc] Copying bashincludes to memory.\e[0m"
-    #       BASHINCLUDES_DIR=$(/home/swirepe/pers/scripts/toramdisk.sh "$BASHINCLUDES_DIR")
-    #    fi
-    #    
-    #    if [[ -d "/tmp/ramdisk/scripts" ]]
-    #    then
-    #        SCRIPTS_DIR="/tmp/ramdisk/scripts"
-    #    else
-    #        # report this in purple
-    #        echo -e "\e[0;35m[bashrc] Copying scripts to memory.\e[0m"
-    #        SCRIPTS_DIR=$(/home/swirepe/pers/scripts/toramdisk.sh "$SCRIPTS_DIR")
-    #    fi
-    
-    export PATH="$PATH:$SCRIPTS_DIR"
-    
-    source $SCRIPTS_DIR/rc/bashrc.include
-   
-fi
 
 
