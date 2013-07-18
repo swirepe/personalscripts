@@ -68,3 +68,4 @@ source_include $BASHINCLUDES_DIR/errorinred.sh
 source_include $BASHINCLUDES_DIR/lstmux.sh
 source_include $BASHINCLUDES_DIR/_work_dummy.sh
 source_include $BASHINCLUDES_DIR/work.sh
+source_include $BASHINCLUDES_DIR/mac.sh
