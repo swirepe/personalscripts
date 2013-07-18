@@ -1,4 +1,4 @@
-function lslan {
-    echo "nmap -sP 192.168.1.1-254"
-    nmap -sP 192.168.1.1-254
-}
+#!/usr/bin/env bash
+# echo "nmap -sP 192.168.1.1-254"
+nmap -sP 192.168.1.1-254 |grep --extended-regex --only-match '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+'
+
