@@ -6,6 +6,8 @@ CWD=$(pwd)
 # greadlink is a mac thing: brewinstall coreutils
 #READLINK=$(/usr/bin/which greadlink 2>/dev/null || /usr/bin/which readlink 2>/dev/null)
 
+
+
 ## NOTE: no longer trying to resolve full names
 ##  find "$basedir" -name Vagrantfile | xargs -I BASEDIR $(eval $READLINK -f BASEDIR)
 
@@ -19,7 +21,11 @@ CWD=$(pwd)
 function vagrantstatus {
     directory="$1"
     cd "$directory"
-    echo -e "$directory\t$(vagrant status | sed -n '3p')"
+    echo -e "$directory\t$(vagrant status | sed -n '3p')"  
+    
+    ## to clean up that space, add
+    ## | sed -E 's/ +/ /g'
+    
 }
 
 export -f vagrantstatus
@@ -29,8 +35,15 @@ if [ "$1" == "--help" ]
 then
     echo "lsvagrant - list vagrant sessions."
     echo "    Arguments are the root directories to start searching for Vagrantfiles."
+    echo "    use --virtualbox to use virtualbox to make that query."
     exit 0
 fi
+
+if [ "$1" == "--virtualbox" ]
+then
+    VBoxManage list runningvms
+fi
+
 
 
 # default to the current directory if no root is given
