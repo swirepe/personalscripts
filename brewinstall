@@ -8,7 +8,7 @@ then
 fi
 
 
-BREWRECORD_DIR="$PERS_DIR/homebrew/$(hostname)"
+BREWRECORD_DIR="$PERS_DIR/machines/homebrew/$(hostname)"
 
 if [ ! -d $BREWRECORD_DIR ]
 then
