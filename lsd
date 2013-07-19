@@ -10,7 +10,8 @@ NOOP="cat"
 BASE="$NOOP"
 NOROOT_FILTER="$NOOP"
 COLOR=""
-
+NODOT="$NOOP"
+SORT="sort"
 
 function di_color {
     echo -e "\033[$(echo $LS_COLORS | grep -oh ":di=[0-9]*;[0-9]*" | sed 's/.*=//')m"
@@ -29,6 +30,8 @@ echo -e "lsd - list directories
 --no-root\t-n\tDon't show the directory named in the arguments.
 --basename\t-b\tOnly show the basename of the directories listed.
 --invert-match\t-v\tShow only files.
+--no-sort\t\tDon't sort the output.
+--no-dot\t\tDon't show directories that begin with a dot.
 --color\t-c\tDisplay in color."
 exit
 ;;
@@ -43,6 +46,12 @@ exit
 	    ;;
 	--invert-match|-v)
 	    TYPE="f"
+	    ;;
+	--no-sort)
+	    SORT="$NOOP"
+	    ;;
+	--no-dot)
+	    NODOT="grep -v '^\.'"
 	    ;;
 	--color|-c)
 	    ## TODO: colors suck.
@@ -63,7 +72,7 @@ then
     echo -en "$COLOR" 
 fi
 
-find "$DIR" $MAXDEPTH -type $TYPE | $NOROOT_FILTER | $BASE
+find "$DIR" $MAXDEPTH -type $TYPE | $NOROOT_FILTER | $BASE | $NODOT | $SORT
 
 if [[ ! -z "$COLOR" ]]
 then
