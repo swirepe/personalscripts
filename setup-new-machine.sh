@@ -148,9 +148,8 @@ echo -e "${COLOR_BGreen}Files successfully symlinked.${COLOR_off}"
 
 if [[ "$DEBIAN" == "true" ]]
 then
-    echo -e "${COLOR_Blue}Installing vim, ipython, gnupg, golang, fortune-mod${COLOR_off}"
-    $HOME/pers/scripts/sagi -y fortune-mod vim ipython gnupg golang
-    
+    echo -e "${COLOR_Blue}Installing vim ipython gnupg fortune-mod${COLOR_off}"
+    $HOME/pers/scripts/sagi -y fortune-mod vim ipython gnupg    
     
     echo -e "${COLOR_Blue}Making stderred.${COLOR_off}"
     cd $HOME/pers/scripts/src/stderred
