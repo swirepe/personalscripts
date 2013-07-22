@@ -19,5 +19,5 @@ then
 fi
 
 
-brew install "$@" && cd "$BREWRECORD_DIR" && brew list > brewlist.txt && git add brewlist.txt && git commit -m "$@"
+brew install "$@" && cd "$BREWRECORD_DIR" && brew list > brewlist.txt && git add brewlist.txt && git commit -m "$(hostname) $@"
 cd "$CURRDIR"

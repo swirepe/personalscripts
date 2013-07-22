@@ -25,7 +25,7 @@ sudo apt-get install "$@" && (
     cd "$SAGIRECORD_DIR" &&
     dpkg --get-selections > aptlist.txt &&
     git add aptlist.txt &&
-    git commit -m "$@"
+    git commit -m "$(hostname) $@"
 )
         
 cd "$CURRDIR"
