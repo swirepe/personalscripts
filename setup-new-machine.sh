@@ -29,6 +29,21 @@ trap 'error ${LINENO} ${$?}' ERR
 
 
 
+## ----------------------------------------------------------------------------
+## linux-specific
+## ----------------------------------------------------------------------------
+DEBIAN="false"
+if [[ $(which apt-get) ]]
+then
+    DEBIAN="true"
+    echo -e "${COLOR_Blue}Program apt-get found.  Assuming Debian.${COLOR_off}"
+    echo -e "${COLOR_Blue}Upgrading and installing core packages.${COLOR_off}"
+    sudo apt-get update
+    sudo apt-get install -y automake pkg-config libpcre3-dev zlib1g-dev liblzma-dev git-core build-essential cmake openssl
+fi
+
+
+
 echo -e "${COLOR_BIBlue}user:${COLOR_off}\t$(whoami)"
 echo -e "${COLOR_BlIBue}host:${COLOR_off}\t$(hostname)"
 
@@ -46,6 +61,7 @@ echo -e "${COLOR_Blue}Checking git.${COLOR_off}"
 which git
 echo -e "${COLOR_Blue}Checking openssl.${COLOR_off}"
 which openssl
+
 
 echo -e "${COLOR_BGreen}All necessary programs are present.${COLOR_off}"
 
@@ -102,6 +118,7 @@ git submodule update --init --recursive
 
 echo -e "${COLOR_BGreen}Repositories successfully cloned.${COLOR_off}"
 
+
 ## ----------------------------------------------------------------------------
 ## symlink everything in place
 ## ----------------------------------------------------------------------------
@@ -123,10 +140,43 @@ ln -s $HOME/pers/scripts/grepignore $HOME/.grepignore
 echo -e "${COLOR_BGreen}Files successfully symlinked.${COLOR_off}"
 
 
+## ----------------------------------------------------------------------------
+## build some scripts if we can
+## ----------------------------------------------------------------------------
+
+if [[ "$DEBIAN" -eq "true" ]]
+then
+    echo -e "${COLOR_Blue}Installing vim, ipython, gnupg, golang, fortune-mod${COLOR_off}"
+    $HOME/pers/scripts/sagi -y fortune-mod vim ipython gnupg golang
+    
+    
+    echo -e "${COLOR_Blue}Making stderred.${COLOR_off}"
+    cd $HOME/pers/scripts/src/stderred
+    make
+    echo -e "${COLOR_BGreen}Build of stderred complete.${COLOR_off}"
+    
+    
+    echo -e "${COLOR_Blue}Building the j programming language.${COLOR_off}"
+    cd $HOME/pers/scripts/src
+    ./buildj.sh
+    echo -e "${COLOR_BGreen}Build of the j programming language complete.${COLOR_off}"
+    
+    
+    echo -e "${COLOR_Blue}Building the silver searcher.${COLOR_off}"
+    cd $HOME/pers/scripts/src/silversearcher
+    ./build.sh
+    sudo make install
+    echo -e "${COLOR_BGreen}Build of the silver searcher complete.${COLOR_off}"
+fi
+
+## ----------------------------------------------------------------------------
+## bashrc_nomem
+## ----------------------------------------------------------------------------
 
 echo -e "${COLOR_Blue}Creating ~/.bashrc_nomem${COLOR_off}"
 echo -e "${COLOR_Blue}Remove it if you want all scripts to be stored on a ramdisk.${COLOR_off}"
 touch $HOME/.bashrc_nomem
+
 
 
 ## ----------------------------------------------------------------------------
