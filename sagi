@@ -9,7 +9,7 @@ then
 fi
 
 
-SAGIRECORD_DIR="$PERS_DIR/apt/$(hostname)"
+SAGIRECORD_DIR="$PERS_DIR/machines/apt/$(hostname)"
 
 if [ ! -d $SAGIRECORD_DIR ]
 then
