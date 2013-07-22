@@ -2,7 +2,7 @@
 	name = Peter Swire
 	email = swirepe@swirepe.com
 [core]
-	excludesfile = /home/swirepe/.gitignore_global
+	excludesfile = ~/.gitignore_global
 [color]
 	ui = true
 [alias]
