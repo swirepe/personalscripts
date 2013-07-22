@@ -158,7 +158,7 @@ then
     
     echo -e "${COLOR_Blue}Building the j programming language.${COLOR_off}"
     cd $HOME/pers/scripts/src
-    ./buildj.sh
+    SCRIPTS_DIR=$HOME/pers/scripts ./buildj.sh
     echo -e "${COLOR_BGreen}Build of the j programming language complete.${COLOR_off}"
     
     
