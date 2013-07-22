@@ -33,7 +33,7 @@ echo -e "${COLOR_Blue}host:${COLOR_off}\t$(hostname)"
 
 
 PS3="Is this correct? "
-select option in go stay wait quit
+select option in yes no
 do
     case $option in
         y|yes) 
