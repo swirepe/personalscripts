@@ -146,7 +146,7 @@ echo -e "${COLOR_BGreen}Files successfully symlinked.${COLOR_off}"
 ## build some scripts if we can
 ## ----------------------------------------------------------------------------
 
-if [[ "$DEBIAN" -eq "true" ]]
+if [[ "$DEBIAN" == "true" ]]
 then
     echo -e "${COLOR_Blue}Installing vim, ipython, gnupg, golang, fortune-mod${COLOR_off}"
     $HOME/pers/scripts/sagi -y fortune-mod vim ipython gnupg golang

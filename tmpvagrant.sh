@@ -7,5 +7,5 @@ vagrant init lucid32
 vagrant up
 vagrant ssh
 vagrant halt
-cd ~
+cd .. 
 rm -rf "$DIRNAME"
