@@ -11,6 +11,8 @@ COLOR_BGreen='\033[1;32m'
 COLOR_Blue='\033[0;34m'
 COLOR_BIBlue='\033[1;94m' 
 
+THIS_SCRIPT_PATH="$PWD/$0"
+
 ## ----------------------------------------------------------------------------
 ## set up error checking
 ## ----------------------------------------------------------------------------
@@ -21,7 +23,7 @@ function error() {
     JOB="$0"              # job name
     LASTLINE="$1"         # line of error occurrence
     LASTERR="$2"          # error code
-    echo -e "${COLOR_Red}ERROR in ${JOB} : line ${LASTLINE} with exit code ${LASTERR}: $(sed -n ${LASTLINE}p $0) ${COLOR_off}"
+    echo -e "${COLOR_Red}ERROR in ${JOB} : line ${LASTLINE} with exit code ${LASTERR}: $(sed -n ${LASTLINE}p $THIS_SCRIPT_PATH) ${COLOR_off}"
     exit 1
 }
 trap 'error ${LINENO} ${$?}' ERR
