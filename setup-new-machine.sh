@@ -9,6 +9,7 @@ COLOR_off='\033[0m'
 COLOR_Red='\033[0;31m'
 COLOR_BGreen='\033[1;32m'
 COLOR_Blue='\033[0;34m'
+COLOR_BIBlue='\033[1;94m' 
 
 ## ----------------------------------------------------------------------------
 ## set up error checking
@@ -28,24 +29,8 @@ trap 'error ${LINENO} ${$?}' ERR
 
 
 
-echo -e "${COLOR_Blue}user:${COLOR_off}\t$(whoami)"
-echo -e "${COLOR_Blue}host:${COLOR_off}\t$(hostname)"
-
-
-PS3="Is this correct? "
-select option in yes no
-do
-    case $option in
-        y|yes) 
-            echo -e "${COLOR_BGreen}Proceeding.${COLOR_off}"
-            ;;
-        *) 
-            echo -e "${COLOR_Red}Exiting.${COLOR_off}"  
-            exit
-          ;;
-     esac
-done
-
+echo -e "${COLOR_BIBlue}user:${COLOR_off}\t$(whoami)"
+echo -e "${COLOR_BlIBue}host:${COLOR_off}\t$(hostname)"
 
 
 
