@@ -9,6 +9,7 @@ then
 fi
 
 
+
 SAGIRECORD_DIR="$PERS_DIR/machines/apt/$(hostname)"
 
 if [ ! -d $SAGIRECORD_DIR ]
@@ -25,7 +26,7 @@ sudo apt-get install "$@" && (
     cd "$SAGIRECORD_DIR" &&
     dpkg --get-selections > aptlist.txt &&
     git add aptlist.txt &&
-    git commit -m "$(hostname) $@"
+    git commit -m "$(hostname) $*"
 )
         
 cd "$CURRDIR"
