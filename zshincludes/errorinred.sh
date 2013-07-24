@@ -14,10 +14,10 @@ then
 	   export DYLD_INSERT_LIBRARIES="$SCRIPTS_DIR/src/stderred/build/libstderred.so${LD_PRELOAD:+:$LD_PRELOAD}"
 	    ;;
 	*)   
-	    [ ! -f ~/.hushlogin ] && echo "[errorinred.sh] platform $OSTYPE not found."
+	    echo "[errorinred.sh] platform $OSTYPE not found."
 	    ;;
     esac
 else
-    [ ! -f ~/.hushlogin ] && echo "[errorinred.sh] libstderred.so not found."
+    echo "[errorinred.sh] libstderred.so not found."
 fi
     

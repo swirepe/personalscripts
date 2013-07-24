@@ -13,6 +13,7 @@ then
     
     # unmark everything
     chmod -x $BASHINCLUDES_DIR/*.sh
+    chmod -x $ZSHINCLUDES_DIR/*.sh
     
 else
     VERBOSE=""
@@ -31,14 +32,15 @@ function source_include {
         then
             source $@
         else
-            echo "[INCLUDE.sh] File not found: $@" 1>&2
+            echo "[zshincludes/INCLUDE.sh] File not found: $@" 1>&2
         fi
     fi
 
 }
 
 # best to start with the core
-source_include $BASHINCLUDES_DIR/bashrc_core.sh
+source_include $ZSHINCLUDES_DIR/zshrc_core.sh
+source_include $ZSHINCLUDES_DIR/jython.sh
 
 source_include $BASHINCLUDES_DIR/color.sh
 source_include $BASHINCLUDES_DIR/misc.sh
@@ -50,7 +52,6 @@ source_include $BASHINCLUDES_DIR/pyg.sh
 source_include $BASHINCLUDES_DIR/vim.sh
 source_include $BASHINCLUDES_DIR/perl.sh
 source_include $BASHINCLUDES_DIR/fortunes.sh
-source_include $BASHINCLUDES_DIR/timekey.sh
 source_include $BASHINCLUDES_DIR/lsfancy.sh
 source_include $BASHINCLUDES_DIR/colorman.sh
 source_include $BASHINCLUDES_DIR/clipboard.sh
@@ -67,4 +68,5 @@ source_include $BASHINCLUDES_DIR/errorinred.sh
 source_include $BASHINCLUDES_DIR/lstmux.sh
 source_include $BASHINCLUDES_DIR/_work_dummy.sh
 source_include $BASHINCLUDES_DIR/work.sh
-source_include $BASHINCLUDES_DIR/mac.sh
+
+

@@ -35,6 +35,10 @@ trap 'error ${LINENO} ${$?}' ERR
 ## ----------------------------------------------------------------------------
 ## linux-specific
 ## ----------------------------------------------------------------------------
+echo -e "${COLOR_BIBlue}user:${COLOR_off}\t$(whoami)"
+echo -e "${COLOR_BIBlue}host:${COLOR_off}\t$(hostname)"
+
+
 DEBIAN="false"
 if [[ $(which apt-get) ]]
 then
@@ -44,12 +48,6 @@ then
     sudo apt-get update
     sudo apt-get install -y automake pkg-config libpcre3-dev zlib1g-dev liblzma-dev git-core build-essential cmake openssl
 fi
-
-
-
-echo -e "${COLOR_BIBlue}user:${COLOR_off}\t$(whoami)"
-echo -e "${COLOR_BlIBue}host:${COLOR_off}\t$(hostname)"
-
 
 
 ## ----------------------------------------------------------------------------
@@ -115,9 +113,15 @@ git clone git@bitbucket.org:swirepe/machines.git $HOME/pers/machines
 git clone git@bitbucket.org:swirepe/fortunes.git $HOME/pers/quotes
 git clone git@github.com:swirepe/personalscripts.git $HOME/pers/scripts
 
-
 cd $HOME/pers/scripts
 git submodule update --init --recursive 
+
+
+echo -e "${COLOR_Blue}Updating oh-my-zsh (even if you aren't using it.)${COLOR_off}"
+cd $HOME/pers/scripts/src/oh-my-zsh-copy
+git pull origin master
+git pull bitbucket master
+
 
 echo -e "${COLOR_BGreen}Repositories successfully cloned.${COLOR_off}"
 
@@ -131,9 +135,12 @@ echo -e "${COLOR_Blue}Symlinking files into place.${COLOR_off}"
 [ -e ~/.bashrc ] && mv ~/.bashrc "$HOME/.bashrc-$(shasum ~/.bashrc | cut -c 1-5)"
 [ -e ~/.vimrc  ] && mv ~/.vimrc "$HOME/.vimrc-$(shasum ~/.vimrc | cut -c 1-5)"
 [ -e ~/.tmux.conf  ] && mv ~/.tmux.conf "$HOME/.tmux.conf-$(shasum ~/.vimrc | cut -c 1-5)"
-[ -e ~/.gitconfig  ] && mv ~/.gitconfig "$HOME/.gitconfig-$(shasum ~/.vimrc | cut -c 1-5)"
+[ -e ~/.gitconfig  ] && mv ~/.gitconfig "$HOME/.gitconfig-$(shasum ~/.gitconfig | cut -c 1-5)"
+[ -e ~/.zshrc ] && mv ~/.zshrc "$HOME/.zshrc-$(shasum ~/.zshrc | cut -c 1-5)"
 
 ln -s $HOME/pers/scripts/rc/bashrc.init $HOME/.bashrc
+ln -s $HOME/pers/scripts/rc/zshrc.init $HOME/.zshrc
+ln -s $HOME/pers/scripts/src/oh-my-zsh-copy $HOME/.oh-my-zsh
 ln -s $HOME/pers/scripts/rc/vimrc2 $HOME/.vimrc
 ln -s $HOME/pers/scripts/rc/tmux.conf $HOME/.tmux.conf
 ln -s $HOME/pers/scripts/rc/gitconfig $HOME/.gitconfig
@@ -149,8 +156,8 @@ echo -e "${COLOR_BGreen}Files successfully symlinked.${COLOR_off}"
 
 if [[ "$DEBIAN" == "true" ]]
 then
-    echo -e "${COLOR_Blue}Installing vim ipython gnupg fortune-mod${COLOR_off}"
-    $HOME/pers/scripts/sagi -y fortune-mod vim ipython gnupg python-pygments python-pip
+    echo -e "${COLOR_Blue}Installing vim ipython gnupg fortune-mod python-pygments python-pip moreutils zsh${COLOR_off}"
+    $HOME/pers/scripts/sagi -y fortune-mod vim ipython gnupg python-pygments python-pip moreutils zsh
     
     echo -e "${COLOR_Blue}Making stderred.${COLOR_off}"
     cd $HOME/pers/scripts/src/stderred
@@ -169,6 +176,13 @@ then
     ./build.sh
     sudo make install
     echo -e "${COLOR_BGreen}Build of the silver searcher complete.${COLOR_off}"
+    
+    
+    echo -e "${COLOR_Blue}Building git-extras.${COLOR_off}"
+    cd $HOME/pers/scripts/src/git-extras
+    sudo make install
+    echo -e "${COLOR_BGreen}Build of git-extras complete.${COLOR_off}"
+    
 fi
 
 
@@ -178,8 +192,14 @@ fi
 
 echo -e "${COLOR_Blue}Setting up fortunes.${COLOR_off}"
 
+
+
 if [[ "$(which strfile)" ]]
 then 
+    
+    wget --output-document=$HOME/get-arxiv-fortunes.sh https://raw.github.com/swirepe/arXiv-fortunes/master/getShort.sh  
+    chmod +x $HOME/get-arxiv-fortunes.sh
+    
     mkdir -p $HOME/pers/quotes/fortunes_pers
     cd $HOME/pers/quotes
     python compile.py
@@ -188,6 +208,8 @@ then
 else
     echo -e "${COLOR_BYellow}WARNING: fortunes package not installed." 
 fi
+
+
 
 ## ----------------------------------------------------------------------------
 ## bashrc_nomem

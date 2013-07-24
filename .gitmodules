@@ -10,3 +10,9 @@
 [submodule "src/silversearcher"]
 	path = src/silversearcher
 	url = https://github.com/ggreer/the_silver_searcher
+[submodule "src/git-extras"]
+	path = src/git-extras
+	url = https://github.com/visionmedia/git-extras.git
+[submodule "src/oh-my-zsh-copy"]
+	path = src/oh-my-zsh-copy
+	url = git@bitbucket.org:swirepe/oh-my-zsh-copy.git
