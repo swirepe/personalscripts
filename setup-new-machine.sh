@@ -111,7 +111,7 @@ echo -e "${COLOR_BGreen}Keys successfully added.${COLOR_off}"
 echo -e "${COLOR_Blue}Cloning repositories.${COLOR_off}"
 
 git clone git@bitbucket.org:swirepe/machines.git $HOME/pers/machines
-git clone git@bitbucket.org:swirepe/fortunes.git $HOME/.fortunes
+git clone git@bitbucket.org:swirepe/fortunes.git $HOME/pers/quotes
 git clone git@github.com:swirepe/personalscripts.git $HOME/pers/scripts
 
 
@@ -119,6 +119,20 @@ cd $HOME/pers/scripts
 git submodule update --init --recursive 
 
 echo -e "${COLOR_BGreen}Repositories successfully cloned.${COLOR_off}"
+
+
+
+## ----------------------------------------------------------------------------
+## compile the fortunes
+## ----------------------------------------------------------------------------
+
+echo -e "${COLOR_Blue}Setting up fortunes.${COLOR_off}"
+
+mkdir -p $HOME/pers/quotes/fortunes_pers
+cd $HOME/pers/quotes
+python compile.py
+
+echo -e "${COLOR_BGreen}Fortunes successfully compiled.${COLOR_off}"
 
 
 ## ----------------------------------------------------------------------------
@@ -149,7 +163,7 @@ echo -e "${COLOR_BGreen}Files successfully symlinked.${COLOR_off}"
 if [[ "$DEBIAN" == "true" ]]
 then
     echo -e "${COLOR_Blue}Installing vim ipython gnupg fortune-mod${COLOR_off}"
-    $HOME/pers/scripts/sagi -y fortune-mod vim ipython gnupg    
+    $HOME/pers/scripts/sagi -y fortune-mod vim ipython gnupg python-pygments python-pip
     
     echo -e "${COLOR_Blue}Making stderred.${COLOR_off}"
     cd $HOME/pers/scripts/src/stderred
