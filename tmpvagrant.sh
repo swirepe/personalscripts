@@ -7,5 +7,6 @@ vagrant init lucid32
 vagrant up
 vagrant ssh
 vagrant halt
+vagrant destroy
 cd .. 
 rm -rf "$DIRNAME"
