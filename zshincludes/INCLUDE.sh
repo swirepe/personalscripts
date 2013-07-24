@@ -47,7 +47,6 @@ source_include $BASHINCLUDES_DIR/misc.sh
 source_include $BASHINCLUDES_DIR/alwaysontop.sh
 source_include $BASHINCLUDES_DIR/navigation.sh
 source_include $BASHINCLUDES_DIR/projects.sh
-source_include $BASHINCLUDES_DIR/prompts.sh
 source_include $BASHINCLUDES_DIR/pyg.sh
 source_include $BASHINCLUDES_DIR/vim.sh
 source_include $BASHINCLUDES_DIR/perl.sh
@@ -65,7 +64,6 @@ source_include $BASHINCLUDES_DIR/headtail.sh
 source_include $BASHINCLUDES_DIR/ramdiskscripts.sh
 source_include $BASHINCLUDES_DIR/virtualenvs.sh
 source_include $BASHINCLUDES_DIR/errorinred.sh
-source_include $BASHINCLUDES_DIR/lstmux.sh
 source_include $BASHINCLUDES_DIR/_work_dummy.sh
 source_include $BASHINCLUDES_DIR/work.sh
 

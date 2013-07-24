@@ -1,6 +1,4 @@
 
-PATH="$PATH:/home/swirepe/scripts"
-
 function lastrun {
   history | tail -2 | awk '{print $2; exit}'
 }
@@ -11,17 +9,6 @@ function lastrun {
 alias dream='(dreampie $(which python) &>/dev/null &)'
 
 
-function ingitrepo {
-    # returns zero if in a git repo, nonzero if not
-    local  __resultvar=$1
-    git rev-parse 2> /dev/null > /dev/null
-    local myresult=$?
-    if [[ "$__resultvar" ]]; then
-        eval $__resultvar="$myresult"
-    else
-        echo "$myresult"
-    fi
-}
 
 
 function findinfiles {
