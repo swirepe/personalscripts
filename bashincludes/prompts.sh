@@ -1,6 +1,10 @@
 # add the tmux extensions to path
 PATH=$PATH:$SCRIPTS_DIR/tmux
 
+# ---------------------------------------------------------------------------
+# git branches for bash
+# ---------------------------------------------------------------------------
+
 
 function parse_git_branch {
 	git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
@@ -28,6 +32,11 @@ $LIGHT_GRAY>$COLOR_off$COLOR_off "
 PS2='> '
 PS4='+ '
 }
+
+# ---------------------------------------------------------------------------
+# multiplexers
+# ---------------------------------------------------------------------------
+
 
 
 function whichmultiplexer {
@@ -76,7 +85,6 @@ case $(whichmultiplexer) in
     ;;    
 esac
 
-PS1=" \w \$(parse_git_branch) \$ "
 
 # for the tmux powerline
 # https://github.com/erikw/tmux-powerline
@@ -103,3 +111,43 @@ function retcolor {
         echo -e "\[${COLOR_Red}\]✖\[${COLOR_off}\]"
     fi
 }
+
+
+
+# ---------------------------------------------------------------------------
+# now actually set the PS1
+# ---------------------------------------------------------------------------
+
+
+PS1=" \w \$(parse_git_branch) \$ "
+
+
+
+# ---------------------------------------------------------------------------
+# show a little icon if we are on a remote server
+# ---------------------------------------------------------------------------
+
+# ☎ ☏  ☄  ❂    ✈
+
+if [ -n "$SSH_CLIENT" ]
+then
+    PS1="\[${COLOR_IGreen}\] ⚲ \[${COLOR_off}\]$PS1"
+fi
+
+
+# ---------------------------------------------------------------------------
+# display the vagrant box if we are in a vm
+# ---------------------------------------------------------------------------
+
+function _getvagrantbox {
+    grep 'config\.vm\.box\s*=' /vagrant/Vagrantfile | sed 's/.*"\(.*\)".*/\1/'
+    
+}
+
+
+if [ -e /vagrant/Vagrantfile ]
+then
+    export PS1="\[${COLOR_Purple}\][vm:$(_getvagrantbox)]\[${COLOR_off}\] $PS1"
+fi
+
+
