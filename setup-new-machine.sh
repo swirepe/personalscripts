@@ -8,6 +8,7 @@
 COLOR_off='\033[0m'
 COLOR_Red='\033[0;31m'
 COLOR_BGreen='\033[1;32m'
+COLOR_BYellow='\033[1;33m'
 COLOR_Blue='\033[0;34m'
 COLOR_BIBlue='\033[1;94m' 
 
@@ -121,20 +122,6 @@ git submodule update --init --recursive
 echo -e "${COLOR_BGreen}Repositories successfully cloned.${COLOR_off}"
 
 
-
-## ----------------------------------------------------------------------------
-## compile the fortunes
-## ----------------------------------------------------------------------------
-
-echo -e "${COLOR_Blue}Setting up fortunes.${COLOR_off}"
-
-mkdir -p $HOME/pers/quotes/fortunes_pers
-cd $HOME/pers/quotes
-python compile.py
-
-echo -e "${COLOR_BGreen}Fortunes successfully compiled.${COLOR_off}"
-
-
 ## ----------------------------------------------------------------------------
 ## symlink everything in place
 ## ----------------------------------------------------------------------------
@@ -182,6 +169,24 @@ then
     ./build.sh
     sudo make install
     echo -e "${COLOR_BGreen}Build of the silver searcher complete.${COLOR_off}"
+fi
+
+
+## ----------------------------------------------------------------------------
+## compile the fortunes
+## ----------------------------------------------------------------------------
+
+echo -e "${COLOR_Blue}Setting up fortunes.${COLOR_off}"
+
+if [[ "$(which strfile)" ]]
+then 
+    mkdir -p $HOME/pers/quotes/fortunes_pers
+    cd $HOME/pers/quotes
+    python compile.py
+    
+    echo -e "${COLOR_BGreen}Fortunes successfully compiled.${COLOR_off}"
+else
+    echo -e "${COLOR_BYellow}WARNING: fortunes package not installed." 
 fi
 
 ## ----------------------------------------------------------------------------
