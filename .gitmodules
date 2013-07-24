@@ -13,6 +13,3 @@
 [submodule "src/git-extras"]
 	path = src/git-extras
 	url = https://github.com/visionmedia/git-extras.git
-[submodule "src/oh-my-zsh-copy"]
-	path = src/oh-my-zsh-copy
-	url = https://github.com/robbyrussell/oh-my-zsh.git
