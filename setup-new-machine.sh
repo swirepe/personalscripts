@@ -119,7 +119,7 @@ git submodule update --init --recursive
 
 echo -e "${COLOR_Blue}Updating oh-my-zsh (even if you aren't using it.)${COLOR_off}"
 cd $HOME/pers/scripts/src/oh-my-zsh-copy
-git pull origin master
+git remote add bitbucket git@bitbucket.org:swirepe/oh-my-zsh-copy.git
 git pull bitbucket master
 
 
