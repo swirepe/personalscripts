@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+pcat "$1" | less -R
+
