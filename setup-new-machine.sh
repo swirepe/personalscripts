@@ -147,6 +147,8 @@ ln -s $HOME/pers/scripts/rc/gitconfig $HOME/.gitconfig
 ln -s $HOME/pers/scripts/gitignoreglobal $HOME/.gitignore_global
 ln -s $HOME/pers/scripts/grepignore $HOME/.grepignore
 
+mkdir -p $HOME/.vim_backup
+
 echo -e "${COLOR_BGreen}Files successfully symlinked.${COLOR_off}"
 
 
@@ -196,9 +198,9 @@ echo -e "${COLOR_Blue}Setting up fortunes.${COLOR_off}"
 
 if [[ "$(which strfile)" ]]
 then 
-    
-    wget --output-document=$HOME/get-arxiv-fortunes.sh https://raw.github.com/swirepe/arXiv-fortunes/master/getShort.sh  
-    chmod +x $HOME/get-arxiv-fortunes.sh
+    cd $HOME
+    wget https://raw.github.com/swirepe/arXiv-fortunes/master/csarxiv.tar.gz
+    tar -xzvf csarxiv.tar.gz
     
     mkdir -p $HOME/pers/quotes/fortunes_pers
     cd $HOME/pers/quotes
