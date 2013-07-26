@@ -163,7 +163,7 @@ then
     
     echo -e "${COLOR_Blue}Making stderred.${COLOR_off}"
     cd $HOME/pers/scripts/src/stderred
-    make
+    make || make 32
     echo -e "${COLOR_BGreen}Build of stderred complete.${COLOR_off}"
     
     
