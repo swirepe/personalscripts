@@ -101,7 +101,6 @@ def write_output(OUT, outstr, mode="w"):
 
 def main():
     args = arguments()
-    print args
     
     if os.path.exists(args.key):
         decrypt(IN = args.IN, key = args.key, OUT = args.OUT)
