@@ -62,7 +62,10 @@ echo -e "${COLOR_Blue}Checking git.${COLOR_off}"
 which git
 echo -e "${COLOR_Blue}Checking openssl.${COLOR_off}"
 which openssl
-
+echo -e "${COLOR_Blue}Checking tar.${COLOR_off}"
+which tar
+echo -e "${COLOR_Blue}Checking yes.${COLOR_off}"
+which yes
 
 echo -e "${COLOR_BGreen}All necessary programs are present.${COLOR_off}"
 
@@ -97,8 +100,8 @@ echo -e "${COLOR_Blue}Adding keys to ssh agent.${COLOR_off}"
 
 eval `ssh-agent -s` 
 
-ssh-add $HOME/pers/keys/bitbucket-key
-ssh-add $HOME/pers/keys/github-key
+yes yes | ssh-add $HOME/pers/keys/bitbucket-key
+yes yes | ssh-add $HOME/pers/keys/github-key
 
 echo -e "${COLOR_BGreen}Keys successfully added.${COLOR_off}"
 
@@ -190,7 +193,7 @@ then
     cd /tmp
     wget http://ftp.gnu.org/gnu/parallel/parallel-latest.tar.bz2
     tar -xvjf parallel-latest.tar.bz2
-    cd parallel-latest
+    cd parallel*
     ./configure
     make
     sudo make install
