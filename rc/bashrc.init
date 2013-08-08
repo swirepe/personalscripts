@@ -15,6 +15,12 @@
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
+
+if [ -e ~/.bashrc_verbose ]
+then
+    set -o verbose
+fi
+
 ################################################################################
 ## These three variables absolutely have to be defined
 # $SCRIPTS_DIR       where the scripts are located. can be hoisted into memory.
