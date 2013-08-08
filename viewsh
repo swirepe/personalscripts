@@ -1,2 +1,34 @@
 #!/usr/bin/env bash
-pcat $(which "$@")
+
+function is_binary {
+    if [[ $(file -i `which $1` | grep binary) ]]
+    then
+	echo "$1 is binary."
+	exit 0
+    fi
+}
+
+if [[ -z "$1" ]]
+then 
+    echo "Usage: $0 command-name     Show the text that makes up this command."
+    exit 1
+fi
+
+CMD="$1"
+
+
+if [[ -e "$1" ]]
+then
+    CMD="$1"
+else
+    CMD="$(which $1)"
+fi
+
+
+if [[ -e "$CMD" ]]
+then
+    is_binary $CMD
+    pcat $(which "$CMD")
+else
+    echo "$1 not found." > /dev/stderr
+fi

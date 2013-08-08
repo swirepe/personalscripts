@@ -3,7 +3,34 @@
 # http://pygments.org/download/
 # http://www.ralfebert.de/blog/tools/cat_syntax_highlighting/
 
+# try to read the shebang line
 # redirect to cat if we can't find a lexer
-pygmentize "$@" 2> /dev/null || cat "$@"
+LEXER=""
+FILE="$1"
+
+FIRSTLINE="$(head -n1 $FILE)"
+
+if [[ "$FIRSTLINE" == *"bash"* ]]
+then
+    LEXER="-l bash"
+fi
+
+if [[ "$FIRSTLINE" == *"python"* ]]
+then
+    LEXER="-l python"
+fi
+
+if [[ "$FIRSTLINE" == *"perl"* ]]
+then
+    LEXER="-l perl"
+fi
+
+if [[ "$FIRSTLINE" == *"ruby"* ]]
+then
+    LEXER="-l ruby"
+fi
+
+
+pygmentize $LEXER "$FILE" 2> /dev/null || cat $FILE 
 
 
