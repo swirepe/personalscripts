@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 function is_binary {
-    if [[ $(file -i `which $1` | grep binary) ]]
+    if [[ $(file -i $1 | grep binary) ]]
     then
 	echo "$1 is binary."
 	exit 0
@@ -28,7 +28,7 @@ fi
 if [[ -e "$CMD" ]]
 then
     is_binary $CMD
-    pcat $(which "$CMD")
+    pcat $CMD
 else
     echo "$1 not found." > /dev/stderr
 fi
