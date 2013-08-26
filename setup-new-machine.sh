@@ -133,13 +133,23 @@ echo -e "${COLOR_BGreen}Repositories successfully cloned.${COLOR_off}"
 ## symlink everything in place
 ## ----------------------------------------------------------------------------
 
+function move_if_exists {
+    FILE=$1
+    [ -e $FILE ] && tar -zcf "$FILE-$(shasum $FILE | cut -c 1-5)" $FILE && rm -r $FILE
+}
+
+
 echo -e "${COLOR_Blue}Symlinking files into place.${COLOR_off}"
 
-[ -e ~/.bashrc ] && mv ~/.bashrc "$HOME/.bashrc-$(shasum ~/.bashrc | cut -c 1-5)"
-[ -e ~/.vimrc  ] && mv ~/.vimrc "$HOME/.vimrc-$(shasum ~/.vimrc | cut -c 1-5)"
-[ -e ~/.tmux.conf  ] && mv ~/.tmux.conf "$HOME/.tmux.conf-$(shasum ~/.vimrc | cut -c 1-5)"
-[ -e ~/.gitconfig  ] && mv ~/.gitconfig "$HOME/.gitconfig-$(shasum ~/.gitconfig | cut -c 1-5)"
-[ -e ~/.zshrc ] && mv ~/.zshrc "$HOME/.zshrc-$(shasum ~/.zshrc | cut -c 1-5)"
+move_if_exists ~/.bashrc 
+move_if_exists ~/.vimrc 
+move_if_exists ~/.tmux.conf  
+move_if_exists ~/.gitconfig  
+move_if_exists ~/.zshrc
+move_if_exists ~/.gitconfig
+move_if_exists ~/.gitignore_global
+move_if_exists ~/.grepignore
+
 
 ln -s $HOME/pers/scripts/rc/bashrc.init $HOME/.bashrc
 ln -s $HOME/pers/scripts/rc/zshrc.init $HOME/.zshrc
