@@ -199,6 +199,11 @@ then
     sudo make install
     echo -e "${COLOR_BGreen}Install of gnu parallel complete.${COLOR_off}"
     
+    echo -e "${COLOR_Blue}Building and installing csvkit.${COLOR_off}"
+    cd $HOME/pers/scripts/src/csvkit
+    sudo python setup.py install
+    echo -e "${COLOR_BGreen}Install of csvkit complete.${COLOR_off}"
+
 fi
 
 
