@@ -136,6 +136,7 @@ echo -e "${COLOR_BGreen}Repositories successfully cloned.${COLOR_off}"
 function move_if_exists {
     FILE=$1
     [ -e $FILE ] && tar -zcf "$FILE-$(shasum $FILE | cut -c 1-5)" $FILE && rm -r $FILE
+    cd $HOME
 }
 
 
