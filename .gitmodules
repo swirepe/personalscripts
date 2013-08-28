@@ -16,3 +16,6 @@
 [submodule "src/oh-my-zsh-copy"]
 	path = src/oh-my-zsh-copy
 	url = https://github.com/robbyrussell/oh-my-zsh.git
+[submodule "src/csvkit"]
+	path = src/csvkit
+	url = https://github.com/onyxfish/csvkit

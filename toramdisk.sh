@@ -1,1 +1,1 @@
-/home/swirepe/Dropbox/code/toramdisk/toramdisk.sh
+src/toramdisk/toramdisk.sh
