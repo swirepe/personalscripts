@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+# on ubuntu, the netflix-desktop program runs way way way too fast
+# you can throttle pulseaudio which makes it behave better
+# http://hongouru.blogspot.com/2013/06/solved-netflix-desktop-has-choppy-video.html
+
+# my version of cpulimit doesn't specify cores, so
+cpulimit -e pulseaudio -l 10 & netflix-desktop
