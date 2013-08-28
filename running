@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# -e all processes
+# -o format
+# r  only runningi
+ARGS="$@"
+if [[ -z $ARGS ]]
+then
+    ARGS='.'
+fi
+
+RESULTS=$(ps -e -o "pid,%cpu,%mem,ucmd" | grep $ARGS )
+if [[ "$RESULTS" ]]
+then
+   echo -e "pid    cpu  mem  command"
+   echo "$RESULTS"
+else
+    exit 1
+fi
