@@ -19,3 +19,6 @@
 [submodule "src/csvkit"]
 	path = src/csvkit
 	url = https://github.com/onyxfish/csvkit
+[submodule "src/fswatch"]
+	path = src/fswatch
+	url = https://github.com/alandipert/fswatch.git
