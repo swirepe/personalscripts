@@ -13,7 +13,10 @@ fi
 RESULTS=$(ps T -o "pid,%cpu,%mem,ucmd" | grep $ARGS )
 if [[ "$RESULTS" ]]
 then
-   echo -e "pid    cpu  mem  command"
+   if [[ ! "$ARGS" == "." ]]
+   then 
+       echo "  PID %CPU %MEM CMD"
+   fi
    echo "$RESULTS"
 else
     exit 1
