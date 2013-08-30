@@ -2,13 +2,29 @@
 # -e all processes
 # -o format
 # r  only runningi
+
+
+CMD="ucmd"
+
+if [[ "$1" == "-l" ]]
+then
+	CMD="args"
+	shift
+elif [[ "$1" == "--long" ]]
+then
+	CMD="args"
+	shift
+fi
+
+
 ARGS="$@"
 if [[ -z $ARGS ]]
 then
     ARGS='.'
 fi
 
-RESULTS=$(ps -e -o "pid,%cpu,%mem,ucmd" | grep $ARGS )
+
+RESULTS=$(ps -e -o "pid,%cpu,%mem,$CMD" | grep $ARGS )
 if [[ "$RESULTS" ]]
 then
    if [[ ! "$ARGS" == "." ]]
