@@ -22,3 +22,6 @@
 [submodule "src/fswatch"]
 	path = src/fswatch
 	url = https://github.com/alandipert/fswatch.git
+[submodule "autonav"]
+	path = src/autonav
+	url = https://github.com/swirepe/autonav.git
