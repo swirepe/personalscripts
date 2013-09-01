@@ -72,4 +72,5 @@ source_include $BASHINCLUDES_DIR/errorinred.sh
 source_include $BASHINCLUDES_DIR/lstmux.sh
 source_include $BASHINCLUDES_DIR/lsfn.sh
 source_include $BASHINCLUDES_DIR/z.sh
+source_include $BASHINCLUDES_DIR/iptables.sh
 source_include $BASHINCLUDES_DIR/mac.sh
