@@ -1,0 +1,11 @@
+#!/usr/bin/env expect
+# exp_internal: tell me what's going on
+#exp_internal 1
+catch {exec echo BdG/OU1sv4uRlRsMsPI= | onetimepad.py --key /home/swirepe/.ldap_passwd.otp } passwd_var
+spawn svntr login pswire
+expect "Password"
+send "$passwd_var\n"
+catch {exec rndstars.pl} stars
+puts "$stars"
+interact
+exit

@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+# sudo apt-get update ; sudo apt-fast install -y
+
+
+# if apt-fast isn't installed, install it
+if [[ -z "$(which apt-fast)" ]]
+then
+    echo "[sagify] apt-fast not installed: installing."
+    sudo add-apt-repository ppa:apt-fast/stable
+    sagi apt-fast
+fi
+
+
+CURRDIR=$(pwd)
+
+if [[ -z "$PERS_DIR" ]]
+then
+    PERS_DIR="$HOME/pers"
+fi
+
+
+
+SAGIRECORD_DIR="$PERS_DIR/machines/apt/$(hostname)"
+
+if [ ! -d $SAGIRECORD_DIR ]
+then
+    echo "[sagi] $SAGIRECORD_DIR does not exist: creating."
+    mkdir -p $SAGIRECORD_DIR
+    cd $SAGIRECORD_DIR
+    git init
+fi
+
+sudo apt-fast update
+
+sudo apt-fast install -y "$@" && ( 
+    cd "$SAGIRECORD_DIR" &&
+    dpkg --get-selections > aptlist.txt &&
+    git add aptlist.txt &&
+    git commit -m "$(hostname) $*"
+)
+        
+cd "$CURRDIR"
+    

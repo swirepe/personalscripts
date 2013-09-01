@@ -20,8 +20,9 @@ set showcmd
 set nocompatible              " vim, not vi
 set autoindent smartindent    " auto/smart indent
 set smarttab                  " tab and backspace are smart
-set tabstop=2                 " 6 spaces
+set tabstop=2                 " 2 spaces
 set shiftwidth=2
+set showmatch                 " set show matching parenthesis
 set scrolloff=5               " keep at least 5 lines above/below
 set sidescrolloff=5           " keep at least 5 lines left/right
 set history=200
@@ -42,6 +43,7 @@ filetype plugin on            " Enable filetype-specific plugins
 set wildmode=longest:full
 set wildmenu                  " menu has tab completion
 let maplocalleader=','        " all my macros start with ,
+set pastetoggle=<F2>          " press f2 to paste a large amount of text without the indents going nuts
 
 "  searching
 set incsearch                 " incremental search
@@ -49,7 +51,9 @@ set ignorecase                " search ignoring case
 set hlsearch                  " highlight the search
 set showmatch                 " show matching bracket
 set diffopt=filler,iwhite     " ignore all whitespace and sync
-
+set ignorecase                " ignore case when searching
+set smartcase                 " ignore case if search pattern is all lowercase,
+                              "    case-sensitive otherwise
 "  backup
 set backup
 set backupdir=~/.vim_backup
@@ -78,3 +82,16 @@ filetype plugin indent on
 au FileType py set autoindent
 au FileType py set smartindent
 au FileType py set textwidth=79 " PEP-8 Friendly
+
+
+" Treat long lines as break lines (useful when moving around in them)
+map j gj
+map k gk
+
+
+highlight Search guibg='LightBlue' guifg='NONE'
+ " press f4 to highlight matches
+noremap <F4> :set hlsearch! hlsearch?<CR> 
+" Visual mode pressing * or # searches for the current selection
+vnoremap <silent> * :call VisualSelection('f')<CR>
+vnoremap <silent> # :call VisualSelection('b')<CR>

@@ -4,7 +4,17 @@
 [core]
 	excludesfile = ~/.gitignore_global
 [color]
-	ui = true
+	ui = auto
+	interactive = auto
 [alias]
-    lol = log --graph --decorate --pretty=oneline --abbrev-commit
-    lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
+  lol = log --graph --decorate --pretty=oneline --abbrev-commit
+  lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
+  ls = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate
+  subup = submodule update --init
+  filelog = log -u
+  fl = log -u
+  find = "!git ls-files | grep -i"
+  grep = grep -Ii
+  lsalias = "!git config --list | grep ^alias | cut -c 7- "
+  standup = "!f(){ echo -e \"${COLOR_BGreen}$(git config user.name) - $(git config user.email)${COLOR_off}\" && git log --since yesterday --author \"$(git config user.name)\" --pretty=\"%C(red)%h  %C(green)%cr%C(reset)  %s\" ; } ; f"
+  changed = diff --stat --pretty="format:"  
