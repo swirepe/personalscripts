@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+# what sizes are the packages that are ok to remove?
+# http://askubuntu.com/questions/1577/moving-from-bash-to-zsh
+dpkg-query -W --showformat='${Installed-Size} ${Package} ${Status}\n' | grep -v deinstall | sort -n | awk '{print $1" "$2}'
+
