@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+DIRECTION=""
+
+if [[ "$1" == "--forward" ]] || [[ "$1" == "-f" ]]
+then
+    DIRECTION="FORWARD"
+elif [[ "$1" == "--input" ]] || [[ "$1" == "-i" ]]
+then
+    DIRECTION="INPUT"
+elif [[ "$1" == "--ouput" ]] || [[ "$1" == "-o" ]]
+then
+    DIRECTION="OUTPUT"
+fi
+
+sudo iptables -L $DIRECTION  -n -v --line-numbers
