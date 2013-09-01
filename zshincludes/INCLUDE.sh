@@ -41,6 +41,7 @@ function source_include {
 # best to start with the core
 source_include $ZSHINCLUDES_DIR/zshrc_core.sh
 source_include $ZSHINCLUDES_DIR/jython.sh
+source_include $ZSHINCLUDES_DIR/report.sh
 
 source_include $BASHINCLUDES_DIR/color.sh
 source_include $BASHINCLUDES_DIR/misc.sh
