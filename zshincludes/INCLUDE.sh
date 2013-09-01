@@ -42,6 +42,10 @@ function source_include {
 source_include $ZSHINCLUDES_DIR/zshrc_core.sh
 source_include $ZSHINCLUDES_DIR/jython.sh
 source_include $ZSHINCLUDES_DIR/report.sh
+source_include $ZSHINCLUDES_DIR/hosts.sh
+source_include $ZSHINCLUDES_DIR/mandelbrot.sh
+source_include $ZSHINCLUDES_DIR/meta-parent.sh
+source_include $ZSHINCLUDES_DIR/completedots.sh
 
 source_include $BASHINCLUDES_DIR/color.sh
 source_include $BASHINCLUDES_DIR/misc.sh
@@ -66,6 +70,8 @@ source_include $BASHINCLUDES_DIR/ramdiskscripts.sh
 source_include $BASHINCLUDES_DIR/virtualenvs.sh
 source_include $BASHINCLUDES_DIR/errorinred.sh
 source_include $BASHINCLUDES_DIR/_work_dummy.sh
+source_include $BASHINCLUDES_DIR/z.sh
+source_include $BASHINCLUDES_DIR/lsfn.sh
 source_include $BASHINCLUDES_DIR/work.sh
 
 
