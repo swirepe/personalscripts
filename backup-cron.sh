@@ -2,27 +2,18 @@
 CURRDIR="$(pwd)"
 PATH="$PATH:$HOME/pers/scripts"
 
-# fail on any errors (same as set -e)
-set -o errexit
-
-function error() {
-    JOB="$0"              # job name
-    LASTLINE="$1"         # line of error occurrence
-    LASTERR="$2"          # error code
-    echo -e "${COLOR_Red}ERROR in ${JOB} : line ${LASTLINE} with exit code ${LASTERR}: $(sed -n ${LASTLINE}p $THIS_SCRIPT_PATH) ${COLOR_off}"
-    exit 1
-}
-trap 'error ${LINENO} ${$?}' ERR
+## note: this will not pick up on crons for deleted users.  for that, you 
+## need to poke around in /var/spool/cron
 
 
 function users {
-	if [[ "$(which dscl)" ]]
+	if [[ "$(which dscl)" ]]                   ## mac osx
 	then
 		sudo dscl . list /users 
-	elif [[ "$(which getent)" ]]
+	elif [[ "$(which getent)" ]]               ## get administrator database
 	then
 		getent passwd | cut -d: -f1 | sort
-	elif [[ -e /etc/passwd ]]
+	elif [[ -e /etc/passwd ]]                  ## ok, go directly to where the users are
 	then
 		cat /etc/passwd | cut -d: -f1 | sort
 	else
@@ -71,7 +62,8 @@ fi
 cd $CRON_DIR
 for user in $(users)
 do
-	sudo crontab -u $user -l > $CRON_DIR/$user 2>/dev/null
+    echo "$user "
+	sudo crontab -u "$user" -l > "$CRON_DIR/$user"
 done
 
 
