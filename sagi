@@ -8,16 +8,25 @@ then
     PERS_DIR="$HOME/pers"
 fi
 
+if [[ -d $PERS_DIR/machines ]]
+then
+  echo "Updating machines repository."
+  cd $PERS_DIR/machines
+  git pull origin master
+else
+  echo "No machines repository found.  Cloning."
+  git clone git@bitbucket.org:swirepe/machines.git $PERS_DIR/machines
+fi
 
 
 SAGIRECORD_DIR="$PERS_DIR/machines/apt/$(hostname)"
+
+
 
 if [ ! -d $SAGIRECORD_DIR ]
 then
     echo "[sagi] $SAGIRECORD_DIR does not exist: creating."
     mkdir -p $SAGIRECORD_DIR
-    cd $SAGIRECORD_DIR
-    git init
 fi
 
 sudo apt-get update
@@ -26,7 +35,8 @@ sudo apt-get install "$@" && (
     cd "$SAGIRECORD_DIR" &&
     dpkg --get-selections > aptlist.txt &&
     git add aptlist.txt &&
-    git commit -m "$(hostname) $*"
+    git commit -m "$(hostname) $*" &&
+    git push origin master
 )
         
 cd "$CURRDIR"
