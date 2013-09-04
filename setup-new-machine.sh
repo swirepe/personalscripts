@@ -112,7 +112,7 @@ function add_sudoersd {
     FILE="$1"
     CONTENT="##added by setup-new-machine on $(date)\n$2"
     echo -e "$CONTENT" | sudo tee /etc/sudoers.d/$FILE
-    if [[ visudo -c -f /etc/sudoers.d/$FILE ]]
+    if [[ visudo -c -f /etc/sudoers.d/$FILE && echo "okay" ]]
     then
         sudo chmod 0440 /etc/sudoers.d/$FILE
         echo -e "${COLOR_BIBlue}Sudoers file /etc/sudoers.d/$FILE successfully installed.${COLOR_off}"
