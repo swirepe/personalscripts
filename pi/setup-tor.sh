@@ -21,7 +21,7 @@ function torrc-append {
 }
 
 
-torrc-append "## Added by setup-tor.sh"
+torrc-append "## Added by setup-tor.sh on $(date)"
 torrc-append "SocksPort 0"
 torrc-append "Log notice file /var/log/tor/notices.log"
 torrc-append "RunAsDaemon 1"
