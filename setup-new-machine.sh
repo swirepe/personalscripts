@@ -30,6 +30,52 @@ function error() {
 trap 'error ${LINENO} ${$?}' ERR
 
 
+
+## ----------------------------------------------------------------------------
+## Start this script behind a tee
+## ----------------------------------------------------------------------------
+
+if [[ -t 1 ]]
+then
+    # stdout is a terminal
+    exec bash -c "$THIS_SCRIPT_PATH | tee --append $HOME/new-machine-setup.log"
+else
+     # stdout is not a terminal
+    echo "(Okay, it seems like this is being piped somewhere.  That's good.)"
+fi
+
+
+
+## ----------------------------------------------------------------------------
+## Introduce yourself!
+## ----------------------------------------------------------------------------
+
+
+echo -en "$COLOR_BGreen"
+
+echo '        m     m        ""#                                    m '
+echo '        #  #  #  mmm     #     mmm    mmm   mmmmm   mmm       # '
+echo '        " #"# # #"  #    #    #"  "  #" "#  # # #  #"  #      # '
+echo '         ## ##" #""""    #    #      #   #  # # #  #""""        '
+echo '         #   #  "#mm"    "mm  "#mm"  "#m#"  # # #  "#mm"      # '
+echo -e "$COLOR_off" 
+echo "This is the automated setup script for Peter Swire's machines."
+echo "                 Peter Swire - data@swirepe.com"
+echo ""
+echo "This script will:"
+echo " * Create user swirepe                                   (Linux)"
+echo " * Get private keys                                        (All)"
+echo " * Clone respositories                                     (All)"
+echo " * Symlink dotfiles into place                             (All)"
+echo " * Build commonly used scripts                           (Linux)"
+echo " * Install and record commonly used packages            (Debian)"
+echo " * Expand the root partition                      (Raspberry Pi)"
+echo " * Install a Tor relay                            (Raspberry Pi)"
+echo " * Expand the root partition                      (Raspberry Pi)"
+
+echo -e "\nReady? Go!\n"
+
+
 ## ----------------------------------------------------------------------------
 ## who are we?
 ## ----------------------------------------------------------------------------
@@ -42,81 +88,115 @@ echo -e "${COLOR_BIBlue}host:${COLOR_off}\t$(hostname)"
 ## ----------------------------------------------------------------------------
 ## linux-specific: make a swirepe if you have to
 ## ----------------------------------------------------------------------------
+function add_sudoersd {
+    # make sure /etc/sudoers.d exists
+    [ -d /etc/sudoers.d ] || sudo mkdir -p /etc/sudoers.d
+    
+    echo -e "${COLOR_Blue}Creating sudoers file /etc/sudoers.d/${FILE}${COLOR_off}"
+    FILE="$1"
+    CONTENT="##added by setup-new-machine on $(date)\n$2"
+    echo -e "$CONTENT" | sudo tee /etc/sudoers.d/$FILE
+    if [[ visudo -c -f /etc/sudoers.d/$FILE ]]
+    then
+        sudo chmod 0440 /etc/sudoers.d/$FILE
+        echo -e "${COLOR_BIBlue}Sudoers file /etc/sudoers.d/$FILE successfully installed.${COLOR_off}"
+    else
+        echo -e "${COLOR_BYellow}New sudoers file /etc/sudoers.d/$FILE is incorrect.  Removing.${COLOR_off}"
+        sudo rm /etc/sudoers.d/$FILE
+    fi
+}
 
+
+
+if [[ "$(uname)" == *"Linux"* ]]
+then
+    # does the group admin exist?
+    if [[ "$(cat /etc/group | grep ^admin)"         ]] &&
+       [[ "$(sudo cat /etc/sudoers | grep ^%admin)" ]]
+    then
+        echo -e "${COLOR_Blue}Group admin exists.${COLOR_off}"
+    else
+        echo -e "${COLOR_Blue}Creating group admin${COLOR_off}"
+        sudo groupadd --force admin
+        add_sudoersd 'admin.sudo' "# Members of the admin group may gain root privileges\n\n%admin ALL=(ALL) NOPASSWD:ALL"
+        echo -e "${COLOR_BIBlue}Group admin created.${COLOR_off}"
+    fi
+    
+    # does swirepe exist?
+    if [[ "$(grep ^swirepe /etc/passwd)"  ]]
+    then
+        echo -e "${COLOR_Blue}User swirepe in /etc/passwd${COLOR_off}"
+    else
+        echo -e "${COLOR_Blue}Creating user swirepe.${COLOR_off}"
+        sudo adduser --home /home/swirepe --ingroup admin --gecos "Peter Swire,1337,swirepe@swirepe.com,hi@swirepe.com,Believe in yourself." swirepe
+        echo -e "${COLOR_BYellow}NOTE: User swirepe has an unencrypted home directory.${COLOR_off}"
+        echo -e "${COLOR_BYellow}    Consider running ${COLOR_BGreen}ecryptfs-setup-private${COLOR_BYellow} on your next login.${COLOR_off}"
+        echo -e "${COLOR_BYellow}    See: ${COLOR_BGreen}https://help.ubuntu.com/community/EncryptedPrivateDirectory${COLOR_off}"
+        echo -e "${COLOR_BIBlue}User swirepe created.${COLOR_off}"
+    fi
+    
+    ## add swirepe to sudoers
+    if [[ "$(sudo cat /etc/sudoers | grep swirepe)"     ]] ||
+       [[ "$(sudo cat /etc/sudoers.d/* | grep swirepe)" ]] 
+    then
+        echo -e "${COLOR_Blue}User swirepe is a sudoer.${COLOR_off}"
+    else
+        echo -e "${COLOR_Blue}Putting a file for user swirepe in /etc/sudoers.d/${COLOR_off}"
+        add_sudoersd 'swirepe.sudo' "swirepe ALL=(ALL) NOPASSWD:ALL"
+        echo -e "${COLOR_BIBlue}User swirepe added to /etc/sudoers.d/${COLOR_off}"
+    fi
+    
+    ## add that include directive to sudoers
+    if [[ "$(sudo cat /etc/sudoers | grep '^includedir /etc/sudoers.d')" ]]
+    then
+        echo -e "${COLOR_BIBlue}Sudoers includes the directory /etc/sudoers.d/${COLOR_off}"
+    else
+        echo -e "${COLOR_Blue}Adding an include directive in /etc/sudoers${COLOR_off}"
+            
+        SUDOERS_TEMP=$(mktemp /tmp/sudoers.XXXXX)
+        sudo cat /etc/sudoers >> $SUDOERS_TEMP
+        
+        echo -e "\n\n## Added by setup-new-machine.sh on $(date)" >> $SUDOERS_TEMP
+        echo -e "includedir /etc/sudoers.d" >> $SUDOERS_TEMP
+        if [[ visudo -c -f $SUDOERS_TEMP ]]
+        then
+            echo -e "${COLOR_Blue}New sudoers file is syntactically correct.  Installing.${COLOR_off}"
+            sudo flock /etc/sudoers -c "cat $SUDOERS_TEMP | sudo tee /etc/sudoers"
+            
+            if [[ visudo -c -f /etc/sudoers ]]
+            then
+                echo -e "${COLOR_BIBlue}Sudoers file /etc/sudoers successfully installed.${COLOR_off}"
+            else
+                echo -e "${COLOR_Red}Sudoers file failed to install correctly.  Lord have mercy.${COLOR_off}"  
+            fi
+            
+        else
+            echo -e "${COLOR_BYellow}New sudoers file is incorrect.  NOT installing.${COLOR_off}"
+        fi
+        rm $SUDOERS_TEMP
+    fi
+fi
+
+
+## ----------------------------------------------------------------------------
+## restart script as swirepe
+## ----------------------------------------------------------------------------
+    
+    
 if [[ "$(whoami)" == "swirepe" ]]
 then
     echo -e "${COLOR_BGreen}Currently user swirepe.${COLOR_off}"
 else   
-    if [[ "$(uname)" == *"Linux"* ]]
-    then
-        # does swirepe exist?
-        if [[ "$(grep ^swirepe /etc/passwd)"  ]]
-        then
-            echo -e "${COLOR_Blue}User swirepe in /etc/passwd${COLOR_off}"
-        else
-            echo -e "${COLOR_Blue}Creating user swirepe.${COLOR_off}"
-            sudo adduser --home /home/swirepe --gecos "Peter Swire,1337,swirepe@swirepe.com,hi@swirepe.com,Believe in yourself." swirepe
-            echo -e "${COLOR_BYellow}NOTE: User swirepe has an unencrypted home directory.${COLOR_off}"
-            echo -e "${COLOR_BYellow}    Consider running ${COLOR_BGreen}ecryptfs-setup-private${COLOR_BYellow} on your next login.${COLOR_off}"
-            echo -e "${COLOR_BYellow}    See: ${COLOR_BGreen}https://help.ubuntu.com/community/EncryptedPrivateDirectory${COLOR_off}"
-            echo -e "${COLOR_BIBlue}User swirepe created.${COLOR_off}"
-        fi
-        
-        ## add to sudoers
-        if [[ "$(sudo cat /etc/sudoers | grep swirepe)"     ]] ||
-           [[ "$(sudo cat /etc/sudoers.d/* | grep swirepe)" ]] 
-        then
-            echo -e "${COLOR_Blue}User swirepe is a sudoer.${COLOR_off}"
-        else
-            echo -e "${COLOR_Blue}Adding an include directive in /etc/sudoers${COLOR_off}"
-            
-            SUDOERS_TEMP=$(mktemp /tmp/sudoers.XXXXX)
-            sudo cat /etc/sudoers >> $SUDOERS_TEMP
-            
-            echo -e "\n\n## Added by setup-new-machine.sh on $(date)" >> $SUDOERS_TEMP
-            echo -e "includedir /etc/sudoers.d" >> $SUDOERS_TEMP
-            if [[ visudo -c -f $SUDOERS_TEMP ]]
-            then
-                echo -e "${COLOR_Blue}New sudoers file is syntactically correct.  Installing.${COLOR_off}"
-                sudo flock /etc/sudoers -c "cat $SUDOERS_TEMP | sudo tee /etc/sudoers"
-                
-                if [[ visudo -c -f /etc/sudoers ]]
-                then
-                    echo -e "${COLOR_BIBlue}Sudoers file /etc/sudoers successfully installed.${COLOR_off}"
-                else
-                    echo -e "${COLOR_Red}Sudoers file failed to install correctly.  Lord have mercy.${COLOR_off}"  
-                fi
-                
-            else
-                echo -e "${COLOR_BYellow}New sudoers file is incorrect.  NOT installing.${COLOR_off}"
-            fi
-            rm $SUDOERS_TEMP
-            
-            echo -e "${COLOR_Blue}Putting a file for user swirepe in /etc/sudoers.d/${COLOR_off}"
-            echo -e"## Added by setup-new-machine.sh on $(date)\n\nswirepe ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/swirepe.sudo
-            if [[ visudo -c -f /etc/sudoers.d/swirepe.sudo ]]
-            then
-                sudo chmod 0440 /etc/sudoers.d/swirepe.sudo
-                echo -e "${COLOR_BIBlue}Sudoers file /etc/sudoers.d/swirepe.sudo successfully installed.${COLOR_off}"
-                echo -e "${COLOR_BIBlue}User swirepe added to /etc/sudoers.d/${COLOR_off}"
-            else
-                echo -e "${COLOR_BYellow}New sudoers file  /etc/sudoers.d/swirepe.sudo is incorrect.  Removing.${COLOR_off}"
-                sudo rm /etc/sudoers.d/swirepe.sudo
-            fi
-            
-        fi
-        
-    fi
-
+    
     echo -e "${COLOR_BYellow}We can restart this command as user ${COLOR_BIBlue}swirepe${COLOR_off}${COLOR_BYellow}.${COLOR_off}"
-    echo -n "Restart? [y/N] "
-    read restart
-    if [[ "$(echo $restart | grep -i  y )" ]]
+    read -t 5 -p "Restart as swirepe? [Y/n] " restart
+    restart=${restart:-yes}
+    if [[ "$(echo $restart | grep -i  ^y )" ]]
     then
         
-        echo -e "${COLOR_BYellow}****RESTARTING.****${COLOR_off}"
+        echo -e "${COLOR_BYellow}****RESTARTING SCRIPT.****${COLOR_off}"
         
-        sudo su - swirepe -c "HOME=/home/swirepe  bash -c '$THIS_SCRIPT_PATH | tee /home/swirepe/new-machine-setup.log' "
+        sudo su - swirepe -c "HOME=/home/swirepe  bash -c '$THIS_SCRIPT_PATH | tee --append /home/swirepe/new-machine-setup.log' "
         
         exit 0
     else
@@ -124,8 +204,8 @@ else
         
         echo -e "${COLOR_BYellow}We can pretend that home is at ${COLOR_BIBlue}/home/swirepe${COLOR_off}${COLOR_BYellow}.${COLOR_off}"
         echo -e "${COLOR_BYellow}It is currently at  ${COLOR_Blue}${HOME}${COLOR_off}${COLOR_BYellow}.${COLOR_off}"
-        echo -e "Pretend home is ${COLOR_BIBlue}/home/swirepe${COLOR_off}? [y/N]"
-        read rehome
+        read -t 5 -p "Pretend home is /home/swirepe? [y/N] " rehome
+        rehome=${rehome:-no}
         if [[ "$(echo $rehome | grep -i y)" ]]
         then
             echo -e "${COLOR_BIBlue}Setting HOME to /home/swirepe${COLOR_off}"
@@ -177,6 +257,39 @@ echo -e "${COLOR_BGreen}All necessary programs are present.${COLOR_off}"
 
 mkdir -p $HOME/pers
 cd $HOME/pers
+
+
+## ----------------------------------------------------------------------------
+## make getting stuff tenacious, just for this one time
+## ----------------------------------------------------------------------------
+
+function wget {
+    command wget --tries=10 --append-output="$HOME/new-machine-setup-wget.log" "$@"
+}
+
+
+## ----------------------------------------------------------------------------
+## pi-specific
+## ----------------------------------------------------------------------------
+
+if [[ "$(which raspi-config)" ]]
+then
+    echo -e "${COLOR_Blue}raspi-config detected.  Assuming raspberry pi.${COLOR_off}"
+
+    echo -e "${COLOR_Blue}Fetching raspberry pi pre-install script.${COLOR_off}"
+    mkdir -p $HOME/pi
+    cd $HOME/pi
+    
+    [ -e pre-install.sh  ] || wget https://raw.github.com/swirepe/personalscripts/master/pi/pre-install.sh
+
+    chmod +x pre-install.sh
+    ./pre-install.sh "$THIS_SCRIPT_PATH"
+    
+
+    ## more to come
+    echo -e "${COLOR_BGreen}Setup of pi-specific components complete.${COLOR_off}"
+fi
+
 
 ## ----------------------------------------------------------------------------
 ## get the keys and extract them
@@ -271,21 +384,6 @@ mkdir -p $HOME/.vim_backup
 echo -e "${COLOR_BGreen}Files successfully symlinked.${COLOR_off}"
 
 
-## ----------------------------------------------------------------------------
-## pi-specific
-## ----------------------------------------------------------------------------
-
-if [[ "$(which raspi-config)" ]]
-then
-    echo -e "${COLOR_Blue}raspi-config detected.  Assuming raspberry pi.${COLOR_off}"
-
-    cd $HOME/pers/scripts/pi
-    echo -e "${COLOR_Blue}Setting up tor.${COLOR_off}"
-    ./setup-tor.sh
-    echo -e "${COLOR_BIBlue}Setting up tor complete.${COLOR_off}"
-    
-    ## more to come
-fi
 
 ## ----------------------------------------------------------------------------
 ## build some scripts if we can
@@ -337,6 +435,18 @@ then
     echo -e "${COLOR_BGreen}Install of csvkit complete.${COLOR_off}"
 
 fi
+
+
+## ----------------------------------------------------------------------------
+## backup-cron.sh
+## ----------------------------------------------------------------------------
+
+echo -e "${COLOR_Blue}Installing backup-cron.sh${COLOR_off}"
+
+$HOME/pers/scripts/backup-cron.sh --install
+
+echo -e "${COLOR_BGreen}Install of backup-cron.sh complete.${COLOR_off}"
+
 
 
 ## ----------------------------------------------------------------------------
