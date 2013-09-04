@@ -25,8 +25,13 @@ function users {
 
 if [[ "$1" == "--install" ]]
 then
-	echo "Installing."
-	crontab -l | { cat; echo "@daily $HOME/pers/scripts/backup-cron.sh"; } | crontab -
+    if [[ "$(crontab -l | grep backup-cron.sh)" ]]
+    then
+        echo "backup-cron.sh already installed."
+    else
+        echo "Installing."
+        crontab -l | { cat; echo "@daily $HOME/pers/scripts/backup-cron.sh"; } | crontab -
+    fi
 	crontab -l | grep backup-cron.sh
 	echo "Done."
 	exit 0
