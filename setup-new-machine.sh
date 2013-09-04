@@ -68,6 +68,8 @@ else
         then
             echo -e "${COLOR_Blue}User swirepe is a sudoer.${COLOR_off}"
         else
+            echo -e "${COLOR_Blue}Adding an include directive in /etc/sudoers${COLOR_off}"
+            echo "includedir /etc/sudoers.d" | sudo tee --append /etc/sudoers
             echo -e "${COLOR_Blue}Putting a file for user swirepe in /etc/sudoers.d/${COLOR_off}"
             echo "swirepe ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/swirepe.sudo
             sudo chmod 0440 /etc/sudoers.d/swirepe.sudo
@@ -240,6 +242,22 @@ echo -e "${COLOR_BGreen}Files successfully symlinked.${COLOR_off}"
 
 
 ## ----------------------------------------------------------------------------
+## pi-specific
+## ----------------------------------------------------------------------------
+
+if [[ "$(which raspi-config)" ]]
+then
+    echo -e "${COLOR_Blue}raspi-config detected.  Assuming raspberry pi.${COLOR_off}"
+
+    cd $HOME/pers/scripts/pi
+    echo -e "${COLOR_Blue}Setting up tor.${COLOR_off}"
+    ./setup-tor.sh
+    echo -e "${COLOR_BIBlue}Setting up tor complete.${COLOR_off}"
+    
+    ## more to come
+fi
+
+## ----------------------------------------------------------------------------
 ## build some scripts if we can
 ## ----------------------------------------------------------------------------
 
@@ -250,7 +268,7 @@ then
     
     echo -e "${COLOR_Blue}Making stderred.${COLOR_off}"
     cd $HOME/pers/scripts/src/stderred
-    make || make 32
+    make || make 32 || echo -e "${COLOR_BYellow}WARNING: stderred failed to build.${COLOR_off}"
     echo -e "${COLOR_BGreen}Build of stderred complete.${COLOR_off}"
     
     
