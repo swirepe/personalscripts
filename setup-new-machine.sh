@@ -69,11 +69,41 @@ else
             echo -e "${COLOR_Blue}User swirepe is a sudoer.${COLOR_off}"
         else
             echo -e "${COLOR_Blue}Adding an include directive in /etc/sudoers${COLOR_off}"
-            echo "includedir /etc/sudoers.d" | sudo tee --append /etc/sudoers
+            
+            SUDOERS_TEMP=$(mktemp /tmp/sudoers.XXXXX)
+            sudo cat /etc/sudoers >> $SUDOERS_TEMP
+            
+            echo -e "\n\n## Added by setup-new-machine.sh on $(date)" >> $SUDOERS_TEMP
+            echo -e "includedir /etc/sudoers.d" >> $SUDOERS_TEMP
+            if [[ visudo -c -f $SUDOERS_TEMP ]]
+            then
+                echo -e "${COLOR_Blue}New sudoers file is syntactically correct.  Installing.${COLOR_off}"
+                sudo flock /etc/sudoers -c "cat $SUDOERS_TEMP | sudo tee /etc/sudoers"
+                
+                if [[ visudo -c -f /etc/sudoers ]]
+                then
+                    echo -e "${COLOR_BIBlue}Sudoers file /etc/sudoers successfully installed.${COLOR_off}"
+                else
+                    echo -e "${COLOR_Red}Sudoers file failed to install correctly.  Lord have mercy.${COLOR_off}"  
+                fi
+                
+            else
+                echo -e "${COLOR_BYellow}New sudoers file is incorrect.  NOT installing.${COLOR_off}"
+            fi
+            rm $SUDOERS_TEMP
+            
             echo -e "${COLOR_Blue}Putting a file for user swirepe in /etc/sudoers.d/${COLOR_off}"
-            echo "swirepe ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/swirepe.sudo
-            sudo chmod 0440 /etc/sudoers.d/swirepe.sudo
-            echo -e "${COLOR_BIBlue}User swirepe added to /etc/sudoers.d/${COLOR_off}"
+            echo -e"## Added by setup-new-machine.sh on $(date)\n\nswirepe ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/swirepe.sudo
+            if [[ visudo -c -f /etc/sudoers.d/swirepe.sudo ]]
+            then
+                sudo chmod 0440 /etc/sudoers.d/swirepe.sudo
+                echo -e "${COLOR_BIBlue}Sudoers file /etc/sudoers.d/swirepe.sudo successfully installed.${COLOR_off}"
+                echo -e "${COLOR_BIBlue}User swirepe added to /etc/sudoers.d/${COLOR_off}"
+            else
+                echo -e "${COLOR_BYellow}New sudoers file  /etc/sudoers.d/swirepe.sudo is incorrect.  Removing.${COLOR_off}"
+                sudo rm /etc/sudoers.d/swirepe.sudo
+            fi
+            
         fi
         
     fi
