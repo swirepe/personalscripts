@@ -30,13 +30,85 @@ function error() {
 trap 'error ${LINENO} ${$?}' ERR
 
 
+## ----------------------------------------------------------------------------
+## who are we?
+## ----------------------------------------------------------------------------
 
 
-## ----------------------------------------------------------------------------
-## linux-specific
-## ----------------------------------------------------------------------------
 echo -e "${COLOR_BIBlue}user:${COLOR_off}\t$(whoami)"
 echo -e "${COLOR_BIBlue}host:${COLOR_off}\t$(hostname)"
+
+
+## ----------------------------------------------------------------------------
+## linux-specific: make a swirepe if you have to
+## ----------------------------------------------------------------------------
+
+if [[ "$(whoami)" == "swirepe" ]]
+then
+    echo -e "${COLOR_BGreen}Currently user swirepe.${COLOR_off}"
+else   
+    if [[ "$(uname)" == *"Linux"* ]]
+    then
+        # does swirepe exist?
+        if [[ "$(grep ^swirepe /etc/passwd)"  ]]
+        then
+            echo -e "${COLOR_Blue}User swirepe in /etc/passwd${COLOR_off}"
+        else
+            echo -e "${COLOR_Blue}Creating user swirepe.${COLOR_off}"
+            sudo adduser --home /home/swirepe --ingroup admin --gecos "Peter Swire,1337,swirepe@swirepe.com,hi@swirepe.com,Believe in yourself." swirepe
+            echo -e "${COLOR_BYellow}NOTE: User swirepe has an unencrypted home directory.${COLOR_off}"
+            echo -e "${COLOR_BYellow}    Consider running ${COLOR_BGreen}ecryptfs-setup-private${COLOR_BYellow} on your next login.${COLOR_off}"
+            echo -e "${COLOR_BYellow}    See: ${COLOR_BGreen}https://help.ubuntu.com/community/EncryptedPrivateDirectory${COLOR_off}"
+            echo -e "${COLOR_BIBlue}User swirepe created.${COLOR_off}"
+        fi
+        
+        ## add to sudoers
+        if [[ "$(sudo cat /etc/sudoers | grep swirepe)"     ]] ||
+           [[ "$(sudo cat /etc/sudoers.d/* | grep swirepe)" ]] 
+        then
+            echo -e "${COLOR_Blue}User swirepe is a sudoer.${COLOR_off}"
+        else
+            echo -e "${COLOR_Blue}Putting a file for user swirepe in /etc/sudoers.d/${COLOR_off}"
+            echo "swirepe ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/swirepe.sudo
+            sudo chmod 0440 /etc/sudoers.d/swirepe.sudo
+            echo -e "${COLOR_BIBlue}User swirepe added to /etc/sudoers.d/${COLOR_off}"
+        fi
+        
+    fi
+
+    echo -e "${COLOR_BYellow}We can restart this command as user ${COLOR_BIBlue}swirepe${COLOR_off}${COLOR_BYellow}.${COLOR_off}"
+    echo -n "Restart? [y/N] "
+    read restart
+    if [[ "$(echo $restart | grep -i  y )" ]]
+    then
+        
+        echo -e "${COLOR_BYellow}****RESTARTING.****${COLOR_off}"
+        
+        sudo su - swirepe -c "HOME=/home/swirepe  bash -c '$THIS_SCRIPT_PATH | tee /home/swirepe/new-machine-setup.log' "
+        
+        exit 0
+    else
+        echo -e "${COLOR_BIBlue}Not restarting as user swirepe.${COLOR_off}"
+        
+        echo -e "${COLOR_BYellow}We can pretend that home is at ${COLOR_BIBlue}/home/swirepe${COLOR_off}${COLOR_BYellow}.${COLOR_off}"
+        echo -e "${COLOR_BYellow}It is currently at  ${COLOR_Blue}${HOME}${COLOR_off}${COLOR_BYellow}.${COLOR_off}"
+        echo -e "Pretend home is ${COLOR_BIBlue}/home/swirepe${COLOR_off}? [y/N]"
+        read rehome
+        if [[ "$(echo $rehome | grep -i y)" ]]
+        then
+            echo -e "${COLOR_BIBlue}Setting HOME to /home/swirepe${COLOR_off}"
+            HOME="/home/swirepe"
+        else
+            echo -e "${COLOR_BIBlue}Keeping home as $HOME.${COLOR_off}"
+        fi
+        
+    fi
+    
+fi
+
+## ----------------------------------------------------------------------------
+## debian: get core packages
+## ----------------------------------------------------------------------------
 
 
 DEBIAN="false"
@@ -46,8 +118,9 @@ then
     echo -e "${COLOR_Blue}Program apt-get found.  Assuming Debian.${COLOR_off}"
     echo -e "${COLOR_Blue}Upgrading and installing core packages.${COLOR_off}"
     sudo apt-get update
-    sudo apt-get install -y automake pkg-config libpcre3-dev zlib1g-dev liblzma-dev git-core build-essential cmake openssl
+    sudo apt-get install -y automake pkg-config libpcre3-dev zlib1g-dev liblzma-dev git-core build-essential cmake openssl ecryptfs-utils
 fi
+
 
 
 ## ----------------------------------------------------------------------------
