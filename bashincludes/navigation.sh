@@ -24,6 +24,10 @@ function scripts {
   cd ~/pers/scripts   
 }
 
+function machines {
+  cd ~/pers/machines
+}
+
 function envs {
   cd ~/envs   
 }

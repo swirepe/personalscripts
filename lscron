@@ -44,7 +44,7 @@ function lookup_run_parts() {
 }
 
 # Temporary file for crontab lines.
-temp=$(mktemp) || exit 1
+temp=$(mktemp /tmp/crontab.XXXXX) || (echo "Error making temporary file." > /dev/stderr ; exit 1)
 
 # Add all of the jobs from the system-wide crontab file.
 cat "${CRONTAB}" | clean_cron_lines | lookup_run_parts >"${temp}" 

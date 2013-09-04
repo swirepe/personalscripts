@@ -7,6 +7,16 @@ then
     PERS_DIR="$HOME/pers"
 fi
 
+if [[ -d $PERS_DIR/machines ]]
+then
+  echo "Updating machines repository."
+  cd $PERS_DIR/machines
+  git pull origin master
+else
+  echo "No machines repository found.  Cloning."
+  git clone git@bitbucket.org:swirepe/machines.git $PERS_DIR/machines
+fi
+
 
 BREWRECORD_DIR="$PERS_DIR/machines/homebrew/$(hostname)"
 
@@ -14,10 +24,14 @@ if [ ! -d $BREWRECORD_DIR ]
 then
     echo "$BREWRECORD_DIR does not exist: creating."
     mkdir -p $BREWRECORD_DIR
-    cd $BREWRECORD_DIR
-    git init
 fi
 
 
-brew install "$@" && cd "$BREWRECORD_DIR" && brew list > brewlist.txt && git add brewlist.txt && git commit -m "$(hostname) $*"
+brew install "$@" && 
+cd "$BREWRECORD_DIR" && 
+brew list > brewlist.txt && 
+git add brewlist.txt && 
+git commit -m "$(hostname) $*" && 
+git push origin master
+
 cd "$CURRDIR"

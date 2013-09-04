@@ -52,6 +52,8 @@ source_include $ZSHINCLUDES_DIR/cachecompletion.sh
 
 
 source_include $BASHINCLUDES_DIR/color.sh
+source_include $BASHINCLUDES_DIR/_work_dummy.sh
+source_include $BASHINCLUDES_DIR/work.sh
 source_include $BASHINCLUDES_DIR/misc.sh
 source_include $BASHINCLUDES_DIR/alwaysontop.sh
 source_include $BASHINCLUDES_DIR/navigation.sh
@@ -73,9 +75,8 @@ source_include $BASHINCLUDES_DIR/headtail.sh
 source_include $BASHINCLUDES_DIR/ramdiskscripts.sh
 source_include $BASHINCLUDES_DIR/virtualenvs.sh
 source_include $BASHINCLUDES_DIR/errorinred.sh
-source_include $BASHINCLUDES_DIR/_work_dummy.sh
 source_include $BASHINCLUDES_DIR/z.sh
 source_include $BASHINCLUDES_DIR/lsfn.sh
-source_include $BASHINCLUDES_DIR/work.sh
+
 
 
