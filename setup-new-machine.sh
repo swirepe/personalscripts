@@ -32,6 +32,7 @@ trap 'error ${LINENO} ${$?}' ERR
 
 function checkpoint {
     echo "$1" > $HOME/setup-new-machine.checkpoint
+    echo -e "${COLOR_BGreen}Checkpoint: $1"
 }
 
 
@@ -39,47 +40,55 @@ function checkpoint {
 ## Start this script behind a tee
 ## ----------------------------------------------------------------------------
 
-if [[ -t 1 ]]
-then
-    # stdout is a terminal
-    exec bash -c "$THIS_SCRIPT_PATH | tee --append $HOME/new-machine-setup.log"
-else
-     # stdout is not a terminal
-    echo "(Okay, it seems like this is being piped somewhere.  That's good.)"
-fi
+function start_behind_tee {
+    # deliberately does not checkpoint, since it has the power to restart the script
+    if [[ -t 1 ]]
+    then
+        # stdout is a terminal
+        exec bash -c "$THIS_SCRIPT_PATH | tee --append $HOME/new-machine-setup.log"
+    else
+         # stdout is not a terminal
+        echo "(Okay, it seems like this is being piped somewhere.  That's good.)"
+    fi
 
-
+}
 
 ## ----------------------------------------------------------------------------
 ## Introduce yourself!
 ## ----------------------------------------------------------------------------
 function intro {
-
-checkpoint 'intro'
-
-echo -en "$COLOR_BGreen"
-
-echo '        m     m        ""#                                    m '
-echo '        #  #  #  mmm     #     mmm    mmm   mmmmm   mmm       # '
-echo '        " #"# # #"  #    #    #"  "  #" "#  # # #  #"  #      # '
-echo '         ## ##" #""""    #    #      #   #  # # #  #""""        '
-echo '         #   #  "#mm"    "mm  "#mm"  "#m#"  # # #  "#mm"      # '
-echo -e "$COLOR_off" 
-echo "This is the automated setup script for Peter Swire's machines."
-echo "                 Peter Swire - data@swirepe.com"
-echo ""
-echo "This script will:"
-echo " * Create user swirepe                                   (Linux)"
-echo " * Get private keys                                        (All)"
-echo " * Clone respositories                                     (All)"
-echo " * Symlink dotfiles into place                             (All)"
-echo " * Build commonly used scripts                           (Linux)"
-echo " * Install and record commonly used packages            (Debian)"
-echo " * Expand the root partition                      (Raspberry Pi)"
-echo " * Install a Tor relay                            (Raspberry Pi)"
-echo " * Expand the root partition                      (Raspberry Pi)"
-
-echo -e "\nReady? Go!\n"
+    
+    checkpoint 'intro'
+    
+    echo -en "$COLOR_BGreen"
+    
+    echo '        m     m        ""#                                    m '
+    echo '        #  #  #  mmm     #     mmm    mmm   mmmmm   mmm       # '
+    echo '        " #"# # #"  #    #    #"  "  #" "#  # # #  #"  #      # '
+    echo '         ## ##" #""""    #    #      #   #  # # #  #""""        '
+    echo '         #   #  "#mm"    "mm  "#mm"  "#m#"  # # #  "#mm"      # '
+    echo -e "$COLOR_off" 
+    echo "This is the automated setup script for Peter Swire's machines."
+    echo "                 Peter Swire - data@swirepe.com"
+    echo ""
+    echo "This script will:"
+    echo " * Create user swirepe                                   (Linux)"
+    echo " * Get private keys                                        (All)"
+    echo " * Clone respositories                                     (All)"
+    echo " * Symlink dotfiles into place                             (All)"
+    echo " * Build commonly used scripts                           (Linux)"
+    echo " * Install and record commonly used packages            (Debian)"
+    echo " * Expand the root partition                      (Raspberry Pi)"
+    echo " * Install a Tor relay                            (Raspberry Pi)"
+    echo " * Expand the root partition                      (Raspberry Pi)"
+    echo ""
+    echo "This script also has checkpointing system."
+    echo "Start this script with a checkpoint location,"
+    echo "or store it in $HOME/setup-new-machine.checkpoint"
+    echo "Possible starting points:"
+    declare -f gammut
+    echo "or just 'build_scripts' to build all the scripts."
+    echo -e "\n\nReady? Go!\n"
 
 }
 ## ----------------------------------------------------------------------------
@@ -621,7 +630,6 @@ function gammut {
     update_submodules
     update_oh_my_zsh_module
     symlinks
-    build_scripts
     build_scripts_sagi
     build_scripts_stderred
     build_scripts_j
@@ -636,40 +644,64 @@ function gammut {
 }
 
 
+STARTING_POINT=''
 if [ -e $HOME/setup-new-machine.checkpoint ]
 then
-    case ( $(cat $HOME/setup-new-machine.checkpoint) ) in             ;&
-        intro)                         intro                          ;&
-        names)                         names                          ;&
-        add_group_admin)               add_group_admin                ;& 
-        add_user_swirepe               add_user_swirepe               ;&
-        add_swirepe_to_sudoersd)       add_swirepe_to_sudoersd        ;&
-        add_include_to_sudoers)        add_include_to_sudoers         ;&
-        add_include_to_sudoers)        add_include_to_sudoers         ;&
-        restart_as_swirepe)            restart_as_swirepe             ;&
-        debian_core)                   debian_core                    ;&
-        util_check)                    util_check                     ;&
-        pi_specific)                   pi_specific                    ;&
-        keys)                          keys                           ;&
-        add_keys_to_ssh)               add_keys_to_ssh                ;&
-        clone_repos)                   clone_repos                    ;&
-        symlinks)                      symlinks                       ;&
-        build_scripts_sagi)            build_scripts_sagi             ;&
-        build_scripts_stderred)        build_scripts_stderred         ;&
-        build_scripts_j)               build_scripts_j                ;&
-        build_scripts_ag)              build_scripts_ag               ;&
-        build_scripts_git_extras)      build_scripts_git_extras       ;&
-        build_scripts_parallel)        build_scripts_parallel         ;&
-        build_scripts_csvkit)          build_scripts_csvkit           ;&
-        install_backup_cron)           install_backup_cron            ;&
-        compile_fortunes)              compile_fortunes               ;&
-        bashrc_nomem)                  bashrc_nomem                   ;&
-        all_done)                      all_done                       ;;
-        
-    esac
-else
-    gammut
+    STARTING_POINT="$(cat $HOME/setup-new-machine.checkpoint)"
 fi
+
+if [[ "$1" ]]
+then
+    if [[ "$1 " == "-h"     ]]   ||
+       [[ "$1 " == "--help" ]]
+       intro
+       exit 0
+    else
+        STARTING_POINT="$1"  
+    fi
+fi
+
+## if you aren't asking for help, we can start this behind a tee
+start_behind_tee
+
+echo "Starting at $STARTING_POINT"
+
+case ( $STARTING_POINT ) in
+    start_behind_tee)              start_behind_tee               ;&
+    intro)                         intro                          ;&
+    names)                         names                          ;&
+    add_group_admin)               add_group_admin                ;& 
+    add_user_swirepe               add_user_swirepe               ;&
+    add_swirepe_to_sudoersd)       add_swirepe_to_sudoersd        ;&
+    add_include_to_sudoers)        add_include_to_sudoers         ;&
+    add_include_to_sudoers)        add_include_to_sudoers         ;&
+    restart_as_swirepe)            restart_as_swirepe             ;&
+    debian_core)                   debian_core                    ;&
+    util_check)                    util_check                     ;&
+    pi_specific)                   pi_specific                    ;&
+    keys)                          keys                           ;&
+    add_keys_to_ssh)               add_keys_to_ssh                ;&
+    clone_repos)                   clone_repos                    ;&
+    update_submodules)             update_submodules              ;&
+    update_oh_my_zsh_module)       update_oh_my_zsh_module        ;&
+    symlinks)                      symlinks                       ;&
+    build_scripts_sagi)            build_scripts_sagi             ;&
+    build_scripts_stderred)        build_scripts_stderred         ;&
+    build_scripts_j)               build_scripts_j                ;&
+    build_scripts_ag)              build_scripts_ag               ;&
+    build_scripts_git_extras)      build_scripts_git_extras       ;&
+    build_scripts_parallel)        build_scripts_parallel         ;&
+    build_scripts_csvkit)          build_scripts_csvkit           ;&
+    install_backup_cron)           install_backup_cron            ;&
+    compile_fortunes)              compile_fortunes               ;&
+    bashrc_nomem)                  bashrc_nomem                   ;&
+    all_done)                      all_done                       ;;
+    build_scripts)                 build_scripts                  ;;
+    *)                             gammut                         ;;
+    
+esac
+
+
 
 
 
