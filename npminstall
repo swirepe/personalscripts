@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+
+CURRDIR=$(pwd)
+
+if [[ -z "$PERS_DIR" ]]
+then
+    PERS_DIR="$HOME/pers"
+fi
+
+if [[ -d $PERS_DIR/machines ]]
+then
+  echo "Updating machines repository."
+  cd $PERS_DIR/machines
+  git pull origin master
+else
+  echo "No machines repository found.  Cloning."
+  git clone git@bitbucket.org:swirepe/machines.git $PERS_DIR/machines
+fi
+
+
+NPMRECORD_DIR="$PERS_DIR/machines/npm/$(hostname)"
+
+if [ ! -d $NPMRECORD_DIR ]
+then
+    echo "$NPMRECORD_DIR does not exist: creating."
+    mkdir -p $NPMRECORD_DIR
+fi
+
+cd $CURRDIR &&
+npm install "$@" &&
+npm list --global --parseable > $NPMRECORD_DIR/npm-global.txt &&
+echo "Global:" &&
+npm list --global &&
+date +"%Y-%m-%d %H:%M:%S" >> $NPMRECORD_DIR/npm-local.txt &&
+echo "$CURRDIR" >> $NPMRECORD_DIR/npm-local.txt &&
+npm list --parseable >> $NPMRECORD_DIR/npm-local.txt &&
+echo "Local:" &&
+npm list &&
+cd $NPMRECORD_DIR &&
+git add npm-global.txt npm-local.txt &&
+git commit -m "$(hostname) $*" && 
+git push origin master
+
+cd "$CURRDIR"
