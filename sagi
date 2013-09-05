@@ -35,7 +35,7 @@ sudo apt-get install "$@" && (
     cd "$SAGIRECORD_DIR" &&
     dpkg --get-selections > aptlist.txt &&
     git add aptlist.txt &&
-    git commit -m "$(hostname) $*" &&
+    git commit -m "sagi $(hostname) $*" &&
     git push origin master
 )
         

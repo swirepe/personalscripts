@@ -38,7 +38,7 @@ echo "Local:" &&
 npm list &&
 cd $NPMRECORD_DIR &&
 git add npm-global.txt npm-local.txt &&
-git commit -m "$(hostname) $*" && 
+git commit -m "npm $(hostname) $*" && 
 git push origin master
 
 cd "$CURRDIR"

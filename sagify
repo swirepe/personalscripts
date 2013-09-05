@@ -43,7 +43,7 @@ sudo apt-fast install -y "$@" && (
     cd "$SAGIRECORD_DIR" &&
     dpkg --get-selections > aptlist.txt &&
     git add aptlist.txt &&
-    git commit -m "$(hostname) $*" &&
+    git commit -m "sagify $(hostname) $*" &&
     git push origin master
 )
         

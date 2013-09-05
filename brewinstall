@@ -31,7 +31,7 @@ brew install "$@" &&
 cd "$BREWRECORD_DIR" && 
 brew list > brewlist.txt && 
 git add brewlist.txt && 
-git commit -m "$(hostname) $*" && 
+git commit -m "brew $(hostname) $*" && 
 git push origin master
 
 cd "$CURRDIR"
