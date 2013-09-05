@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+CURRDIR=$(pwd)
+
+# note: if you have two virtualenvs with the same name, you get ruined.
+
+if [[ -z "$PERS_DIR" ]]
+then
+    PERS_DIR="$HOME/pers"
+fi
+
+if [[ -d $PERS_DIR/machines ]]
+then
+  echo "Updating machines repository."
+  cd $PERS_DIR/machines
+  git pull origin master
+else
+  echo "No machines repository found.  Cloning."
+  git clone git@bitbucket.org:swirepe/machines.git $PERS_DIR/machines
+fi
+
+PIPRECORD_DIR="$PERS_DIR/machines/pip/$(hostname)"
+
+if [ ! -d $PIPRECORD_DIR ]
+then
+    echo "$PIPRECORD_DIR does not exist: creating."
+    mkdir -p $PIPRECORD_DIR
+fi
+
+if [ -z "$VIRTUAL_ENV" ]
+then
+    PIPRECORD_FILE="$PIPRECORD_DIR/global.txt"
+else
+    PIPRECORD_FILE="$PIPRECORD_DIR/$(basename $VIRTUAL_ENV).txt"
+fi
+
+
+cd $PIPRECORD_DIR
+pip install "$@" && {
+    pip list > $PIPRECORD_FILE
+    git add $PIPRECORD_FILE
+    git commit -m "pip $(hostname) $*"
+    git push origin master
+    
+}
+
+cd $CURRDIR
+

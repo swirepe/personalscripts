@@ -26,19 +26,19 @@ then
     mkdir -p $NPMRECORD_DIR
 fi
 
-cd $CURRDIR &&
-npm install "$@" &&
-npm list --global --parseable > $NPMRECORD_DIR/npm-global.txt &&
-echo "Global:" &&
-npm list --global &&
-date +"%Y-%m-%d %H:%M:%S" >> $NPMRECORD_DIR/npm-local.txt &&
-echo "$CURRDIR" >> $NPMRECORD_DIR/npm-local.txt &&
-npm list --parseable >> $NPMRECORD_DIR/npm-local.txt &&
-echo "Local:" &&
-npm list &&
-cd $NPMRECORD_DIR &&
-git add npm-global.txt npm-local.txt &&
-git commit -m "npm $(hostname) $*" && 
-git push origin master
-
+cd $CURRDIR 
+npm install "$@" && {
+    npm list --global --parseable > $NPMRECORD_DIR/npm-global.txt 
+    echo "Global:" 
+    npm list --global 
+    date +"%Y-%m-%d %H:%M:%S" >> $NPMRECORD_DIR/npm-local.txt 
+    echo "$CURRDIR" >> $NPMRECORD_DIR/npm-local.txt 
+    npm list --parseable >> $NPMRECORD_DIR/npm-local.txt 
+    echo "Local:" 
+    npm list 
+    cd $NPMRECORD_DIR 
+    git add npm-global.txt npm-local.txt 
+    git commit -m "npm $(hostname) $*"  
+    git push origin master
+}
 cd "$CURRDIR"
