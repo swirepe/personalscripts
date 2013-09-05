@@ -37,7 +37,7 @@ do
 	elif [[ "$FIRSTLINE" == *"python"* ]] ||
 		 [[ "$FILE"      == *".py"    ]]
 	then
-			/usr/bin/env python -m py_compile $FILE && echo "OK"
+			/usr/bin/env python -m py_compile $FILE && echo "OK" && rm "$FILE"c
 
 	
 
@@ -56,7 +56,14 @@ do
   elif [[ "$FILE"      == *".js"  ]]
 	then
 			jshint $FILE && echo "OK"
-	
+
+	elif [[ "$FILE"      == *".css" ]]
+	then
+		csslint $FILE # oh look, csslint doesn't exit with a nonzero status when it finds an error.
+
+	elif [[ "$FILE"      == *".xml" ]]
+	then
+		xmllint $FILE
 
 	elif [[ "$FIRSTLINE" == *"zsh"*   ]] ||
 		 [[ "$FILE"      == *".zsh"  ]]
