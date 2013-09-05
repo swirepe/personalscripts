@@ -112,7 +112,7 @@ function add_sudoersd {
     FILE="$1"
     CONTENT="##added by setup-new-machine on $(date)\n$2"
     echo -e "$CONTENT" | sudo tee /etc/sudoers.d/$FILE
-    if [[ visudo -c -f /etc/sudoers.d/$FILE && echo "okay" ]]
+    if  visudo -c -f /etc/sudoers.d/$FILE 
     then
         sudo chmod 0440 /etc/sudoers.d/$FILE
         echo -e "${COLOR_BIBlue}Sudoers file /etc/sudoers.d/$FILE successfully installed.${COLOR_off}"
@@ -200,12 +200,12 @@ function add_include_to_sudoers {
             
             echo -e "\n\n## Added by setup-new-machine.sh on $(date)" >> $SUDOERS_TEMP
             echo -e "includedir /etc/sudoers.d" >> $SUDOERS_TEMP
-            if [[ visudo -c -f $SUDOERS_TEMP ]]
+            if visudo -c -f $SUDOERS_TEMP 
             then
                 echo -e "${COLOR_Blue}New sudoers file is syntactically correct.  Installing.${COLOR_off}"
                 sudo flock /etc/sudoers -c "cat $SUDOERS_TEMP | sudo tee /etc/sudoers"
                 
-                if [[ visudo -c -f /etc/sudoers ]]
+                if  visudo -c -f /etc/sudoers 
                 then
                     echo -e "${COLOR_BIBlue}Sudoers file /etc/sudoers successfully installed.${COLOR_off}"
                 else
@@ -389,7 +389,7 @@ function clone_repos {
 }
 
 
-function update_submodules{
+function update_submodules {
     checkpoint 'update_submodules'
     
     cd $HOME/pers/scripts
@@ -654,6 +654,7 @@ if [[ "$1" ]]
 then
     if [[ "$1 " == "-h"     ]]   ||
        [[ "$1 " == "--help" ]]
+    then
        intro
        exit 0
     else
@@ -666,7 +667,7 @@ start_behind_tee
 
 echo "Starting at $STARTING_POINT"
 
-case ( $STARTING_POINT ) in
+case  $STARTING_POINT  in
     start_behind_tee)              start_behind_tee               ;&
     intro)                         intro                          ;&
     names)                         names                          ;&
