@@ -51,6 +51,11 @@ do
 		 [[ "$FILE"      == *".rb"  ]]
 	then
 			/usr/bin/env ruby -c $FILE && echo "OK"
+
+		
+  elif [[ "$FILE"      == *".js"  ]]
+	then
+			jshint $FILE && echo "OK"
 	
 
 	elif [[ "$FIRSTLINE" == *"zsh"*   ]] ||
