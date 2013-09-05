@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+
+## TODO: add javascript, java, css
+##       loop over multiple files
+##       search in path, like viewsh
+
+# try to read the shebang line
+# if we can, we might know the language.
+for FILE in $@
+do
+	echo -en "$FILE\t"
+
+	FIRSTLINE="$(head -n1 $FILE)"
+
+	if [[ ! -e "$FILE" ]]
+	then
+		FILE="$(which $FILE)"
+	fi
+
+	if [[ ! -e "$FILE" ]]
+	then
+		echo "not found."
+	fi
+
+
+  if [[ $(file -i $FILE | grep binary) ]]
+	then
+			echo "is binary."
+
+	elif [[ "$FIRSTLINE" == *"bash"* ]] ||
+		 [[ "$FILE"      == *".sh"  ]]
+		 
+	then
+			/usr/bin/env bash -n $FILE && echo "OK" 
+	
+
+	elif [[ "$FIRSTLINE" == *"python"* ]] ||
+		 [[ "$FILE"      == *".py"    ]]
+	then
+			/usr/bin/env python -m py_compile $FILE && echo "OK"
+
+	
+
+	elif [[ "$FIRSTLINE" == *"perl"* ]] ||
+		 [[ "$FILE"      == *".pl"  ]]
+	then
+			/usr/bin/env perl -c $FILE && echo "OK"
+	
+
+	elif [[ "$FIRSTLINE" == *"ruby"* ]] ||
+		 [[ "$FILE"      == *".rb"  ]]
+	then
+			/usr/bin/env ruby -c $FILE && echo "OK"
+	
+
+	elif [[ "$FIRSTLINE" == *"zsh"*   ]] ||
+		 [[ "$FILE"      == *".zsh"  ]]
+	then
+			/usr/bin/env zsh -n $FILE && echo "OK"
+	else
+			echo "parser not found."
+	fi
+done
