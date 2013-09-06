@@ -380,14 +380,16 @@ function add_keys_to_ssh {
 ## ----------------------------------------------------------------------------
 function config_ssh_persist {
 	checkpoint 'config_ssh_persist'
+	
     echo -e "${COLOR_Blue}Adding persistence options to ~/.ssh/config${COLOR_off}"
-
-		echo -e "\n\$## ---------------------------------------------\n"  >> ~/.ssh/config
-    echo -e "\n\n## Added on $(date) by setup-new-machine.sh\n"  >> ~/.ssh/config
-    echo "ControlMaster auto" >> ~/.ssh/config
-    echo "ControlPath /tmp/%r@%h:%p" >> ~/.ssh/config
-    echo "ControlPersist yes" >> ~/.ssh/config
-    echo -e "\n\$## ---------------------------------------------\n"  >> ~/.ssh/config
+    mkdir -p ~/.ssh
+    echo -e "\n\## ---------------------------------------------\n"  >> ~/.ssh/config
+    echo -e "\n## added on $(date) by setup-new-machine.sh\n" >> ~/.ssh/config
+    echo "Host *" >> ~/.ssh/config
+    echo -e "    ControlMaster auto" >> ~/.ssh/config
+    echo -e "    ControlPath /tmp/ssh-%r@%h:%p" >> ~/.ssh/config
+    echo -e "    ControlPersist yes" >> ~/.ssh/config
+    echo -e "\n\## ---------------------------------------------\n"  >> ~/.ssh/config
 
     echo -e "${COLOR_BGreen}Done adding persistence options to ~/.ssh/config${COLOR_off}"
 
@@ -700,7 +702,7 @@ case  $STARTING_POINT  in
     pi_specific)                   pi_specific                    ;&
     keys)                          keys                           ;&
     add_keys_to_ssh)               add_keys_to_ssh                ;&
-		config_ssh_persist)            config_ssh_persist             ;&
+	config_ssh_persist)            config_ssh_persist             ;&
     clone_repos)                   clone_repos                    ;&
     update_submodules)             update_submodules              ;&
     update_oh_my_zsh_module)       update_oh_my_zsh_module        ;&
