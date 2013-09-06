@@ -4,30 +4,16 @@ echo "Adding persistence options to ~/.ssh/config"
 
 cp ~/.ssh/config ~/.ssh/config-original
 
-PREAMBLE="\n## added on $(date) by ssh-persist.sh\n"
+echo -e "\n## added on $(date) by ssh-persist.sh\n" >> ~/.ssh/config
+echo "Host *" >> ~/.ssh/config
+echo -e "    ControlMaster auto" >> ~/.ssh/config
+echo -e "ControlMaster auto enables the sharing of multiple SSH sessions over a single network connection, and auto-creating a master connection if it does not already exist.\n"
 
-if grep 'ControlMaster' ~/.ssh/config
-then
-	echo "'ControlMaster' found."
-else
-	echo -e "${PREAMBLE}ControlMaster auto" >> ~/.ssh/config
-	echo -e "ControlMaster auto enables the sharing of multiple SSH sessions over a single network connection, and auto-creating a master connection if it does not already exist.\n"
-fi
+echo -e "    ControlPath /tmp/%r@%h:%p" >> ~/.ssh/config
+echo -e "ControlPath /tmp/ssh-%r@%h:%p specifies the path to the control socket used for connection sharing. %r will be substituted by the remote login username, %h by the target host name and %p by the port.\n"
 
-if grep 'ControlPath' ~/.ssh/config
-then
-	echo "'ControlPath' found."
-else
-	echo -e "${PREAMBLE}ControlPath /tmp/%r@%h:%p" >> ~/.ssh/config
-	echo -e "ControlPath /tmp/%r@%h:%p specifies the path to the control socket used for connection sharing. %r will be substituted by the remote login username, %h by the target host name and %p by the port.\n"
-fi
+echo -e "    ControlPersist yes" >> ~/.ssh/config
+echo -e "ControlPersist yes keeps the master connection open in the background indefinitely."
 
-if grep 'ControlPersist' ~/.ssh/config
-then
-	echo "'ControlPersist' found."
-else
-	echo -e "${PREAMBLE}ControlPersist yes" >> ~/.ssh/config
-	echo -e "ControlPersist yes keeps the master connection open in the background indefinitely."
-fi
 
 
