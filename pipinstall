@@ -9,6 +9,12 @@ then
     PERS_DIR="$HOME/pers"
 fi
 
+# install root's stuff under my name
+if [[ $EUID -eq 0 ]]
+then
+	PERS_DIR="/home/swirepe/pers"
+fi
+
 if [[ -d $PERS_DIR/machines ]]
 then
   echo "Updating machines repository."
