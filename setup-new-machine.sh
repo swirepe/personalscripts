@@ -376,6 +376,23 @@ function add_keys_to_ssh {
 
 }
 ## ----------------------------------------------------------------------------
+## add persistence to ssh connections.
+## ----------------------------------------------------------------------------
+function config_ssh_persist {
+	checkpoint 'config_ssh_persist'
+    echo -e "${COLOR_Blue}Adding persistence options to ~/.ssh/config${COLOR_off}"
+
+		echo -e "\n\$## ---------------------------------------------\n"  >> ~/.ssh/config
+    echo -e "\n\n## Added on $(date) by setup-new-machine.sh\n"  >> ~/.ssh/config
+    echo "ControlMaster auto" >> ~/.ssh/config
+    echo "ControlPath /tmp/%r@%h:%p" >> ~/.ssh/config
+    echo "ControlPersist yes" >> ~/.ssh/config
+    echo -e "\n\$## ---------------------------------------------\n"  >> ~/.ssh/config
+
+    echo -e "${COLOR_BGreen}Done adding persistence options to ~/.ssh/config${COLOR_off}"
+
+}
+## ----------------------------------------------------------------------------
 ## clone the repos
 ## ----------------------------------------------------------------------------
 function clone_repos {
@@ -626,6 +643,7 @@ function gammut {
     pi_specific
     keys
     add_keys_to_ssh
+    config_ssh_persist
     clone_repos
     update_submodules
     update_oh_my_zsh_module
@@ -682,6 +700,7 @@ case  $STARTING_POINT  in
     pi_specific)                   pi_specific                    ;&
     keys)                          keys                           ;&
     add_keys_to_ssh)               add_keys_to_ssh                ;&
+		config_ssh_persist)            config_ssh_persist             ;&
     clone_repos)                   clone_repos                    ;&
     update_submodules)             update_submodules              ;&
     update_oh_my_zsh_module)       update_oh_my_zsh_module        ;&
