@@ -692,7 +692,7 @@ case  $STARTING_POINT  in
     intro)                         intro                          ;&
     names)                         names                          ;&
     add_group_admin)               add_group_admin                ;& 
-    add_user_swirepe               add_user_swirepe               ;&
+    add_user_swirepe)              add_user_swirepe               ;&
     add_swirepe_to_sudoersd)       add_swirepe_to_sudoersd        ;&
     add_include_to_sudoers)        add_include_to_sudoers         ;&
     add_include_to_sudoers)        add_include_to_sudoers         ;&
