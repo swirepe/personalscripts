@@ -30,7 +30,7 @@ then
         echo "backup-cron.sh already installed."
     else
         echo "Installing."
-        crontab -l | { cat; echo "@daily $HOME/pers/scripts/backup-cron.sh"; } | crontab -
+        crontab -l | { cat; echo -e "\n# Added on $(date) by backup-cron.sh\n# backup crontabs every day.\n@daily $HOME/pers/scripts/backup-cron.sh"; } | crontab -
     fi
 	crontab -l | grep backup-cron.sh
 	echo "Done."
