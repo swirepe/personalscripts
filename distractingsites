@@ -1,0 +1,218 @@
+#!/usr/bin/env python
+
+import socket
+import os
+import sys
+import signal
+import psutil
+
+sites = [  'www.facebook.com'                         ,
+            'facebook.com'                            ,
+            'static.ak.fbcdn.net'                     ,
+            'www.static.ak.fbcdn.net'                 ,
+            'login.facebook.com'                      ,
+            'www.login.facebook.com'                  ,
+            'fbcdn.net'                               ,
+            'www.fbcdn.net'                           ,
+            'fbcdn.com'                               ,
+            'www.fbcdn.com'                           ,
+            'static.ak.connect.facebook.com'          ,
+            'www.static.ak.connect.facebook.com'      ,
+            'reddit.com'                              ,
+            'www.reddit.com'                          ,
+            'news.ycombinator.com'                    ,
+            'imgur.com'                               ,
+            'www.imgur.com'                           ,
+            'penny-arcade.com'                        ,
+            'www.penny-arcade.com'                    ,
+            'twitter.com'                             ,
+            'www.twitter.com'
+]
+
+SILENT=False
+
+LOCKFILE="/tmp/distractingsites.pid"
+
+
+def silent_print(x):
+    global SILENT
+    if not SILENT:
+        print x
+
+
+page = """
+<!-- saved from url=(0038)http://phylab.mtu.edu/~nckelley/Focus/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>GET YOURSELF IN GEAR</title>
+
+
+<style type="text/css">
+body {
+    margin: 0;
+    padding: 50px;
+    font: 10px normal Verdana, Arial, Helvetica, sans-serif;
+    background: #1d1d1d;
+    color: #fff;}
+* {
+    margin: 0;
+    padding: 0;}
+a:link{color:#AAF;}
+a:hover{color:#fff;}
+a:active{color:#fff;}
+a:visited{color:#989;}
+h1 {
+    font: 5em normal New York, Times, Times New Roman;
+    letter-spacing: 0.08em;
+    text-align:center;
+    color: #FFFFFF;
+    padding-bottom: 20px;}
+h2 {
+    font: 3em normal New York, Times, Times New Roman;
+    letter-spacing: 0.08em;
+    text-align:center;
+    color: #FFFFFF;
+    padding-bottom: 20px;}
+td {width: 500px;}
+                                                                             
+</style>
+
+
+<style type="text/css"></style>
+
+</head>
+<body>
+
+<br>
+<br><br><br><br><br><br><br><br><br><br><br><br>
+<br>
+<br>
+<h1>OH NO YOU DON'T.</h1>
+<br><br><br>
+<h1>YOU HAVE THINGS TO DO.</h1>
+<h1>GET OFF THE INTERNET.</h1>
+<br><br><br>
+
+
+<br><br><br>
+
+
+
+</body></html>
+"""
+
+def checkIfRoot():
+    if os.geteuid() != 0:
+        silent_print("You need to have root privileges to run this script.")
+        silent_print("Please try again, this time using 'sudo'. Exiting.")
+        exit(1)
+
+
+def checkIfRunning():
+    if os.path.exists(LOCKFILE):
+        with open(LOCKFILE) as pidfile:
+            pid = int(pidfile.read())
+            
+        if pid in psutil.get_pid_list():
+            silent_print("Program distractingsites is already running.")
+            silent_print("Exiting.")
+            exit(2)
+            
+        os.remove(LOCKFILE)
+
+
+def addLoopback():
+    os.system("sudo ifconfig lo0 alias 127.0.0.2 up")
+
+
+def add_sites():
+    global sites
+    remove_sites()
+    out = open('/etc/hosts', 'a')
+    out.write("\n\n" + "#### start distracting sites ####\n")
+    for site in sites:
+        out.write("127.0.0.2 " + site + "\n")
+        
+    out.write("#### end distracting sites ####\n")
+    out.close()
+
+
+def remove_sites():
+    f = open("/etc/hosts")
+    lines = []
+    startedFiltering = False
+    for line in f.readlines():
+        line = line.strip()
+        if "start" in line and "distracting" in line:
+            startedFiltering = True
+            continue
+        elif "end" in line and "distracting" in line:
+            startedFiltering = False
+            continue
+        
+        if not startedFiltering:
+            lines.append(line)
+        
+    f.close()
+    out = open('/etc/hosts', 'w')
+    out.write('\n'.join(lines))
+    out.close()
+    
+    
+
+
+def serve():
+    global page
+    host = '127.0.0.2' 
+    port = 80 
+    backlog = 5 
+    size = 1024 
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
+    s.bind((host,port)) 
+    s.listen(backlog)
+    silent_print("Serving at " + host + "on port " + str(port))
+    while True: 
+        client, address = s.accept() 
+        data = client.recv(size) 
+        if data: 
+            client.send(page) 
+        client.close()
+
+
+
+
+
+def cleanup(*args):
+    print "Removing distracting sites from hosts file."
+    remove_sites()
+    os.remove(LOCKFILE)
+    print 'Exiting'
+    sys.exit(0)
+
+
+def registerCleanupSignal():
+    silent_print("Registering cleanup signal.")
+    signal.signal(signal.SIGINT, cleanup)
+    signal.signal(signal.SIGTERM, cleanup)
+
+    
+if __name__ == "__main__":
+    SILENT = ("--silent" in sys.argv )
+    
+    checkIfRoot()
+    checkIfRunning()
+    addLoopback()
+    silent_print("Adding sites:")
+    silent_print(sites)
+    add_sites()
+    
+    pid = os.fork()
+    
+    if pid == 0:
+        registerCleanupSignal()
+        serve()
+    else:
+        print str(pid)
+        pidfile = open(LOCKFILE, 'w')
+        pidfile.write(str(pid))
+        pidfile.close()
+    
+
