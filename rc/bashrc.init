@@ -21,6 +21,19 @@ then
     set -o verbose
 fi
 
+
+## Use this, so that if we aren't supposed to say anything (ie there is a .hushlogin file)
+## then we don't accidentally spill any input
+function echo {
+    if [ ! -e ~/.hushlogin ]
+    then
+        builtin echo $*
+    fi
+}
+
+
+
+
 ################################################################################
 ## These three variables absolutely have to be defined
 # $SCRIPTS_DIR       where the scripts are located. can be hoisted into memory.
@@ -97,3 +110,7 @@ then
     BASHRC_END_TIME=$(date +%s)
     echo -e "${COLOR_Purple}[bashrc] Up in $(echo "$BASHRC_END_TIME - $BASHRC_START_TIME" | bc -l) seconds.$COLOR_off"
 fi
+
+
+# put echo back to where it was
+unset -f echo

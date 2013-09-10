@@ -1,3 +1,13 @@
+## Use this, so that if we aren't supposed to say anything (ie there is a .hushlogin file)
+## then we don't accidentally spill any input
+function echo {
+    if [ ! -e ~/.hushlogin ]
+    then
+        builtin echo $*
+    fi
+}
+
+
 ## This mirrors scripts/rc/bashrc.init
 
 export SCRIPTS_DIR="$HOME/pers/scripts"
@@ -8,4 +18,11 @@ export ZSHINCLUDES_DIR="$SCRIPTS_DIR/zshincludes"
 export TORAMDISK=""
 
 export PATH="$PATH:$SCRIPTS_DIR"
+
+
+
 source $ZSHINCLUDES_DIR/INCLUDE.sh
+
+
+# put echo back to where it was
+unset -f echo
