@@ -196,11 +196,12 @@ function add_include_to_sudoers {
             echo -e "${COLOR_Blue}Adding an include directive in /etc/sudoers${COLOR_off}"
                 
             SUDOERS_TEMP=$(mktemp /tmp/sudoers.XXXXX)
+            echo "Temporary sudoers file is $SUDOERS_TEMP"
             sudo cat /etc/sudoers >> $SUDOERS_TEMP
             
             echo -e "\n\n## Added by setup-new-machine.sh on $(date)" >> $SUDOERS_TEMP
             echo -e "includedir /etc/sudoers.d" >> $SUDOERS_TEMP
-            if visudo -c -f $SUDOERS_TEMP 
+            if sudo visudo -c -f $SUDOERS_TEMP 
             then
                 echo -e "${COLOR_Blue}New sudoers file is syntactically correct.  Installing.${COLOR_off}"
                 sudo flock /etc/sudoers -c "cat $SUDOERS_TEMP | sudo tee /etc/sudoers"
@@ -215,7 +216,7 @@ function add_include_to_sudoers {
             else
                 echo -e "${COLOR_BYellow}New sudoers file is incorrect.  NOT installing.${COLOR_off}"
             fi
-            rm $SUDOERS_TEMP
+            #rm $SUDOERS_TEMP
         fi
     fi
 
@@ -577,6 +578,20 @@ function install_backup_cron {
 
 
 ## ----------------------------------------------------------------------------
+## backup-hosts.sh
+## ----------------------------------------------------------------------------
+function install_backup_hosts {
+    checkpoint 'install_backup_hosts'
+    echo -e "${COLOR_Blue}Installing backup-hosts.sh${COLOR_off}"
+    
+    $HOME/pers/scripts/backup-hosts.sh --install
+    
+    echo -e "${COLOR_BGreen}Install of backup-hosts.sh complete.${COLOR_off}"
+
+}
+
+
+## ----------------------------------------------------------------------------
 ## compile the fortunes
 ## ----------------------------------------------------------------------------
 function compile_fortunes {
@@ -658,6 +673,7 @@ function gammut {
     build_scripts_parallel
     build_scripts_csvkit
     install_backup_cron
+    install_backup_hosts
     compile_fortunes
     bashrc_nomem
     all_done
@@ -715,6 +731,7 @@ case  $STARTING_POINT  in
     build_scripts_parallel)        build_scripts_parallel         ;&
     build_scripts_csvkit)          build_scripts_csvkit           ;&
     install_backup_cron)           install_backup_cron            ;&
+    install_backup_hosts)          install_backup_hosts           ;&
     compile_fortunes)              compile_fortunes               ;&
     bashrc_nomem)                  bashrc_nomem                   ;&
     all_done)                      all_done                       ;;
