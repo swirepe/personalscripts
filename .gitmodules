@@ -25,3 +25,6 @@
 [submodule "src/autonav"]
 	path = src/autonav
 	url = https://github.com/swirepe/autonav.git
+[submodule "src/dreampie"]
+	path = src/dreampie
+	url = https://github.com/noamraph/dreampie.git
