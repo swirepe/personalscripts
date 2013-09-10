@@ -240,7 +240,7 @@ else
         
         echo -e "${COLOR_BYellow}****RESTARTING SCRIPT.****${COLOR_off}"
         
-        sudo su - swirepe -c "HOME=/home/swirepe  bash -c '$THIS_SCRIPT_PATH | tee --append /home/swirepe/new-machine-setup.log' "
+        sudo su - swirepe -c "HOME=/home/swirepe  bash -c '$THIS_SCRIPT_PATH | tee --append $HOME/new-machine-setup.log' "
         
         exit 0
     else
@@ -406,6 +406,28 @@ function clone_repos {
     git clone git@bitbucket.org:swirepe/machines.git $HOME/pers/machines
     git clone git@bitbucket.org:swirepe/fortunes.git $HOME/pers/quotes
     git clone git@github.com:swirepe/personalscripts.git $HOME/pers/scripts
+}
+
+
+function git_add_alternate_remote {
+    checkpoint 'add_alternate_remote'
+    
+    echo -e "${COLOR_Blue}Adding an alternate remote for the scripts repository.${COLOR_off}"
+    
+    cd $HOME/pers/scripts
+    git remote add bitbucket git@bitbucket.org:swirepe/scripts.git
+}
+
+
+function git_add_push_all {
+    checkpoint 'git_add_push_all'
+    
+    echo -e "${COLOR_Blue}Creating an 'all' remote repository.${COLOR_off}"
+    
+    cd $HOME/pers/scripts
+    while read -r name url method; do
+        git config --add remote.all.url "$url"
+    done < <(git remote -v | awk '!/all/ && /push/')
 }
 
 
@@ -662,6 +684,8 @@ function gammut {
     add_keys_to_ssh
     config_ssh_persist
     clone_repos
+    git_add_alternate_remote
+    git_add_push_all
     update_submodules
     update_oh_my_zsh_module
     symlinks
@@ -720,6 +744,8 @@ case  $STARTING_POINT  in
     add_keys_to_ssh)               add_keys_to_ssh                ;&
 	config_ssh_persist)            config_ssh_persist             ;&
     clone_repos)                   clone_repos                    ;&
+    git_add_alternate_remote)      git_add_alternate_remote       ;&
+    git_add_push_all)              git_add_push_all               ;&
     update_submodules)             update_submodules              ;&
     update_oh_my_zsh_module)       update_oh_my_zsh_module        ;&
     symlinks)                      symlinks                       ;&
@@ -735,6 +761,9 @@ case  $STARTING_POINT  in
     compile_fortunes)              compile_fortunes               ;&
     bashrc_nomem)                  bashrc_nomem                   ;&
     all_done)                      all_done                       ;;
+        
+    # these ones should not fall through
+    # build_scripts, for example, just calls the build for a bunch of other stuff    
     build_scripts)                 build_scripts                  ;;
     *)                             gammut                         ;;
     
