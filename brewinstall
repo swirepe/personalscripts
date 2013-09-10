@@ -2,32 +2,37 @@
 
 CURRDIR=$(pwd)
 
-if [[ -z "$PERS_DIR" ]]
-then
-    PERS_DIR="$HOME/pers"
-fi
+function update_machines {
 
-if [[ -d $PERS_DIR/machines ]]
-then
-  echo "Updating machines repository."
-  cd $PERS_DIR/machines
-  git pull origin master
-else
-  echo "No machines repository found.  Cloning."
-  git clone git@bitbucket.org:swirepe/machines.git $PERS_DIR/machines
-fi
+    if [[ -z "$PERS_DIR" ]]
+    then
+        PERS_DIR="$HOME/pers"
+    fi
+    
+    if [[ -d $PERS_DIR/machines      ]]  &&
+       [[ -d $PERS_DIR/machines/.git ]]
+    then
+      echo "Updating machines repository."
+      cd $PERS_DIR/machines
+      git pull origin master
+    else
+      echo "No machines repository found.  Cloning."
+      git clone git@bitbucket.org:swirepe/machines.git $PERS_DIR/machines
+    fi
+    
+    
+    BREWRECORD_DIR="$PERS_DIR/machines/homebrew/$(hostname)"
+    
+    if [ ! -d $BREWRECORD_DIR ]
+    then
+        echo "$BREWRECORD_DIR does not exist: creating."
+        mkdir -p $BREWRECORD_DIR
+    fi
 
-
-BREWRECORD_DIR="$PERS_DIR/machines/homebrew/$(hostname)"
-
-if [ ! -d $BREWRECORD_DIR ]
-then
-    echo "$BREWRECORD_DIR does not exist: creating."
-    mkdir -p $BREWRECORD_DIR
-fi
-
+}
 
 brew install "$@" && 
+update_machines &&
 cd "$BREWRECORD_DIR" && 
 brew list > brewlist.txt && 
 git add brewlist.txt && 
