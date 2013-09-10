@@ -120,7 +120,11 @@ def checkIfRunning():
 
 
 def addLoopback():
-    os.system("sudo ifconfig lo0 alias 127.0.0.2 up")
+    os.system("ifconfig lo0 alias 127.0.0.2 up")
+
+
+def flushDNSCache():
+    os.system("dscacheutil -flushcache")
 
 
 def add_sites():
@@ -200,6 +204,7 @@ if __name__ == "__main__":
     checkIfRoot()
     checkIfRunning()
     addLoopback()
+    flushDNSCache()
     silent_print("Adding sites:")
     silent_print(sites)
     add_sites()
