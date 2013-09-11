@@ -12,6 +12,12 @@ then
 	shift
 fi
 
+# mac doesn't know about ucmd
+if [[ "$(uname)" == "Darwin" ]]
+then
+	CMD="args"
+fi
+
 
 ARGS="$@"
 if [[ -z $ARGS ]]
