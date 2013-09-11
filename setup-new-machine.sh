@@ -28,9 +28,9 @@ then
     THIS_SCRIPT_PATH="$HOME/$(basename $0)"
 else
     echo "Moving $0 to $HOME"
-    cp $0 $HOME/$0
+    cp $0 $HOME/$(basename $0)
     echo "Restarting at home."
-    exec bash -c "$HOME/$0"
+    exec bash -c "$HOME/$(basename $0)"
 fi
 
 
@@ -115,9 +115,10 @@ function intro {
 ## ----------------------------------------------------------------------------
 function names {
     checkpoint 'names'
-        
+    
     echo -e "${COLOR_BIBlue}user:${COLOR_off}\t$(whoami)"
     echo -e "${COLOR_BIBlue}host:${COLOR_off}\t$(hostname)"
+    echo -e "${COLOR_BIBlue}script:${COLOR_off}\t$THIS_SCRIPT_PATH"
 
 }
 ## ----------------------------------------------------------------------------
@@ -258,15 +259,29 @@ else
     restart=${restart:-yes}
     if [[ "$(echo $restart | grep -i  ^y )" ]]
     then
-        
-        echo -e "${COLOR_BYellow}\n****RESTARTING SCRIPT.****${COLOR_off}"
-        
+        echo -e "${COLOR_Blue}Moving setup files to swirepe's home.${COLOR_off}"
+
         chmod a+rw $HOME/new-machine-setup.log
         sudo cp $HOME/new-machine-setup.log /home/swirepe/new-machine-setup.log
         
-        echo -e "${COLOR_BYellow}Logs now at /home/swirepe/new-machine-setup.log${COLOR_off}"
+        echo -e "${COLOR_BBlue}Logs now at /home/swirepe/new-machine-setup.log${COLOR_off}"
         
-        sudo su - swirepe -c "bash -c '$THIS_SCRIPT_PATH | tee --append /home/swirepe/new-machine-setup.log' "
+        chmod a+rw $HOME/setup-new-machine.checkpoint
+        sudo cp $HOME/setup-new-machine.checkpoint /home/swirepe/setup-new-machine.checkpoint
+        
+        echo -e "${COLOR_Blue}Checkpoint file now at /home/swirepe/setup-new-machine.checkpoint${COLOR_off}"
+        
+        chmod a+rwx $THIS_SCRIPT_PATH
+        sudo cp $THIS_SCRIPT_PATH /home/swirepe/$(basename $THIS_SCRIPT_PATH)
+        
+        echo -e "${COLOR_Blue}Setup script now at /home/swirepe/$(basename $THIS_SCRIPT_PATH)${COLOR_off}"
+        
+        
+        
+        echo -e "${COLOR_BYellow}\n****RESTARTING SCRIPT.****${COLOR_off}"
+        
+        
+        sudo su - swirepe -c "bash -c '/home/swirepe/$(basename $THIS_SCRIPT_PATH) | tee --append /home/swirepe/new-machine-setup.log' "
         
         exit 0
     else
