@@ -502,7 +502,9 @@ function config_ssh_persist {
     echo "Host *" >> ~/.ssh/config
     echo -e "    ControlMaster auto" >> ~/.ssh/config
     echo -e "    ControlPath /tmp/ssh-%r@%h:%p" >> ~/.ssh/config
-    echo -e "    ControlPersist yes" >> ~/.ssh/config
+    
+    echo -e "\n## Warning: ControlPersist doesn't work with older versions of ssh" >> ~/.ssh/config
+    echo -e "#    ControlPersist yes" >> ~/.ssh/config
     echo -e "## ---------------------------------------------\n"  >> ~/.ssh/config
 
     echo -e "${COLOR_BGreen}Done adding persistence options to ~/.ssh/config${COLOR_off}"
@@ -739,11 +741,24 @@ function build_scripts_csvkit     {
 function build_scripts_chooseln     {
     checkpoint 'build_scripts_chooseln'
 
-    echo -e "${COLOR_Blue}Building and installing build_scripts_chooseln.${COLOR_off}"
+    echo -e "${COLOR_Blue}Building and installing chooseln.${COLOR_off}"
     cd $HOME/pers/scripts/src/chooseln
     make
     sudo make install
     echo -e "${COLOR_BGreen}Install of chooseln complete.${COLOR_off}"
+}
+
+
+function build_scripts_mosh     {
+    checkpoint 'build_scripts_mosh'
+
+    echo -e "${COLOR_Blue}Building and installing mosh.${COLOR_off}"
+    cd $HOME/pers/scripts/src/mosh
+    ./autogen.sh
+    ./configure
+    make
+    sudo make install
+    echo -e "${COLOR_BGreen}Install of mosh complete.${COLOR_off}"
 }
 
 
@@ -865,7 +880,8 @@ function gammut {
     build_scripts_git_extras      
     build_scripts_parallel        
     build_scripts_csvkit          
-    build_scripts_chooseln        
+    build_scripts_chooseln
+    build_scripts_mosh
     install_backup_cron           
     install_backup_hosts          
     compile_fortunes              
@@ -932,6 +948,7 @@ case  $STARTING_POINT  in
     build_scripts_parallel)        build_scripts_parallel         ;&
     build_scripts_csvkit)          build_scripts_csvkit           ;&
     build_scripts_chooseln)        build_scripts_chooseln         ;&
+    build_scripts_mosh)            build_scripts_mosh             ;&
     install_backup_cron)           install_backup_cron            ;&
     install_backup_hosts)          install_backup_hosts           ;&
     compile_fortunes)              compile_fortunes               ;&
