@@ -438,6 +438,22 @@ function update_submodules {
     git submodule update --init --recursive 
 }
 
+
+function checkout_master_on_submodules {
+    checkpoint 'checkout_master_on_submodules'
+    cd $HOME/pers/scripts
+    
+    for submodule in $( git submodule | awk  '{ print $2 ;}' )
+    do
+        cd $HOME/pers/scripts/$submodule
+        echo -n "Checking out master on $submodule: " 
+        git checkout master 2>&1
+    done
+    
+}
+
+
+
 function update_oh_my_zsh_module {
     checkpoint 'update_oh_my_zsh_module'
     echo -e "${COLOR_Blue}Updating oh-my-zsh (even if you aren't using it.)${COLOR_off}"
@@ -698,6 +714,7 @@ function gammut {
     git_add_alternate_remote
     git_add_push_all
     update_submodules
+    checkout_master_on_submodules
     update_oh_my_zsh_module
     symlinks
     build_scripts_sagi
@@ -759,6 +776,7 @@ case  $STARTING_POINT  in
     git_add_alternate_remote)      git_add_alternate_remote       ;&
     git_add_push_all)              git_add_push_all               ;&
     update_submodules)             update_submodules              ;&
+    checkout_master_on_submodules) checkout_master_on_submodules  ;&
     update_oh_my_zsh_module)       update_oh_my_zsh_module        ;&
     symlinks)                      symlinks                       ;&
     build_scripts_sagi)            build_scripts_sagi             ;&

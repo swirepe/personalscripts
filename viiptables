@@ -43,7 +43,7 @@ function add_to_machines_repo {
     
 }
 
-
+ED="$EDITOR"
 MACHINES=''
 PIDFILE=''
 if [[ "$1" == "--restore-after-five-minutes" ]]
@@ -70,6 +70,8 @@ else
                 echo  "--help               Show this information."
                 echo  "--machines           Store iptables in the machines repository."
                 echo  "--pid PIDFILE        Location to store the pid of the restarter process."
+                echo  "--editor EDITOR      Use this editor instead of the one defined in \$EDITOR"
+                echo  ""
                 echo  "This is an example iptables file, with descriptions."
                 echo  "See https://fedoraproject.org/wiki/How_to_edit_iptables_rules?rd=User_talk:Rforlot"
                 echo  ""
@@ -91,6 +93,13 @@ else
                 MACHINES="True"
                 shift
                 ;;
+             --editor)   
+                shift
+                if test $# -gt 0
+                then
+                    ED="$1"
+                fi
+                shift
              --pid)
                 shift
                 if test $# -gt 0
@@ -98,7 +107,7 @@ else
                     PIDFILE="$1"
                 else
                     echo "Error: no pidfile named." 1>&2
-                    exit 4
+                    exit 5
                 fi
                 shift 
                 ;;
@@ -131,18 +140,28 @@ fi
 
 ## get an editor
 
-if [ -z "$EDITOR" ]
+if [ -z "$ED" ]
 then
-    EDITOR="$(which vim || which nano || which vi)"
+    ED="$(which vim || which nano || which vi)"
 fi
 
-if [ -z "$EDITOR" ]
+if [ -z "$ED" ]
 then
     echo "ERROR: \$EDITOR not set." 1>&2
     exit 3
 fi
 
+if [[ ! -x $ED ]] &&
+   [[ -z "$(which $ED)" ]]
+then
+    echo "ERROR: Editor $ED not found."
+    exit 4
+fi
 
+
+### THE IMPORTANT STUFF
+
+# store the ip tables twice: once for editing, once for restoration
 TMP_TABLE_ORIGINAL="$(mktemp /etc/iptables-original.XXXXXX)"
 TMP_TABLE_EDIT="$(mktemp /etc/iptables-edit.XXXXXX)"
 
@@ -150,9 +169,12 @@ TMP_TABLE_EDIT="$(mktemp /etc/iptables-edit.XXXXXX)"
 iptables-save > $TMP_TABLE_ORIGINAL
 iptables-save > $TMP_TABLE_EDIT
 
+
+# see if, after editing, the iptables file has changed.
+
 HASH_PRE_EDIT="$(shasum $TMP_TABLE_EDIT)"
 
-$EDITOR $TMP_TABLE_EDIT
+$ED $TMP_TABLE_EDIT
 
 HASH_POST_EDIT="$(shasum $TMP_TABLE_EDIT)"
 
@@ -165,9 +187,12 @@ else
     echo "Temporary iptables file $TMP_TABLE_EDIT successfully installed."
 fi
 
+# load up that iptables file we passed to the user to edit
 
 iptables-restore < $TMP_TABLE_EDIT
 
+
+# restore the iptables file after five minutes, even if they close their terminal
 
 nohup $0 --restore-after-five-minutes $TMP_TABLE_ORIGINAL $MACHINES &
 PID="$!"
@@ -181,6 +206,8 @@ then
     echo "$PID" > $PIDFILE
 fi
 
+
+# add to the machines repo, if necessary
 
 if [[ "$MACHINES" ]]
 then
