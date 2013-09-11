@@ -128,17 +128,34 @@ function add_sudoersd {
     # make sure /etc/sudoers.d exists
     [ -d /etc/sudoers.d ] || sudo mkdir -p /etc/sudoers.d
     
-    echo -e "${COLOR_Blue}Creating sudoers file /etc/sudoers.d/${FILE}${COLOR_off}"
     FILE="$1"
-    CONTENT="##added by setup-new-machine on $(date)\n$2"
-    echo -e "$CONTENT" | sudo tee /etc/sudoers.d/$FILE
-    if  visudo -c -f /etc/sudoers.d/$FILE 
+    CONTENT="\n# Added by setup-new-machine on $(date)\n$2"
+    
+    echo -e "${COLOR_Blue}Creating temporary sudoers file $SUDOERS_TEMP"
+    
+    SUDOERS_TEMP=$(mktemp /tmp/sudoers.XXXXX)
+
+    if [ -e /etc/sudoers.d/$FILE ]
     then
+        echo -e "Moving over old contents of /etc/sudoers.d/$FILE"
+        sudo cat /etc/sudoers.d/$FILE | sudo tee $SUDOERS_TEMP
+    fi
+    
+
+    echo -e "$CONTENT" | sudo tee --append $SUDOERS_TEMP
+    
+
+    echo -e "${COLOR_Blue}Creating sudoers file /etc/sudoers.d/${FILE}${COLOR_off}"
+    
+    if  visudo -c -f $SUDOERS_TEMP
+    then
+        sudo cp $SUDOERS_TEMP /etc/sudoers.d/$FILE
         sudo chmod 0440 /etc/sudoers.d/$FILE
         echo -e "${COLOR_BIBlue}Sudoers file /etc/sudoers.d/$FILE successfully installed.${COLOR_off}"
     else
-        echo -e "${COLOR_BYellow}New sudoers file /etc/sudoers.d/$FILE is incorrect.  Removing.${COLOR_off}"
-        sudo rm /etc/sudoers.d/$FILE
+        echo -e "${COLOR_BYellow}Temporary sudoers file $SUDOERS_TEMP is incorrect.  Not installing.${COLOR_off}"
+        
+        
     fi
 }
 
@@ -199,6 +216,20 @@ function add_swirepe_to_sudoersd {
             echo -e "${COLOR_BIBlue}User swirepe added to /etc/sudoers.d/${COLOR_off}"
         fi
     fi
+}
+
+
+
+function add_defaults_to_sudoersd {
+    checkpoint 'add_defaults_to_sudoersd'
+
+    if [[ "$(uname)" == *"Linux"* ]]
+    then
+        add_sudoersd 'defaults.sudo' 'Defaults    env_reset'
+        add_sudoersd 'defaults.sudo' 'Defaults    secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"'
+    fi
+    
+    echo -e "${COLOR_BIBlue}Defaults added to /etc/sudoers.d/${COLOR_off}"
 }
 
 
@@ -273,7 +304,7 @@ else
         
         
         sudo cp $THIS_SCRIPT_PATH /home/swirepe/$(basename $THIS_SCRIPT_PATH)
-        chmod a+rwx /home/swirepe/$(basename $THIS_SCRIPT_PATH)
+        sudo chmod a+rwx /home/swirepe/$(basename $THIS_SCRIPT_PATH)
         
         echo -e "${COLOR_Blue}Setup script now at /home/swirepe/$(basename $THIS_SCRIPT_PATH)${COLOR_off}"
         
@@ -793,43 +824,45 @@ function all_done {
 
 
 function gammut {
-    intro
-    names
-    add_group_admin
-    add_user_swirepe
-    add_swirepe_to_sudoersd
-    add_include_to_sudoers
-    restart_as_swirepe
-    debian_core
-    util_check
-    pi_specific
-    fetch_keys
-    generate_key
-    set_key_permissions
-    add_keys_to_ssh
-    config_ssh_persist
-    git_no_host_checking
-    git_no_host_checking
-    clone_repos
-    git_add_alternate_remote
-    git_add_push_all
-    update_submodules
-    checkout_master_on_submodules
-    update_oh_my_zsh_module
-    symlinks
-    build_scripts_sagi
-    build_scripts_stderred
-    build_scripts_j
-    build_scripts_ag
-    build_scripts_git_extras
-    build_scripts_parallel
-    build_scripts_csvkit
-    build_scripts_chooseln
-    install_backup_cron
-    install_backup_hosts
-    compile_fortunes
-    bashrc_nomem
-    all_done
+    start_behind_tee              
+    intro                         
+    names                         
+    add_group_admin                
+    add_user_swirepe              
+    add_swirepe_to_sudoersd       
+    add_include_to_sudoers        
+    add_include_to_sudoers        
+    add_defaults_to_sudoersd      
+    restart_as_swirepe            
+    debian_core                   
+    util_check                    
+    pi_specific                   
+    fetch_keys                    
+    generate_key                  
+    set_key_permissions           
+    add_keys_to_ssh               
+	config_ssh_persist            
+	git_no_host_checking          
+    clone_repos                   
+    git_add_alternate_remote      
+    git_add_push_all              
+    update_submodules             
+    checkout_master_on_submodules 
+    update_oh_my_zsh_module       
+    symlinks                      
+    build_scripts_sagi            
+    build_scripts_stderred        
+    build_scripts_j               
+    build_scripts_ag              
+    build_scripts_git_extras      
+    build_scripts_parallel        
+    build_scripts_csvkit          
+    build_scripts_chooseln        
+    install_backup_cron           
+    install_backup_hosts          
+    compile_fortunes              
+    bashrc_nomem                  
+    all_done                      
 }
 
 
@@ -865,6 +898,7 @@ case  $STARTING_POINT  in
     add_swirepe_to_sudoersd)       add_swirepe_to_sudoersd        ;&
     add_include_to_sudoers)        add_include_to_sudoers         ;&
     add_include_to_sudoers)        add_include_to_sudoers         ;&
+    add_defaults_to_sudoersd)      add_defaults_to_sudoersd       ;&
     restart_as_swirepe)            restart_as_swirepe             ;&
     debian_core)                   debian_core                    ;&
     util_check)                    util_check                     ;&

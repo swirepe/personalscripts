@@ -3,6 +3,7 @@
 
 DIRNAME="$(mktemp -d vagrant.XXXXX)"
 cd $DIRNAME
+echo "$DIRNAME"
 vagrant init lucid32
 vagrant up
 vagrant ssh
