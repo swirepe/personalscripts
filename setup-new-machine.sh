@@ -24,11 +24,6 @@ COLOR_BPurple='\033[1;35m'
 THIS_SCRIPT_PATH="$PWD/$0"
 
 
-# this is a compatability thing.  I can't figure out why I am dropping the paths
-# that apt needs to run successfully on vagrant when I switch users.
-# HOME="grep $(whoami) /etc/passwd | cut -d ':' -f6"
-
-
 if [[ "$(pwd)" == "$HOME" ]]
 then
     THIS_SCRIPT_PATH="$HOME/$(basename $0)"
@@ -502,13 +497,13 @@ function config_ssh_persist {
 	
     echo -e "${COLOR_Blue}Adding persistence options to ~/.ssh/config${COLOR_off}"
     mkdir -p ~/.ssh
-    echo -e "\n\n## ---------------------------------------------\n"  >> ~/.ssh/config
-    echo -e "## added on $(date) by setup-new-machine.sh\n at checkpoint config_ssh_persist" >> ~/.ssh/config
+    echo -e "\n\n## ---------------------------------------------"  >> ~/.ssh/config
+    echo -e "## added on $(date) by setup-new-machine.sh at checkpoint config_ssh_persist" >> ~/.ssh/config
     echo "Host *" >> ~/.ssh/config
     echo -e "    ControlMaster auto" >> ~/.ssh/config
     echo -e "    ControlPath /tmp/ssh-%r@%h:%p" >> ~/.ssh/config
     echo -e "    ControlPersist yes" >> ~/.ssh/config
-    echo -e "\n\## ---------------------------------------------\n"  >> ~/.ssh/config
+    echo -e "## ---------------------------------------------\n"  >> ~/.ssh/config
 
     echo -e "${COLOR_BGreen}Done adding persistence options to ~/.ssh/config${COLOR_off}"
 
@@ -522,16 +517,16 @@ function git_no_host_checking {
     
     echo -e "${COLOR_Blue}Removing host checking for github.com in ~/.ssh/config${COLOR_off}"
     
-    echo -e "\n\n## ---------------------------------------------\n"  >> ~/.ssh/config
+    echo -e "\n\n## ---------------------------------------------"  >> ~/.ssh/config
     echo -e "## added on $(date) by setup-new-machine.sh at checkpoint git_no_host_checking" >> ~/.ssh/config
-
     echo -e "Host github.com " >> ~/.ssh/config
     echo -e "    StrictHostKeyChecking no\n" >> ~/.ssh/config
     
     echo -e "${COLOR_Blue}Removing host checking for bitbucket.org in ~/.ssh/config${COLOR_off}"
+    
     echo -e "Host bitbucket.org" >> ~/.ssh/config
     echo -e "    StrictHostKeyChecking no\n" >> ~/.ssh/config
-    echo -e "\n\n## ---------------------------------------------\n"  >> ~/.ssh/config
+    echo -e "## ---------------------------------------------\n"  >> ~/.ssh/config
 }
 
 
@@ -562,7 +557,7 @@ function git_add_alternate_remote {
 function git_add_push_all {
     checkpoint 'git_add_push_all'
     
-    echo -e "${COLOR_Blue}Creating an 'all' remote repository.${COLOR_off}"
+    echo -e "${COLOR_Blue}Creating an 'all' remote repository for pers/scripts.${COLOR_off}"
     
     cd $HOME/pers/scripts
     while read -r name url method; do
