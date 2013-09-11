@@ -23,7 +23,13 @@ COLOR_BPurple='\033[1;35m'
 ## ----------------------------------------------------------------------------
 THIS_SCRIPT_PATH="$PWD/$0"
 
-if [[ $PWD == $HOME ]]
+
+# this is a compatability thing.  I can't figure out why I am dropping the paths
+# that apt needs to run successfully on vagrant when I switch users.
+# HOME="grep $(whoami) /etc/passwd | cut -d ':' -f6"
+
+
+if [[ "$(pwd)" == "$HOME" ]]
 then
     THIS_SCRIPT_PATH="$HOME/$(basename $0)"
 else
@@ -32,6 +38,8 @@ else
     echo "Restarting at home."
     exec bash -c "$HOME/$(basename $0)"
 fi
+
+
 
 
 ## ----------------------------------------------------------------------------
@@ -315,8 +323,10 @@ else
         
         echo -e "${COLOR_BYellow}\n****RESTARTING SCRIPT.****${COLOR_off}"
         
-        sudo su --login --preserve-environment -c "/home/swirepe/$(basename $THIS_SCRIPT_PATH) | sudo tee --append /home/swirepe/new-machine-setup.log" swirepe
-
+        # preserve environment gives us the right paths, but ruins our home.
+        # sudo su --login --preserve-environment -c "/home/swirepe/$(basename $THIS_SCRIPT_PATH) | sudo tee --append /home/swirepe/new-machine-setup.log" swirepe
+        sudo -i -u swirepe /home/swirepe/$(basename $THIS_SCRIPT_PATH) | sudo -i -u swirepe tee --append /home/swirepe/new-machine-setup.log
+        
         exit 0
     else
         echo -e "${COLOR_BIBlue}Not restarting as user swirepe.${COLOR_off}"
