@@ -311,8 +311,8 @@ else
         
         echo -e "${COLOR_BYellow}\n****RESTARTING SCRIPT.****${COLOR_off}"
         
-        
-        sudo su --login -c "bash -c '/home/swirepe/$(basename $THIS_SCRIPT_PATH) | sudo tee --append /home/swirepe/new-machine-setup.log' " swirepe
+        sudo su --login --preserve-environment -c "/home/swirepe/$(basename $THIS_SCRIPT_PATH) | sudo tee --append /home/swirepe/new-machine-setup.log" swirepe
+        #sudo su --login -c "bash -c '/home/swirepe/$(basename $THIS_SCRIPT_PATH) | sudo tee --append /home/swirepe/new-machine-setup.log' " swirepe
         
         exit 0
     else
