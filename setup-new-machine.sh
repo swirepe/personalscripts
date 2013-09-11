@@ -504,6 +504,7 @@ function build_scripts {
     build_scripts_git_extras
     build_scripts_parallel
     build_scripts_csvkit
+    build_scripts_chooseln
 
 }
 
@@ -583,6 +584,16 @@ function build_scripts_csvkit     {
     echo -e "${COLOR_BGreen}Install of csvkit complete.${COLOR_off}"
 }
 
+
+function build_scripts_chooseln     {
+    checkpoint 'build_scripts_chooseln'
+
+    echo -e "${COLOR_Blue}Building and installing build_scripts_chooseln.${COLOR_off}"
+    cd $HOME/pers/scripts/src/chooseln
+    make
+    sudo make install
+    echo -e "${COLOR_BGreen}Install of chooseln complete.${COLOR_off}"
+}
 
 
 ## ----------------------------------------------------------------------------
@@ -696,6 +707,7 @@ function gammut {
     build_scripts_git_extras
     build_scripts_parallel
     build_scripts_csvkit
+    build_scripts_chooseln
     install_backup_cron
     install_backup_hosts
     compile_fortunes
@@ -756,6 +768,7 @@ case  $STARTING_POINT  in
     build_scripts_git_extras)      build_scripts_git_extras       ;&
     build_scripts_parallel)        build_scripts_parallel         ;&
     build_scripts_csvkit)          build_scripts_csvkit           ;&
+    build_scripts_chooseln)        build_scripts_chooseln         ;&
     install_backup_cron)           install_backup_cron            ;&
     install_backup_hosts)          install_backup_hosts           ;&
     compile_fortunes)              compile_fortunes               ;&
