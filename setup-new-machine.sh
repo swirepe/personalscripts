@@ -259,29 +259,29 @@ else
     restart=${restart:-yes}
     if [[ "$(echo $restart | grep -i  ^y )" ]]
     then
-        echo -e "${COLOR_Blue}Moving setup files to swirepe's home.${COLOR_off}"
+        echo -e "${COLOR_Blue}\nMoving setup files to swirepe's home.${COLOR_off}"
 
-        chmod a+rw $HOME/new-machine-setup.log
         sudo cp $HOME/new-machine-setup.log /home/swirepe/new-machine-setup.log
+        sudo chmod a+rw /home/swirepe/new-machine-setup.log
         
-        echo -e "${COLOR_BBlue}Logs now at /home/swirepe/new-machine-setup.log${COLOR_off}"
+        echo -e "${COLOR_Blue}Logs now at /home/swirepe/new-machine-setup.log${COLOR_off}"
         
-        chmod a+rw $HOME/setup-new-machine.checkpoint
         sudo cp $HOME/setup-new-machine.checkpoint /home/swirepe/setup-new-machine.checkpoint
+        sudo chmod a+rw /home/swirepe/setup-new-machine.checkpoint
         
         echo -e "${COLOR_Blue}Checkpoint file now at /home/swirepe/setup-new-machine.checkpoint${COLOR_off}"
         
-        chmod a+rwx $THIS_SCRIPT_PATH
+        
         sudo cp $THIS_SCRIPT_PATH /home/swirepe/$(basename $THIS_SCRIPT_PATH)
+        chmod a+rwx /home/swirepe/$(basename $THIS_SCRIPT_PATH)
         
         echo -e "${COLOR_Blue}Setup script now at /home/swirepe/$(basename $THIS_SCRIPT_PATH)${COLOR_off}"
-        
         
         
         echo -e "${COLOR_BYellow}\n****RESTARTING SCRIPT.****${COLOR_off}"
         
         
-        sudo su - swirepe -c "bash -c '/home/swirepe/$(basename $THIS_SCRIPT_PATH) | tee --append /home/swirepe/new-machine-setup.log' "
+        sudo su - swirepe -c "bash -c '/home/swirepe/$(basename $THIS_SCRIPT_PATH) | sudo tee --append /home/swirepe/new-machine-setup.log' "
         
         exit 0
     else
