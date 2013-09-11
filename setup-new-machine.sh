@@ -400,7 +400,7 @@ function add_keys_to_ssh {
     
     cd $HOME/pers/keys
     
-    for $key in $(ls *key* )
+    for key in $(ls *key* | grep -v "\.pub$")
     do
         echo "Adding key $key"
         ssh-add $key
