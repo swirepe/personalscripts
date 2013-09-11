@@ -11,6 +11,7 @@ COLOR_BGreen='\033[1;32m'
 COLOR_BYellow='\033[1;33m'
 COLOR_Blue='\033[0;34m'
 COLOR_BIBlue='\033[1;94m' 
+COLOR_BPurple='\033[1;35m'
 
 THIS_SCRIPT_PATH="$PWD/$0"
 
@@ -32,7 +33,7 @@ trap 'error ${LINENO} ${$?}' ERR
 
 function checkpoint {
     echo "$1" > $HOME/setup-new-machine.checkpoint
-    echo -e "${COLOR_BGreen}Checkpoint: $1"
+    echo -e "${COLOR_BPurple}Checkpoint: $1"
 }
 
 
@@ -57,7 +58,6 @@ function start_behind_tee {
 ## Introduce yourself!
 ## ----------------------------------------------------------------------------
 function intro {
-    
     checkpoint 'intro'
     
     echo -en "$COLOR_BGreen"
@@ -303,8 +303,6 @@ function util_check {
     echo -e "${COLOR_BGreen}All necessary programs are present.${COLOR_off}"
     
     
-    mkdir -p $HOME/pers
-    cd $HOME/pers
 }
 ## ----------------------------------------------------------------------------
 ## make getting stuff tenacious, just for this one time
@@ -342,10 +340,13 @@ function pi_specific {
 ## ----------------------------------------------------------------------------
 ## get the keys and extract them
 ## ----------------------------------------------------------------------------
-function keys {
-    checkpoint 'keys'
+function fetch_keys {
+    checkpoint 'fetch_keys'
     
     echo -e "${COLOR_Blue}Fetching keys.${COLOR_off}"
+    
+    mkdir -p $HOME/pers
+    cd $HOME/pers
     
     wget http://swirepe.com/keys.tar.gz.des3
     
@@ -358,8 +359,35 @@ function keys {
     
     openssl des3 -d -in keys.tar.gz.des3 -out keys.tar.gz
     tar zxvf keys.tar.gz
+    
+}
+
+
+
+## ----------------------------------------------------------------------------
+## make an additional key and set the permissions
+## ----------------------------------------------------------------------------
+
+
+function generate_key {
+    checkpoint 'generate_key'
+    
+    echo -e "${COLOR_Blue}Generating a new key.${COLOR_off}"
+    mkdir -p $HOME/pers/keys
+    ssh-keygen -t rsa -N "" -b 8192 -f "$HOME/pers/keys/$(whoami)-$(hostname)-8192bit-$(date -I)-key"
 
 }
+
+
+function set_key_permissions {
+    checkpoint 'set_key_permissions'
+    
+    echo -e "${COLOR_Blue}Setting permissions on keys directory $HOME/pers/keys/${COLOR_off}"
+    chmod -R go-rw $HOME/pers/keys/
+    
+}
+
+
 ## ----------------------------------------------------------------------------
 ## start ssh agent
 ## ----------------------------------------------------------------------------
@@ -370,8 +398,13 @@ function add_keys_to_ssh {
     
     eval `ssh-agent -s` 
     
-    yes yes | ssh-add $HOME/pers/keys/bitbucket-key
-    yes yes | ssh-add $HOME/pers/keys/github-key
+    cd $HOME/pers/keys
+    
+    for $key in $(ls *key* )
+    do
+        echo "Adding key $key"
+        ssh-add $key
+    done
     
     echo -e "${COLOR_BGreen}Keys successfully added.${COLOR_off}"
 
@@ -384,8 +417,8 @@ function config_ssh_persist {
 	
     echo -e "${COLOR_Blue}Adding persistence options to ~/.ssh/config${COLOR_off}"
     mkdir -p ~/.ssh
-    echo -e "\n\## ---------------------------------------------\n"  >> ~/.ssh/config
-    echo -e "\n## added on $(date) by setup-new-machine.sh\n" >> ~/.ssh/config
+    echo -e "\n\n## ---------------------------------------------\n"  >> ~/.ssh/config
+    echo -e "## added on $(date) by setup-new-machine.sh\n at checkpoint config_ssh_persist" >> ~/.ssh/config
     echo "Host *" >> ~/.ssh/config
     echo -e "    ControlMaster auto" >> ~/.ssh/config
     echo -e "    ControlPath /tmp/ssh-%r@%h:%p" >> ~/.ssh/config
@@ -395,6 +428,28 @@ function config_ssh_persist {
     echo -e "${COLOR_BGreen}Done adding persistence options to ~/.ssh/config${COLOR_off}"
 
 }
+
+## ----------------------------------------------------------------------------
+## remove host checking for github and bitbucket
+## ----------------------------------------------------------------------------
+function git_no_host_checking {
+    checkpoint 'git_no_host_checking'
+    
+    echo -e "${COLOR_Blue}Removing host checking for github.com in ~/.ssh/config${COLOR_off}"
+    
+    echo -e "\n\n## ---------------------------------------------\n"  >> ~/.ssh/config
+    echo -e "## added on $(date) by setup-new-machine.sh at checkpoint git_no_host_checking" >> ~/.ssh/config
+
+    echo -e "Host github.com " >> ~/.ssh/config
+    echo -e "    StrictHostKeyChecking no\n" >> ~/.ssh/config
+    
+    echo -e "${COLOR_Blue}Removing host checking for bitbucket.org in ~/.ssh/config${COLOR_off}"
+    echo -e "Host bitbucket.org" >> ~/.ssh/config
+    echo -e "    StrictHostKeyChecking no\n" >> ~/.ssh/config
+    echo -e "\n\n## ---------------------------------------------\n"  >> ~/.ssh/config
+}
+
+
 ## ----------------------------------------------------------------------------
 ## clone the repos
 ## ----------------------------------------------------------------------------
@@ -707,9 +762,13 @@ function gammut {
     debian_core
     util_check
     pi_specific
-    keys
+    fetch_keys
+    generate_key
+    set_key_permissions
     add_keys_to_ssh
     config_ssh_persist
+    git_no_host_checking
+    git_no_host_checking
     clone_repos
     git_add_alternate_remote
     git_add_push_all
@@ -733,7 +792,7 @@ function gammut {
 }
 
 
-STARTING_POINT=''
+STARTING_POINT='gammut'
 if [ -e $HOME/setup-new-machine.checkpoint ]
 then
     STARTING_POINT="$(cat $HOME/setup-new-machine.checkpoint)"
@@ -769,9 +828,12 @@ case  $STARTING_POINT  in
     debian_core)                   debian_core                    ;&
     util_check)                    util_check                     ;&
     pi_specific)                   pi_specific                    ;&
-    keys)                          keys                           ;&
+    fetch_keys)                    fetch_keys                     ;&
+    generate_key)                  generate_key                   ;&
+    set_key_permissions)           set_key_permissions            ;&
     add_keys_to_ssh)               add_keys_to_ssh                ;&
 	config_ssh_persist)            config_ssh_persist             ;&
+	git_no_host_checking)          git_no_host_checking           ;&
     clone_repos)                   clone_repos                    ;&
     git_add_alternate_remote)      git_add_alternate_remote       ;&
     git_add_push_all)              git_add_push_all               ;&
@@ -796,6 +858,7 @@ case  $STARTING_POINT  in
     # these ones should not fall through
     # build_scripts, for example, just calls the build for a bunch of other stuff    
     build_scripts)                 build_scripts                  ;;
+    gammut)                        gammut                         ;;
     *)                             gammut                         ;;
     
 esac
