@@ -28,3 +28,6 @@
 [submodule "src/dreampie"]
 	path = src/dreampie
 	url = https://github.com/noamraph/dreampie.git
+[submodule "src/chooseln"]
+	path = src/chooseln
+	url = git@github.com:swirepe/chooseln.git
