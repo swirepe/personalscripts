@@ -31,3 +31,6 @@
 [submodule "src/chooseln"]
 	path = src/chooseln
 	url = git@github.com:swirepe/chooseln.git
+[submodule "src/mosh"]
+	path = src/mosh
+	url = https://github.com/keithw/mosh
