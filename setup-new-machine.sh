@@ -8,12 +8,31 @@
 COLOR_off='\033[0m'
 COLOR_Red='\033[0;31m'
 COLOR_BGreen='\033[1;32m'
+COLOR_Green='\033[0;32m'
 COLOR_BYellow='\033[1;33m'
 COLOR_Blue='\033[0;34m'
 COLOR_BIBlue='\033[1;94m' 
 COLOR_BPurple='\033[1;35m'
 
+
+
+
+
+## ----------------------------------------------------------------------------
+## move the script somewhere I can work with it
+## ----------------------------------------------------------------------------
 THIS_SCRIPT_PATH="$PWD/$0"
+
+if [[ $PWD == $HOME ]]
+then
+    THIS_SCRIPT_PATH="$HOME/$(basename $0)"
+else
+    echo "Moving $0 to $HOME"
+    cp $0 $HOME/$0
+    echo "Restarting at home."
+    exec bash -c "$HOME/$0"
+fi
+
 
 ## ----------------------------------------------------------------------------
 ## set up error checking
@@ -33,7 +52,7 @@ trap 'error ${LINENO} ${$?}' ERR
 
 function checkpoint {
     echo "$1" > $HOME/setup-new-machine.checkpoint
-    echo -e "${COLOR_BPurple}Checkpoint: $1"
+    echo -e "${COLOR_Green}Checkpoint: $1${COLOR_off}"
 }
 
 
@@ -234,23 +253,28 @@ then
     echo -e "${COLOR_BGreen}Currently user swirepe.${COLOR_off}"
 else   
     
-    echo -e "${COLOR_BYellow}We can restart this command as user ${COLOR_BIBlue}swirepe${COLOR_off}${COLOR_BYellow}.${COLOR_off}"
-    read -t 5 -p "Restart as swirepe? [Y/n] " restart
+    echo -e "${COLOR_BYellow}We can restart this command as user${COLOR_off} ${COLOR_BIBlue}swirepe${COLOR_off}${COLOR_BYellow}.${COLOR_off}" 2>&1
+    read -t 5 -p "Restart as swirepe? [Y/n] " restart 2>&1 || true
     restart=${restart:-yes}
     if [[ "$(echo $restart | grep -i  ^y )" ]]
     then
         
-        echo -e "${COLOR_BYellow}****RESTARTING SCRIPT.****${COLOR_off}"
+        echo -e "${COLOR_BYellow}\n****RESTARTING SCRIPT.****${COLOR_off}"
         
-        sudo su - swirepe -c "HOME=/home/swirepe  bash -c '$THIS_SCRIPT_PATH | tee --append $HOME/new-machine-setup.log' "
+        chmod a+rw $HOME/new-machine-setup.log
+        sudo cp $HOME/new-machine-setup.log /home/swirepe/new-machine-setup.log
+        
+        echo -e "${COLOR_BYellow}Logs now at /home/swirepe/new-machine-setup.log${COLOR_off}"
+        
+        sudo su - swirepe -c "bash -c '$THIS_SCRIPT_PATH | tee --append /home/swirepe/new-machine-setup.log' "
         
         exit 0
     else
         echo -e "${COLOR_BIBlue}Not restarting as user swirepe.${COLOR_off}"
         
         echo -e "${COLOR_BYellow}We can pretend that home is at ${COLOR_BIBlue}/home/swirepe${COLOR_off}${COLOR_BYellow}.${COLOR_off}"
-        echo -e "${COLOR_BYellow}It is currently at  ${COLOR_Blue}${HOME}${COLOR_off}${COLOR_BYellow}.${COLOR_off}"
-        read -t 5 -p "Pretend home is /home/swirepe? [y/N] " rehome
+        echo -e "${COLOR_BYellow}It is currently at  ${COLOR_Blue}${HOME}${COLOR_off}${COLOR_BYellow}.${COLOR_off}" 2>&1
+        read -t 5 -p "Pretend home is /home/swirepe? [y/N] " rehome 2>&1 || true
         rehome=${rehome:-no}
         if [[ "$(echo $rehome | grep -i y)" ]]
         then
