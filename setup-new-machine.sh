@@ -185,11 +185,13 @@ function add_swirepe_to_sudoersd {
 function add_include_to_sudoers {
     checkpoint 'add_include_to_sudoers'
 
+    
+    
     if [[ "$(uname)" == *"Linux"* ]]
     then
 
         ## add that include directive to sudoers
-        if [[ "$(sudo cat /etc/sudoers | grep '^includedir /etc/sudoers.d')" ]]
+        if [[ "$(sudo cat /etc/sudoers | grep '^#includedir /etc/sudoers.d')" ]]
         then
             echo -e "${COLOR_BIBlue}Sudoers includes the directory /etc/sudoers.d/${COLOR_off}"
         else
@@ -199,8 +201,8 @@ function add_include_to_sudoers {
             echo "Temporary sudoers file is $SUDOERS_TEMP"
             sudo cat /etc/sudoers >> $SUDOERS_TEMP
             
-            echo -e "\n\n## Added by setup-new-machine.sh on $(date)" >> $SUDOERS_TEMP
-            echo -e "includedir /etc/sudoers.d" >> $SUDOERS_TEMP
+            echo -e "\n\n# Added by setup-new-machine.sh on $(date)" >> $SUDOERS_TEMP
+            echo -e "#includedir /etc/sudoers.d" >> $SUDOERS_TEMP
             if sudo visudo -c -f $SUDOERS_TEMP 
             then
                 echo -e "${COLOR_Blue}New sudoers file is syntactically correct.  Installing.${COLOR_off}"
