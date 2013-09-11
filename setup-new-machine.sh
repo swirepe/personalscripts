@@ -291,13 +291,9 @@ else
     if [[ "$(echo $restart | grep -i  ^y )" ]]
     then
         echo -e "${COLOR_Blue}\nMoving setup files to swirepe's home.${COLOR_off}"
-
-        sudo cp $HOME/new-machine-setup.log /home/swirepe/new-machine-setup.log
-        sudo chmod a+rw /home/swirepe/new-machine-setup.log
         
-        echo -e "${COLOR_Blue}Logs now at /home/swirepe/new-machine-setup.log${COLOR_off}"
-        
-        sudo cp $HOME/setup-new-machine.checkpoint /home/swirepe/setup-new-machine.checkpoint
+        sudo chmod a+rw $HOME/setup-new-machine.checkpoint
+        sudo ln $HOME/setup-new-machine.checkpoint /home/swirepe/setup-new-machine.checkpoint
         sudo chmod a+rw /home/swirepe/setup-new-machine.checkpoint
         
         echo -e "${COLOR_Blue}Checkpoint file now at /home/swirepe/setup-new-machine.checkpoint${COLOR_off}"
@@ -309,11 +305,18 @@ else
         echo -e "${COLOR_Blue}Setup script now at /home/swirepe/$(basename $THIS_SCRIPT_PATH)${COLOR_off}"
         
         
+        # change the permissions for the original one as well, because
+        # the original tee will still be running but we'll be a different user
+        sudo chmod a+rw $HOME/new-machine-setup.log
+        sudo ln $HOME/new-machine-setup.log /home/swirepe/new-machine-setup.log
+        sudo chmod a+rw /home/swirepe/new-machine-setup.log
+        
+        echo -e "${COLOR_Blue}Logs now at /home/swirepe/new-machine-setup.log${COLOR_off}"
+        
         echo -e "${COLOR_BYellow}\n****RESTARTING SCRIPT.****${COLOR_off}"
         
         sudo su --login --preserve-environment -c "/home/swirepe/$(basename $THIS_SCRIPT_PATH) | sudo tee --append /home/swirepe/new-machine-setup.log" swirepe
-        #sudo su --login -c "bash -c '/home/swirepe/$(basename $THIS_SCRIPT_PATH) | sudo tee --append /home/swirepe/new-machine-setup.log' " swirepe
-        
+
         exit 0
     else
         echo -e "${COLOR_BIBlue}Not restarting as user swirepe.${COLOR_off}"
