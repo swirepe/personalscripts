@@ -4,4 +4,3 @@ current.tmux_status
 *.shelf
 *.swp
 bashincludes/work.sh
-src/mosh
