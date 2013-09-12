@@ -15,7 +15,7 @@
 	url = https://github.com/visionmedia/git-extras.git
 [submodule "src/oh-my-zsh-copy"]
 	path = src/oh-my-zsh-copy
-	url = https://github.com/robbyrussell/oh-my-zsh.git
+	url = git@bitbucket.org:swirepe/oh-my-zsh-copy.git 
 [submodule "src/csvkit"]
 	path = src/csvkit
 	url = https://github.com/onyxfish/csvkit
