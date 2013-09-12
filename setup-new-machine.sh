@@ -595,8 +595,10 @@ function update_oh_my_zsh_module {
     checkpoint 'update_oh_my_zsh_module'
     echo -e "${COLOR_Blue}Updating oh-my-zsh (even if you aren't using it.)${COLOR_off}"
     cd $HOME/pers/scripts/src/oh-my-zsh-copy
-    git remote add bitbucket git@bitbucket.org:swirepe/oh-my-zsh-copy.git
-    git pull bitbucket master
+    git remote add upstream	https://github.com/robbyrussell/oh-my-zsh.git
+    git fetch origin -v
+    git fetch upstream -v
+    git merge upstream/master
     
     
     echo -e "${COLOR_BGreen}Repositories successfully cloned.${COLOR_off}"
@@ -752,12 +754,20 @@ function build_scripts_chooseln     {
 function build_scripts_mosh     {
     checkpoint 'build_scripts_mosh'
 
-    echo -e "${COLOR_Blue}Building and installing mosh.${COLOR_off}"
-    cd $HOME/pers/scripts/src/mosh
-    ./autogen.sh
-    ./configure
-    make
-    sudo make install
+    if [[ "$(which apt-cache)"       ]] &&
+       [[ "$(apt-cache search mosh)" ]]
+    then
+        echo -e "${COLOR_Blue}Using apt to install mosh.${COLOR_off}"
+        sagi -y mosh
+    else
+         
+        echo -e "${COLOR_Blue}Building and installing mosh.${COLOR_off}"         
+        cd $HOME/pers/scripts/src/mosh
+        ./autogen.sh       || ( echo -e "${COLOR_BYellow}WARNING: mosh failed to autogen.${COLOR_off}"   ; return 0 )
+        ./configure        || ( echo -e "${COLOR_BYellow}WARNING: mosh failed to configure.${COLOR_off}" ; return 0 )
+        make               || ( echo -e "${COLOR_BYellow}WARNING: mosh failed to build.${COLOR_off}"     ; return 0 )
+        sudo make install  || ( echo -e "${COLOR_BYellow}WARNING: mosh failed to install.${COLOR_off}"   ; return 0 )
+    fi
     echo -e "${COLOR_BGreen}Install of mosh complete.${COLOR_off}"
 }
 
