@@ -670,7 +670,7 @@ function build_scripts_sagi {
     if [[ "$DEBIAN" == "true" ]]
     then
         echo -e "${COLOR_Blue}Installing vim ipython gnupg fortune-mod python-pygments python-pip moreutils zsh${COLOR_off}"
-        $HOME/pers/scripts/sagi -y fortune-mod vim ipython gnupg python-pygments python-pip moreutils zsh
+        $HOME/pers/scripts/sagi -y fortune-mod vim ipython gnupg python-pygments python-pip moreutils zsh preload
     fi
 }
 
