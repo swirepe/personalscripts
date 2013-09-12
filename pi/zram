@@ -1,0 +1,121 @@
+#!/bin/bash
+
+### BEGIN INIT INFO
+# Provides: zram
+# Required-Start:
+# Required-Stop:
+# Default-Start: 2 3 4 5
+# Default-Stop: 0 1 6
+# Short-Description: Increased Performance In Linux With zRam (Virtual Swap Compressed in RAM)
+# Description: Adapted from systemd scripts at https://github.com/mystilleef/FedoraZram
+### END INIT INFO
+
+DEFAULTS="/etc/default/zram"
+
+# Include defaults if available
+[ -r "$DEFAULTS" ] && . "$DEFAULTS"
+
+# Get lsb functions
+. /lib/lsb/init-functions
+
+start() {
+    # Add support of defaults file parameter - ZRAM_NDEVS
+    if [ -z "$ZRAM_NDEVS" ] || [ "$ZRAM_NDEVS" -le "0" ]; then
+	# get the number of CPUs
+	num_cpus=$(grep -c processor /proc/cpuinfo)
+    else
+	# or just use user specified
+	num_cpus=$ZRAM_NDEVS
+    fi
+
+    # if something goes wrong, assume we have 1
+    [ "$num_cpus" != 0 ] || num_cpus=1
+
+    decr_num_cpus=$((num_cpus - 1))
+
+    # find module and it's param name
+    error_file=$(mktemp ${RC_NAME}XXXXXX) # storage for error message
+    param_name=$(/usr/bin/env modinfo --parameters zram 2>$error_file | head -1 | cut -d: -f1)
+    error_message=$(<$error_file)
+    rm -f $error_file
+    mod_found=$?
+
+
+    # load dependency modules
+    if [ "$mod_found" == 0 ]; then
+	log_begin_msg "Loading zRAM kernel module"
+	modprobe zram "$param_name=$num_cpus"
+	log_end_msg $?
+    else
+	log_failure_msg "Failed to load zRAM kernel module: ${error_message}"
+	# shit happens, yep.
+	exit $mod_found
+    fi
+
+    # get the amount of memory in the machine
+    mem_total_kb=$(fgrep MemTotal /proc/meminfo | grep -E --only-matching '[[:digit:]]+')
+    mem_total=$((mem_total_kb * 1024))
+
+    # Add support of defaults file parameter - ZRAM_USE_PERCENT
+    if [ -z "$ZRAM_USE_PERCENT" ] || [ "$ZRAM_USE_PERCENT" -le "0" ] || [ "$ZRAM_USE_PERCENT" -gt "100" ]; then
+	# use 100% of ram for zRAM storage (suitable for low-ram laptops)
+	use_percent=100
+    else
+	# or just use user specified
+	use_percent=$ZRAM_USE_PERCENT
+    fi
+
+    zsize=$((use_percent * mem_total / num_cpus / 100))
+
+    # initialize the devices
+    for i in $(seq 0 $decr_num_cpus); do
+	echo $zsize > /sys/block/zram$i/disksize
+    done
+
+    # get page size
+    page_size=$(/usr/bin/env getconf PAGESIZE || /usr/bin/env getconf PAGE_SIZE)
+
+    # Creating swap filesystems
+    for i in $(seq 0 $decr_num_cpus); do
+	msg=">  Making swap on /dev/zram$i"
+	mkswap -p $page_size /dev/zram$i 2>&1 >/dev/null
+	[ "$?" -eq "0" ] && log_success_msg $msg || log_failure_msg $msg
+    done
+
+    # Switch the swaps on
+    for i in $(seq 0 $decr_num_cpus); do
+	msg=">>  Activating swap on /dev/zram$i"
+	swapon -p 100 /dev/zram$i
+	[ "$?" -eq "0" ] && log_success_msg $msg || log_failure_msg $msg
+    done
+
+    # TODO FIXME need strict error reporting
+    # log_end_msg 0
+}
+
+stop() {
+    # Switching off swap ASAP
+    for zswap in $(fgrep /dev/zram /proc/swaps | cut -d' ' -f1); do
+	    swapoff $zswap
+    done
+
+    # Custom kernels can contain zram compiled-in
+    [ -z "$(fgrep zram /proc/modules)" ] || rmmod zram
+}
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    restart)
+        stop
+        sleep 3
+        start
+        ;;
+    *)
+        echo "Usage: $0 {start|stop|restart}"
+        RETVAL=1
+esac
