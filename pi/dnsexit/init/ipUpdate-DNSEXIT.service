@@ -1,0 +1,10 @@
+[Unit]
+Description=DNSEXIT-Dynamic-IP-Updater
+After=syslog.target network.target
+ 
+[Service]
+PIDFile=/var/run/ipUpdate.pid
+ExecStart=/usr/sbin/ipUpdate.pl daemon
+ 
+[Install]
+WantedBy=multi-user.target

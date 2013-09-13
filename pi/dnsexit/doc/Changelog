@@ -1,0 +1,26 @@
+###############
+# Version 1.70
+###############
+- Added auto start capability at crontab to setup.pl
+- Rewrite some scripts
+- Allow only one instance program running at ipUpdate.pl
+
+###############
+# Version 1.64
+###############
+- Added systemd service start capability
+- Automated copy of ipUpdate.pl and Http_get.pm
+
+###############
+# Version 1.6 #
+###############
+- IP proxy failover fix
+
+###############
+# Version 1.5 #
+###############
+- Created setup script
+- Real daemon mode (no need to run the script using nohup)
+- Removed LWP module dependency
+- Added init script for Redhat distributions
+- Some small fixups

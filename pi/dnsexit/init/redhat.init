@@ -1,0 +1,69 @@
+# chkconfig: 345 85 60
+# description: DnsExit.Com dynamic dns client.
+# processname: ipUpdate.pl
+
+### BEGIN INIT INFO
+# Provides: ipUpdate
+# Required-Start: $local_fs $network 
+# Should-Start: 
+# Required-Stop:
+# Default-Start: 3 4 5
+# Default-Stop: 0 1 2 6
+# Short-Description: DnsExit.Com dynamic dns client.
+# Description: DnsExit.Com dynamic dns client.
+### END INIT INFO
+
+# Source function library.
+if [ -f /etc/SuSE-release ]; then
+   SUSE=1
+   START=startproc
+   STATUS="rc_status -v"
+   . /etc/rc.status
+   rc_reset
+else
+   SUSE=0
+   START=daemon
+   STATUS=echo
+   . /etc/rc.d/init.d/functions
+
+fi
+
+start() {
+	echo -n $"Starting ipUpdate: "
+	$START /usr/sbin/ipUpdate.pl
+	touch /var/lock/subsys/ipUpdate
+	$STATUS
+}
+
+stop() {
+	echo -n $"Shutting down ipUpdate: "
+	killproc ipUpdate.pl
+	rm -f  /var/lock/subsys/ipUpdate
+        $STATUS
+}
+
+[ -f /usr/sbin/ipUpdate.pl ] || exit 0
+grep "daemon[:space:]*=[:space:]*no" /etc/dnsexit.conf >/dev/null 2>&1 && exit 0
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    status)
+        ;;
+    restart)
+        stop
+        start
+        ;;
+    condrestart)
+        ;;
+    reload)
+        ;;
+    *)
+        echo $"Usage: $0 {start|stop|status|restart|condrestart|reload}"
+        ;;
+esac
+[ $SUSE -eq "1" ] && rc_exit
+exit 0
