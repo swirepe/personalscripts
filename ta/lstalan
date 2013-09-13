@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+host -l dhcp.ndh02.corp.tripadvisor.com | awk '{ printf("%-60s%16s\n", $1, $4); }'
