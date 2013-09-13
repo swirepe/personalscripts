@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+# learned about invert from here
+# http://misc.flogisoft.com/bash/tip_colors_and_formatting
+
+while read line
+do
+  echo -e "\033[7m${line}${COLOR_off}" # invert fore and back ground
+  read line;
+  echo -e "${line}" # none 
+done
+echo -en "${COLOR_off}"
