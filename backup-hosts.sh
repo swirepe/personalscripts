@@ -11,7 +11,7 @@ then
         echo "backup-cron.sh already installed."
     else
         echo "Installing."
-        crontab -l | { cat; echo -e "\n# Added on $(date) by backup-hosts.sh\n# backup hosts file every day at 1am.\n0 0 1 1/1 * ? * $HOME/pers/scripts/backup-hosts.sh"; } | crontab -
+        crontab -l | { cat; echo -e "\n# Added on $(date) by backup-hosts.sh\n# backup hosts file every day at 1am.\n0 1 * * * $HOME/pers/scripts/backup-hosts.sh"; } | crontab -
     fi
 	crontab -l | grep backup-hosts.sh
 	echo "Done."
