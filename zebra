@@ -1,12 +1,30 @@
-#!/usr/bin/env bash
+#!/usr/bin/env awk -f
 
 # learned about invert from here
 # http://misc.flogisoft.com/bash/tip_colors_and_formatting
+BEGIN {
+	COLOR_invert="\033[7m";
+	COLOR_uninvert="\033[27m";
+	COLOR_off="\033[0m"; 
+}
 
-while read line
-do
-  echo -e "\033[7m${line}${COLOR_off}" # invert fore and back ground
-  read line;
-  echo -e "${line}" # none 
-done
-echo -en "${COLOR_off}"
+{
+	if ( NR % 2 == 0 )
+		printf("%s%s%s\n", COLOR_invert, $0, COLOR_uninvert); # invert fore and back ground
+	else
+		printf("%s\n", $0);
+
+
+}
+
+
+END {
+	printf("%s\n", COLOR_off);
+}
+#while read line
+#do
+#  echo -e "${COLOR_invert}${line}${COLOR_uninvert}" # invert fore and back ground
+#  read line;
+#  echo -e "${line}" # none 
+#done
+#echo -en "${COLOR_off}"

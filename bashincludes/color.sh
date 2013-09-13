@@ -80,22 +80,22 @@ export COLOR_On_IWhite='\033[0;107m'   # White
 
 # I learned this from http://misc.flogisoft.com/bash/tip_colors_and_formatting
 # Invert foreground and background colors
-export COLOR_invert="\033[7m"
-export COLOR_uninvert="\033[27m"
+export COLOR_invert='\033[7m'
+export COLOR_uninvert='\033[27m'
 
 
 # Some attributes independent of colors
-export COLOR_bold="\033[1m"
-export COLOR_dim="\033[2m"
-export COLOR_underline="\033[4m"
-export COLOR_blink="\033[5m"
-export COLOR_hidden="\033[8m"
+export COLOR_bold='\033[1m'
+export COLOR_dim='\033[2m'
+export COLOR_underline='\033[4m'
+export COLOR_blink='\033[5m'
+export COLOR_hidden='\033[8m'
 
-export COLOR_unbold="\033[21m"
-export COLOR_undim="\033[22m"
-export COLOR_ununderline="\033[24m"
-export COLOR_unblink="\033[25m"
-export COLOR_unhidden="\033[28m"
+export COLOR_unbold='\033[21m'
+export COLOR_undim='\033[22m'
+export COLOR_ununderline='\033[24m'
+export COLOR_unblink='\033[25m'
+export COLOR_unhidden='\033[28m'
 
 
 ## http://www.commandlinefu.com/commands/view/5879/show-numerical-values-for-each-of-the-256-colors-in-bash
