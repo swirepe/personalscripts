@@ -50,7 +50,7 @@ source_include $BASHINCLUDES_DIR/work.sh
 source_include $BASHINCLUDES_DIR/misc.sh
 source_include $BASHINCLUDES_DIR/alwaysontop.sh
 source_include $BASHINCLUDES_DIR/navigation.sh
-source_include $BASHINCLUDES_DIR/projects.sh
+#source_include $BASHINCLUDES_DIR/projects.sh
 source_include $BASHINCLUDES_DIR/pyg.sh
 source_include $BASHINCLUDES_DIR/vim.sh
 source_include $BASHINCLUDES_DIR/perl.sh
