@@ -344,6 +344,31 @@ fi
 
 }
 ## ----------------------------------------------------------------------------
+## pi-specific
+## ----------------------------------------------------------------------------
+function pi_specific {
+    checkpoint 'pi_specific'
+    
+    if [[ "$(which raspi-config)" ]]
+    then
+        echo -e "${COLOR_Blue}raspi-config detected.  Assuming raspberry pi.${COLOR_off}"
+    
+        echo -e "${COLOR_Blue}Fetching raspberry pi pre-install script.${COLOR_off}"
+        mkdir -p $HOME/pi
+        cd $HOME/pi
+        
+        [ -e pre-install.sh  ] || wget https://raw.github.com/swirepe/personalscripts/master/pi/pre-install.sh
+    
+        chmod +x pre-install.sh
+        ./pre-install.sh "$THIS_SCRIPT_PATH"
+        
+    
+        echo -e "${COLOR_BGreen}Setup of pi-specific components complete.${COLOR_off}"
+    fi
+
+}
+
+## ----------------------------------------------------------------------------
 ## debian: get core packages
 ## ----------------------------------------------------------------------------
 DEBIAN="false"
@@ -392,31 +417,6 @@ function wget {
     command wget --tries=10 --append-output="$HOME/new-machine-setup-wget.log" "$@"
 }
 
-
-## ----------------------------------------------------------------------------
-## pi-specific
-## ----------------------------------------------------------------------------
-function pi_specific {
-    checkpoint 'pi_specific'
-    
-    if [[ "$(which raspi-config)" ]]
-    then
-        echo -e "${COLOR_Blue}raspi-config detected.  Assuming raspberry pi.${COLOR_off}"
-    
-        echo -e "${COLOR_Blue}Fetching raspberry pi pre-install script.${COLOR_off}"
-        mkdir -p $HOME/pi
-        cd $HOME/pi
-        
-        [ -e pre-install.sh  ] || wget https://raw.github.com/swirepe/personalscripts/master/pi/pre-install.sh
-    
-        chmod +x pre-install.sh
-        ./pre-install.sh "$THIS_SCRIPT_PATH"
-        
-    
-        echo -e "${COLOR_BGreen}Setup of pi-specific components complete.${COLOR_off}"
-    fi
-
-}
 ## ----------------------------------------------------------------------------
 ## get the keys and extract them
 ## ----------------------------------------------------------------------------
@@ -866,10 +866,10 @@ function gammut {
     add_include_to_sudoers        
     add_include_to_sudoers        
     add_defaults_to_sudoersd      
-    restart_as_swirepe            
+    restart_as_swirepe   
+    pi_specific 
     debian_core                   
-    util_check                    
-    pi_specific                   
+    util_check                                      
     fetch_keys                    
     generate_key                  
     set_key_permissions           
@@ -934,9 +934,9 @@ case  $STARTING_POINT  in
     add_include_to_sudoers)        add_include_to_sudoers         ;&
     add_defaults_to_sudoersd)      add_defaults_to_sudoersd       ;&
     restart_as_swirepe)            restart_as_swirepe             ;&
+    pi_specific)                   pi_specific                    ;&
     debian_core)                   debian_core                    ;&
     util_check)                    util_check                     ;&
-    pi_specific)                   pi_specific                    ;&
     fetch_keys)                    fetch_keys                     ;&
     generate_key)                  generate_key                   ;&
     set_key_permissions)           set_key_permissions            ;&
