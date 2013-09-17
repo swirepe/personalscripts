@@ -77,6 +77,7 @@ source_include $BASHINCLUDES_DIR/virtualenvs.sh
 source_include $BASHINCLUDES_DIR/errorinred.sh
 source_include $BASHINCLUDES_DIR/z.sh
 source_include $BASHINCLUDES_DIR/lsfn.sh
+source_include $BASHINCLUDES_DIR/ssh-agent.sh
 source_include $BASHINCLUDES_DIR/mac.sh
 
 
