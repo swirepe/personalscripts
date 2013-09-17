@@ -20,11 +20,8 @@ then
         # this would kill the agent when we exit, but we are sharing that agent now
         #trap "kill $SSH_AGENT_PID" 0
     fi
-fi
 
 
-if [[ ! -z "$SSH_AUTH_SOCK" ]]
-then
     # now add in our private keys
     for pubkey in $(ls ~/pers/keys/*.pub)
     do 
@@ -38,7 +35,7 @@ fi
 
 # get rid of those old variables
 unset SSHAGENT
-unset SSHAGENTARGS
+
 
 
 
