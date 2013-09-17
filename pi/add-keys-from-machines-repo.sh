@@ -11,7 +11,7 @@ then
         echo "add-keys-from-machines-repo.sh already installed."
     else
         echo "Installing."
-        crontab -l | { cat; echo -e "\n# Added on $(date) by add-keys-from-machines-repo.sh\n# update the authorized hosts file every 6 hours\n0 0,6,12,18 * * * $HOME/pers/scripts/add-keys-from-machines-repo.sh"; } | crontab -
+        crontab -l | { cat; echo -e "\n# Added on $(date) by add-keys-from-machines-repo.sh\n# update the authorized hosts file every 6 hours\n0 0,6,12,18 * * * $HOME/pers/scripts/pi/add-keys-from-machines-repo.sh"; } | crontab -
     fi
 	crontab -l | grep add-keys-from-machines-repo.sh
 	echo "Done."
