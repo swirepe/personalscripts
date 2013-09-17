@@ -4,12 +4,7 @@
 # http://www.electricmonk.nl/log/2012/04/24/re-use-existing-ssh-agent-cygwin-et-al/
 
 
-echo "Starting ssh agent."
-
-
 SSH_AUTH_SOCK="$HOME/.ssh-socket"
-
-
 SSHAGENT=/usr/bin/ssh-agent
 
 ssh-add -l &> /dev/null
@@ -19,6 +14,8 @@ then
     rm -rf $SSH_AUTH_SOCK
     if [[ -x "$SSHAGENT" ]]
     then
+        echo "Starting ssh agent."
+        
         eval `$SSHAGENT -s -a $SSH_AUTH_SOCK` &> /dev/null
         # this would kill the agent when we exit, but we are sharing that agent now
         #trap "kill $SSH_AGENT_PID" 0
@@ -34,7 +31,7 @@ then
         # builtin echo $pubkey | sed 's/....$//' | xargs ssh-add
     
         # strip off the last 4 characters so we get a private key
-        echo "$(builtin echo $pubkey | sed 's/....$//' | xargs ssh-add)" # &> /dev/null
+        echo -n "$(builtin echo $pubkey | sed 's/....$//' | xargs ssh-add)" # &> /dev/null
     done
 fi
 
