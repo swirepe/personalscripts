@@ -13,7 +13,7 @@ SSH_AUTH_SOCK="$HOME/.ssh-socket"
 SSHAGENT=/usr/bin/ssh-agent
 
 ssh-add -l &> /dev/null
-if [ $? == 2 ]
+if [ $? = 2 ]
 then
     #  ssh-agent isn't running
     rm -rf $SSH_AUTH_SOCK
