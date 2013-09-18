@@ -4,7 +4,7 @@
 # http://www.electricmonk.nl/log/2012/04/24/re-use-existing-ssh-agent-cygwin-et-al/
 
 
-SSH_AUTH_SOCK="$HOME/.ssh-socket"
+SSH_AUTH_SOCK="$HOME/.ssh/ssh_agent_socket"
 SSHAGENT=/usr/bin/ssh-agent
 
 ssh-add -l &> /dev/null
