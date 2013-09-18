@@ -10,6 +10,13 @@ then
 fi
 
 
+if [[ $BRANCH != trsrc-* ]]
+then
+    echo "Trying with $BRANCH as trsrc-$BRANCH"
+    BRANCH="trsrc-$BRANCH"
+fi
+
+
 if [ ! -e /Users/swirepe/pers/scripts/src/fswatch/fswatch ]
 then
     echo "ERROR: fswatch not at /Users/swirepe/pers/scripts/src/fswatch/fswatch" > /dev/stderr
@@ -22,8 +29,8 @@ if [[ -d /Users/swirepe/$BRANCH ]]
 then
     echo "local: /Users/swirepe/$BRANCH"
 else
-    echo "ERROR: local path /Users/swirepe/$BRANCH doesn't exist" > /dev/stderr
-    exit 1
+    echo "Warning: local path /Users/swirepe/$BRANCH doesn't exist" > /dev/stderr
+    
 fi
 
 
@@ -39,4 +46,4 @@ fi
 
 
 echo "Synching $BRANCH"
-/Users/swirepe/pers/scripts/src/fswatch/fswatch /Users/swirepe/$BRANCH rsync --verbose --archive --filter="+ *.java" --filter="+ *.vm" --filter="+ *.css" --filter="+ *.js" --filter="+ */" --filter="- *" /Users/swirepe/$BRANCH pswire-devserver:/home/site/$BRANCH
+/Users/swirepe/pers/scripts/src/fswatch/fswatch /Users/swirepe/$BRANCH "rsync --verbose --archive --filter='+ *.java' --filter='+ *.vm' --filter='+ *.css' --filter='+ *.js' --filter='- .svn' --filter='+ */' --filter='- *' /Users/swirepe/$BRANCH pswire-devserver:/home/site/$BRANCH"
