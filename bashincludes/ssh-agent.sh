@@ -3,7 +3,7 @@
 # http://mah.everybody.org/docs/ssh
 # http://www.electricmonk.nl/log/2012/04/24/re-use-existing-ssh-agent-cygwin-et-al/
 
-
+mkdir -p ~/.ssh
 SSH_AUTH_SOCK="$HOME/.ssh/ssh_agent_socket"
 SSHAGENT=/usr/bin/ssh-agent
 
