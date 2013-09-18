@@ -14,6 +14,8 @@ then
     rm -rf $SSH_AUTH_SOCK
     if [[ -x "$SSHAGENT" ]]
     then
+        echo -en "\033[38;5;239m"  # a dark grey
+        
         echo "Starting ssh agent."
         
         eval `$SSHAGENT -s -a $SSH_AUTH_SOCK` &> /dev/null
@@ -25,11 +27,11 @@ then
     # now add in our private keys
     for pubkey in $(ls ~/pers/keys/*.pub)
     do 
-        # builtin echo $pubkey | sed 's/....$//' | xargs ssh-add
-    
         # strip off the last 4 characters so we get a private key
-        echo -n "$(builtin echo $pubkey | sed 's/....$//' | xargs ssh-add)" # &> /dev/null
+        echo -n "$(builtin echo $pubkey | sed 's/....$//' | xargs ssh-add)" 
     done
+    
+    echo -en "${COLOR_off}"
 fi
 
 
