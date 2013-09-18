@@ -53,7 +53,7 @@ do
 			/usr/bin/env ruby -c $FILE && echo "OK"
 
 		
-  elif [[ "$FILE"      == *".js"  ]]
+    elif [[ "$FILE"      == *".js"  ]]
 	then
 			jshint $FILE && echo "OK"
 
@@ -69,6 +69,10 @@ do
 		 [[ "$FILE"      == *".zsh"  ]]
 	then
 			/usr/bin/env zsh -n $FILE && echo "OK"
+    elif [[ "$FILE" == *"sshd_config"* ]]
+    then
+        sshd -t -f $FILE
+			
 	else
 			echo "parser not found."
 	fi
