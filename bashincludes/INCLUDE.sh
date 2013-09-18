@@ -54,7 +54,6 @@ source_include $BASHINCLUDES_DIR/navigation.sh
 source_include $BASHINCLUDES_DIR/pyg.sh
 source_include $BASHINCLUDES_DIR/vim.sh
 source_include $BASHINCLUDES_DIR/perl.sh
-source_include $BASHINCLUDES_DIR/fortunes.sh
 source_include $BASHINCLUDES_DIR/timekey.sh
 source_include $BASHINCLUDES_DIR/lsfancy.sh
 source_include $BASHINCLUDES_DIR/colorman.sh
@@ -74,4 +73,6 @@ source_include $BASHINCLUDES_DIR/lsfn.sh
 source_include $BASHINCLUDES_DIR/z.sh
 source_include $BASHINCLUDES_DIR/iptables.sh
 source_include $BASHINCLUDES_DIR/morelikezsh.sh
+source_include $BASHINCLUDES_DIR/ssh-agent.sh
 source_include $BASHINCLUDES_DIR/mac.sh
+source_include $BASHINCLUDES_DIR/fortunes.sh

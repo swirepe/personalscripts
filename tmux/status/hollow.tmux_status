@@ -1,0 +1,27 @@
+
+
+set-option -g set-titles-string ' #H:#S.#I.#P #W #T '
+
+# everything black on magenta
+set -g status-fg default
+set -g status-bg default
+
+set-option -g status-justify "left"
+
+
+
+set-window-option -g window-status-current-bg colour25
+
+set-option -g pane-active-border-fg colour25
+set-option -g pane-active-border-bg default
+
+
+
+
+set-option -g message-fg white
+set-option -g message-bg black
+set-option -g message-attr bright
+
+
+set -g status-left-length 8
+set -g status-right '#[fg=black bright]#(whoami)#[fg=yellow bright]@#[default]#[fg=#(hostcolor_tmux.pl)]#H#[default] #[default][#S] #(tmux_time.py)'

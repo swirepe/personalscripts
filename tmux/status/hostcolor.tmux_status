@@ -1,0 +1,9 @@
+
+# everything black on magenta
+set -g status-fg black
+set -g status-bg '#(hostcolor.pl --tmux)'
+
+set-option -g status-justify "left"
+
+set -g status-left-length 8
+set -g status-right '#[fg=black bright]#(whoami)#[fg=yellow bright]@#[default]#[fg=black bright]#H#[default] #[default][#S] #(tmux_time.py)'

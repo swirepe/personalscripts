@@ -87,6 +87,17 @@ chmod +x setup-zram.sh
 chmod +x setup-ramlog.sh
 chmod +x setup-googledns.sh
 
+
+echo -e "${COLOR_Blue}Setting up zram.${COLOR_off}"
+./setup-zram.sh
+echo -e "${COLOR_BIBlue}Setting up zram complete.${COLOR_off}"
+
+
+echo -e "${COLOR_Blue}Setting up ramlog.${COLOR_off}"
+./setup-ramlog.sh
+echo -e "${COLOR_BIBlue}Setting up ramlog complete.${COLOR_off}"
+
+ 
 echo -e "${COLOR_Blue}Expanding the rootfs.${COLOR_off}"
 ./setup-rootfs.sh
 echo -e "${COLOR_BIBlue}Rootfs will expand on reboot.${COLOR_off}"
@@ -106,14 +117,6 @@ echo -e "${COLOR_Blue}Setting up motd.${COLOR_off}"
 ./setup-motd.sh
 echo -e "${COLOR_BIBlue}Setting up motd complete.${COLOR_off}"
 
-echo -e "${COLOR_Blue}Setting up zram.${COLOR_off}"
-./setup-zram.sh
-echo -e "${COLOR_BIBlue}Setting up zram complete.${COLOR_off}"
-
-
-echo -e "${COLOR_Blue}Setting up ramlog.${COLOR_off}"
-./setup-ramlog.sh
-echo -e "${COLOR_BIBlue}Setting up ramlog complete.${COLOR_off}"
 
 
 echo -e "${COLOR_Blue}Setting up google dns.${COLOR_off}"

@@ -21,8 +21,12 @@ function torrc-append {
 }
 
 
+
+
+
 torrc-append "## Added by setup-tor.sh on $(date)"
-torrc-append "SocksPort 0"
+torrc-append "SocksPort 9050             # what port to open for local application connections (0 to run only as a server)"
+torrc-append "SocksBindAddress 127.0.0.1 # accept connections only from localhost"
 torrc-append "Log notice file /var/log/tor/notices.log"
 torrc-append "RunAsDaemon 1"
 torrc-append "ORPort 9080"
@@ -31,7 +35,10 @@ torrc-append "ExitPolicy reject *:*"
 torrc-append "Nickname rasptor"
 torrc-append "RelayBandwidthRate 100 KB  # Throttle traffic to 100KB/s (800Kbps)"
 torrc-append "RelayBandwidthBurst 200 KB # But allow bursts up to 200KB/s (1600Kbps)"
+torrc-append "#User tor"
+torrc-append "#Group tor"
+torrc-append "#PidFile /var/run/tor.pid"
 
-echo "Restarting."
+echo "Restarting tor."
 sudo service tor reload
 sudo /etc/init.d/tor restart
