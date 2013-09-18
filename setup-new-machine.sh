@@ -628,7 +628,7 @@ function symlinks {
     move_if_exists ~/.gitconfig
     move_if_exists ~/.gitignore_global
     move_if_exists ~/.grepignore
-    
+    move_if_exists ~/.sqliterc
     
     ln -s $HOME/pers/scripts/rc/bashrc.init $HOME/.bashrc
     ln -s $HOME/pers/scripts/rc/zshrc.init $HOME/.zshrc
@@ -638,6 +638,7 @@ function symlinks {
     ln -s $HOME/pers/scripts/rc/gitconfig $HOME/.gitconfig
     ln -s $HOME/pers/scripts/gitignoreglobal $HOME/.gitignore_global
     ln -s $HOME/pers/scripts/grepignore $HOME/.grepignore
+    ln -s $HOME/pers/scripts/rc/sqliterc $HOME/.sqliterc
     
     mkdir -p $HOME/.vim_backup
     

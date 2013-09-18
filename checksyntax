@@ -71,7 +71,7 @@ do
 			/usr/bin/env zsh -n $FILE && echo "OK"
     elif [[ "$FILE" == *"sshd_config"* ]]
     then
-        sshd -t -f $FILE
+        sudo sshd -t -f $FILE && echo "OK"
 			
 	else
 			echo "parser not found."
