@@ -759,7 +759,7 @@ function build_scripts_mosh     {
        [[ "$(apt-cache search mosh)" ]]
     then
         echo -e "${COLOR_Blue}Using apt to install mosh.${COLOR_off}"
-        sagi -y mosh
+        $HOME/pers/scripts/sagi -y mosh
     else
          
         echo -e "${COLOR_Blue}Building and installing mosh.${COLOR_off}"         
