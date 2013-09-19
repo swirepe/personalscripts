@@ -175,7 +175,7 @@ function add_group_admin {
         else
             echo -e "${COLOR_Blue}Creating group admin${COLOR_off}"
             sudo groupadd --force admin
-            add_sudoersd 'admin.sudo' "# Members of the admin group may gain root privileges\n\n%admin ALL=(ALL) NOPASSWD:ALL"
+            add_sudoersd 'admin_sudo' "# Members of the admin group may gain root privileges\n\n%admin ALL=(ALL) NOPASSWD:ALL"
             echo -e "${COLOR_BIBlue}Group admin created.${COLOR_off}"
         fi
     fi
@@ -215,7 +215,7 @@ function add_swirepe_to_sudoersd {
             echo -e "${COLOR_Blue}User swirepe is a sudoer.${COLOR_off}"
         else
             echo -e "${COLOR_Blue}Putting a file for user swirepe in /etc/sudoers.d/${COLOR_off}"
-            add_sudoersd 'swirepe.sudo' "swirepe ALL=(ALL) NOPASSWD:ALL"
+            add_sudoersd 'swirepe_sudo' "swirepe ALL=(ALL) NOPASSWD:ALL"
             echo -e "${COLOR_BIBlue}User swirepe added to /etc/sudoers.d/${COLOR_off}"
         fi
     fi
@@ -228,8 +228,8 @@ function add_defaults_to_sudoersd {
 
     if [[ "$(uname)" == *"Linux"* ]]
     then
-        add_sudoersd 'defaults.sudo' 'Defaults    env_reset'
-        add_sudoersd 'defaults.sudo' 'Defaults    secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"'
+        add_sudoersd 'defaults_sudo' 'Defaults    env_reset'
+        add_sudoersd 'defaults_sudo' 'Defaults    secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"'
     fi
     
     echo -e "${COLOR_BIBlue}Defaults added to /etc/sudoers.d/${COLOR_off}"
@@ -759,7 +759,7 @@ function build_scripts_mosh     {
        [[ "$(apt-cache search mosh)" ]]
     then
         echo -e "${COLOR_Blue}Using apt to install mosh.${COLOR_off}"
-        sagi -y mosh
+        $HOME/pers/scripts/sagi -y mosh
     else
          
         echo -e "${COLOR_Blue}Building and installing mosh.${COLOR_off}"         

@@ -29,7 +29,7 @@ torrc-append "SocksPort 9050             # what port to open for local applicati
 torrc-append "SocksBindAddress 127.0.0.1 # accept connections only from localhost"
 torrc-append "Log notice file /var/log/tor/notices.log"
 torrc-append "RunAsDaemon 1"
-torrc-append "ORPort 80"
+torrc-append "ORPort 9080"
 torrc-append "DirPort 9030"
 torrc-append "ExitPolicy reject *:*"
 torrc-append "Nickname rasptor"
