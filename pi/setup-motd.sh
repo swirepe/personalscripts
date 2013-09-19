@@ -251,10 +251,10 @@ echo "$(tput setaf 2)
 
 function footer {
     echo -e "${COLOR_off}\n\nIt's a beautiful day to be alive."                                                       
-    which lsb_release && echo    "OS:       $(lsb_release -a 2>/dev/null | grep Description | cut -f2))"    
-    which lsb_release && echo -e "Codename: $(lsb_release -a 2>/dev/null | grep Codename | cut -f2)"      
-    which nproc && echo -e       "Cores:    $(nproc)"                                                     
-    which free && echo -e        "Memory:   $(free -g | grep ^Mem | awk '{print $2}')g"                   
+    which lsb_release > /dev/null && echo    "OS:       $(lsb_release -a 2>/dev/null | grep Description | cut -f2))"    
+    which lsb_release > /dev/null && echo -e "Codename: $(lsb_release -a 2>/dev/null | grep Codename | cut -f2)"      
+    which nproc > /dev/null && echo -e       "Cores:    $(nproc)"                                                     
+    which free > /dev/null && echo -e        "Memory:   $(free -m | grep ^Mem | awk '{print $2}')m"                   
     echo -e "Welcome to ${COLOR_BIGreen}${HOSTNAME}${COLOR_off}."                                         
 }
 
@@ -339,7 +339,7 @@ echo '' | sudo tee /etc/motd
 
 
 echo "Choosing motd based on hostname."
-case ( $HOSTNAME ) in
+case  $HOSTNAME  in
        *betta*      ) echo "Choosing motd betta     " && betta         | sudo tee --append /etc/motd ;;    
        *smokeshark* ) echo "Choosing motd smokeshark" && smokeshark    | sudo tee --append /etc/motd ;; 
        *octopus*    ) echo "Choosing motd octopus   " && octopus       | sudo tee --append /etc/motd ;;
