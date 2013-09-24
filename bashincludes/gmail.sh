@@ -1,6 +1,8 @@
 
 # display most recent gmail if we can
-if [[ -e ~/.bashrc_gmail ]] && [[ ! -e ~/.hushlogin ]]
+if [[ -e ~/.bashrc_gmail                ]] &&
+   [[ ! -e ~/.hushlogin                 ]] &&
+   [ ping -c 1 google.com &> /dev/null   ]
 then
 	if [[ -e ~/.mre.config ]]
 	then
