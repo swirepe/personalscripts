@@ -20,6 +20,10 @@ class DefaultConfigParser(ConfigParser.ConfigParser, object):
             return default
 
 
+    def get_no_default(self, key, value):
+        return super(DefaultConfigParser, self).get(key, value)
+
+
 def getLabel(boxList):
     for box in boxList:
         if "[Gmail]/Important" in box:
@@ -29,9 +33,14 @@ def getLabel(boxList):
 
 
 def fewEmails(user, password, numEmails=5, label=None, server='imap.gmail.com'):
-    mail = imaplib.IMAP4_SSL(server)
-    mail.login(user, password)
-
+    try:
+        mail = imaplib.IMAP4_SSL(server)
+        mail.login(user, password)
+    except:
+        sys.stderr.write("(authentication error for " + user + " at " + server + ")\n")
+        raise StopIteration
+        
+        
     if label == None:
         label = getLabel( mail.list()[-1] )
         
@@ -44,6 +53,7 @@ def fewEmails(user, password, numEmails=5, label=None, server='imap.gmail.com'):
 
     if len(id_list) == 0:
          yield "(no email for label " + label + ")" , "", ""
+         raise StopIteration
     else:
         #get the most recent email id
         latest_email_id = int( id_list[-1] )
@@ -92,14 +102,22 @@ def displayEmails(username, password, section, **kwargs):
         print string.ljust(section, 12), string.ljust(emailTo, 35), string.ljust(emailFrom, 35), string.ljust(emailSubject, 50)
         
         
-def getEmailsFromConfig(configFile="~/.mre.config"):
+def getEmailsFromConfig(configFile="~/.mre.config", acceptedSections = None):
     configFile = os.path.expanduser(configFile)
     config = DefaultConfigParser()
     config.read(configFile)
     
-    for section in config.sections():
-        username = config.get(section, "email")
-        password = config.get(section, "password")
+    
+    sections = config.sections()
+    # don't do any filtering if we don't need to
+    if acceptedSections != None:
+        acceptedSections = [ a.lower() for a in acceptedSections ]
+        sections = [s for s in sections if s.lower() in acceptedSections ]
+    
+    
+    for section in sections:
+        username = config.get_no_default(section, "email")
+        password = config.get_no_default(section, "password")
     
 
         numEmails = int(config.get(section, "numEmails", 5))
@@ -109,18 +127,38 @@ def getEmailsFromConfig(configFile="~/.mre.config"):
 
         
         kwargs = {"numEmails": numEmails, "label":label, "server":server}
-        for key in [ k for (k,v) in kwargs.items() if not v ]:
-            del kwargs[key]
+        stripNoneValues(kwargs)
             
 
         dispSection = "[" + string.ljust(section[0:10], 10) + "]"
         displayEmails(username, password, dispSection, **kwargs)
         
-    
+
+
+def stripNoneValues(dictionary):
+    for key in [ k for (k,v) in dictionary.items() if not v ]:
+        del dictionary[key]
+
+
+def getParam(param, args):
+    try:
+        i = args.index(param)
+        param = args[i+1]
+        del args[i]
+        del args[i+1]
+        return param
+    except:
+        return None
+
     
 if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        config = sys.argv[1]
-        getEmailsFromConfig(config)
-    else:
+    if len(sys.argv) == 1:
         getEmailsFromConfig()
+    else:
+        
+        config = getParam("--config", sys.argv)
+        kwargs = {"configFile": config, "acceptedSections": tuple(sys.argv)}
+        stripNoneValues(kwargs)
+        getEmailsFromConfig(**kwargs)
+
+        
