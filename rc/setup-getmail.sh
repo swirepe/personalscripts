@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 wget http://pyropus.ca/software/getmail/old-versions/getmail-4.43.0.tar.gz -O ~/getmail.tar.gz
 tar xzf ~/getmail.tar.gz
 cd ~/getmail*
@@ -20,3 +21,9 @@ chmod 700 /var/log/getmail.log
 
 crontab -l { cat; echo -e "\n#Added on $(date) by setup-getmail.sh\n# get new email every five minutes\n*/5 * * * * getmail --quiet"; } | crontab -
 
+
+mkdir -p /media/mass/backup_mail
+
+crontab -l { cat; echo -e "\n#Added on $(date) by setup-getmail.sh\n# backup email every week\n5 8 * * 6 tar -zcvf /media/mass/backup_mail/mail-\$(date -I).tar.gz /media/mass/mail"; } | crontab -
+
+getmail
