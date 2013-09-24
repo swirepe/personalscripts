@@ -1,0 +1,164 @@
+#!/usr/bin/env python
+
+import os
+import imaplib
+import email
+import string
+import ConfigParser
+import sys
+# http://stackoverflow.com/questions/7314942/python-imaplib-to-get-gmail-inbox-subjects-titles-and-sender-name
+
+class DefaultConfigParser(ConfigParser.ConfigParser, object):
+    def __init__(self, *args, **kwargs):
+        super(DefaultConfigParser, self).__init__(*args, **kwargs)
+
+
+    def get(self, key, value, default=None):
+        try:
+            return super(DefaultConfigParser, self).get(key, value)
+        except:
+            return default
+
+
+    def get_no_default(self, key, value):
+        return super(DefaultConfigParser, self).get(key, value)
+
+
+def getLabel(boxList):
+    for box in boxList:
+        if "[Gmail]/Important" in box:
+            return "[Gmail]/Important"
+            
+    return "inbox"
+
+
+def fewEmails(user, password, numEmails=5, label=None, server='imap.gmail.com'):
+    try:
+        mail = imaplib.IMAP4_SSL(server)
+        mail.login(user, password)
+    except:
+        sys.stderr.write("(authentication error for " + user + " at " + server + ")\n")
+        raise StopIteration
+        
+        
+    if label == None:
+        label = getLabel( mail.list()[-1] )
+        
+    mail.select(label) # connect to inbox.
+    
+    typ, data = mail.search(None, 'ALL')
+    ids = data[0]
+    id_list = ids.split()
+
+
+    if len(id_list) == 0:
+         yield "(no email for label " + label + ")" , "", ""
+         raise StopIteration
+    else:
+        #get the most recent email id
+        latest_email_id = int( id_list[-1] )
+        
+        #iterate through numEmails messages in decending order starting with latest_email_id
+        #the '-1' dictates reverse looping order
+        for i in range( latest_email_id, latest_email_id-numEmails, -1 ):
+            try:
+                typ, data = mail.fetch( i, '(RFC822)' )
+                
+                for response_part in data:
+                   if isinstance(response_part, tuple):
+                       msg = email.message_from_string(response_part[1])
+                       varSubject = msg['subject']
+                       varFrom = msg['from']
+                       varTo = msg['to']
+                
+                #remove the brackets around the sender email address
+                varFrom = varFrom.replace('<', '')
+                varFrom = varFrom.replace('>', '')
+                
+                varTo = varTo.replace('<', '')
+                varTo = varTo.replace('>', '')
+                
+                #add ellipsis (...) if subject length is greater than 50 characters
+                if varSubject == None:
+                    varSubject = "(no subject)"
+                    
+                if len( varSubject ) > 50:
+                    varSubject = varSubject[0:47] + '...'
+                   
+                yield varTo.split()[-1], varFrom.split()[-1], varSubject
+            except:
+                pass
+        
+       
+       
+       
+    mail.close()
+    mail.logout()
+
+
+
+def displayEmails(username, password, section, **kwargs):
+    for (emailTo, emailFrom, emailSubject) in fewEmails(username, password, **kwargs):
+        print string.ljust(section, 12), string.ljust(emailTo, 35), string.ljust(emailFrom, 35), string.ljust(emailSubject, 50)
+        
+        
+def getEmailsFromConfig(configFile="~/.mre.config", acceptedSections = None):
+    configFile = os.path.expanduser(configFile)
+    config = DefaultConfigParser()
+    config.read(configFile)
+    
+    
+    sections = config.sections()
+    # don't do any filtering if we don't need to
+    if acceptedSections != None:
+        acceptedSections = [ a.lower() for a in acceptedSections ]
+        sections = [s for s in sections if s.lower() in acceptedSections ]
+    
+    
+    for section in sections:
+        username = config.get_no_default(section, "email")
+        password = config.get_no_default(section, "password")
+    
+
+        numEmails = int(config.get(section, "numEmails", 5))
+        label = config.get(section, "label", None)
+        server = config.get(section, "server", None)
+
+
+        
+        kwargs = {"numEmails": numEmails, "label":label, "server":server}
+        stripNoneValues(kwargs)
+            
+
+        dispSection = "[" + string.ljust(section[0:10], 10) + "]"
+        displayEmails(username, password, dispSection, **kwargs)
+        
+
+
+def stripNoneValues(dictionary):
+    for key in [ k for (k,v) in dictionary.items() if not v ]:
+        del dictionary[key]
+
+
+def getParam(param, args):
+    try:
+        i = args.index(param)
+        param = args[i+1]
+        del args[i]
+        del args[i+1]
+        return param
+    except:
+        return None
+
+    
+if __name__ == "__main__":
+    if len(sys.argv) == 1:
+        getEmailsFromConfig()
+    else:
+        
+        config = getParam("--config", sys.argv)
+        kwargs = {"configFile": config, "acceptedSections": tuple(sys.argv)}
+        stripNoneValues(kwargs)
+        getEmailsFromConfig(**kwargs)
+
+        

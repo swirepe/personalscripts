@@ -135,7 +135,7 @@ then
     then
         PS1="\[${COLOR_BPurple}\]\$(whoami)\[${COLOR_off}\]\[${COLOR_BYellow}\]@\[${COLOR_off}\]\[${COLOR_bold}\]\[\$(hostcolor.pl)\]\$(hostname)\[${COLOR_off}\] $PS1"  
     else
-        PS1="\[${COLOR_IGreen}\] ⚲ \[${COLOR_off}\]$PS1"
+        PS1="\[\$(hostcolor.pl)\] ⚲ \[${COLOR_off}\]$PS1"
     fi
 else
     PS1="\[${COLOR_BIRed}\]➜\[${COLOR_off}\] $PS1"  

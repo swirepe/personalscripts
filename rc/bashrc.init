@@ -8,6 +8,7 @@
 ##       ~/.bashrc_verbose        output how long each included item takes to load up
 ##       ~/.bashrc_skip           skip the includes
 ##       ~/.bashrc_nomem          skip loading stuff into a ramdisk
+##       ~/.bashrc_email          show most recent emails (each line in this file corresponds to a section in ~/.mre.config)
 ##       ~/.bashrc_sfwfortunes    display only arxiv papers as fortunes
 ##             ( curl -L https://raw.github.com/swirepe/arXiv-fortunes/master/getShort.sh | bash )
 
