@@ -8,8 +8,7 @@ sudo lighty-enable-mod fastcgi-php
 sudo service lighttpd force-reload
 
 echo -e "${COLOR_BBlue}Cloning repository${COLOR_off}"
-sudo git clone git@bitbucket.org:swirepe/neurokyme-site.git /var/www
-sudo rm -rf /var/www/.git
+git archive --format=tar --remote=git@bitbucket.org:swirepe/neurokyme-site.git master | sudo tar -C /var/www -xf  -
 
 if [[ "$(crontab -l | grep netstat)" ]]
 then
