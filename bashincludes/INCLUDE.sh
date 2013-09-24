@@ -48,7 +48,7 @@ source_include $BASHINCLUDES_DIR/_work_dummy.sh
 source_include $BASHINCLUDES_DIR/work.sh
 
 # show recent emails
-source_include $BASHINCLUDES_DIR/gmail.sh
+source_include $BASHINCLUDES_DIR/email.sh
 
 source_include $BASHINCLUDES_DIR/misc.sh
 source_include $BASHINCLUDES_DIR/alwaysontop.sh
