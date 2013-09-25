@@ -73,7 +73,8 @@ then
         # long offensive
         (probexit 0.1 && fortune -o "$FORTUNES_DIR" | fold -s) ||
         (probexit 0.1 && fortune -o "$FORTUNES_PERS_DIR" | fold -s) ||
-        (probexit 0.1 && ping -c 1 google.com &> /dev/null && feedfortune)
+        (probexit 0.05 && ping -c 1 google.com &> /dev/null && feedfortune --timeout 2) ||
+        (probexit 0.05 && ping -c 1 google.com &> /dev/null && feedfortune --timeout 2 --deep)
         echo -en $COLOR_off
         
         # 20% probability of not getting a fortune when not using the arxiv stuff

@@ -82,7 +82,7 @@ filetype plugin indent on
 au FileType py set autoindent
 au FileType py set smartindent
 au FileType py set textwidth=79 " PEP-8 Friendly
-
+autocmd Filetype python setlocal expandtab tabstop=4 shiftwidth=4
 
 " Treat long lines as break lines (useful when moving around in them)
 map j gj
