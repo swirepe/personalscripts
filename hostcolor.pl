@@ -17,4 +17,10 @@ $host =  `hostname`;
 $hash = perlhash($host);
 
 $fg_color = ($hash % 200) + 1;
-print "\033[38;5;${fg_color}m";
+if( $#ARGV + 1  == 1 ) {
+  print "$fg_color";
+}	else{
+	print "\033[38;5;${fg_color}m";
+}
+
+

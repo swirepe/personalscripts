@@ -71,13 +71,14 @@ mkdir -p $HOME/pi
 cd $HOME/pi
 
     
-[ -e setup-rootfs.sh  ] || wget https://raw.github.com/swirepe/personalscripts/master/pi/setup-rootfs.sh
-[ -e setup-tor.sh     ] || wget https://raw.github.com/swirepe/personalscripts/master/pi/setup-tor.sh
-[ -e setup-ssh.sh     ] || wget https://raw.github.com/swirepe/personalscripts/master/pi/setup-ssh.sh
-[ -e setup-motd.sh    ] || wget https://raw.github.com/swirepe/personalscripts/master/pi/setup-motd.sh
-[ -e setup-zram.sh    ] || wget https://raw.github.com/swirepe/personalscripts/master/pi/setup-zram.sh
-[ -e setup-ramlog.sh  ] || wget https://raw.github.com/swirepe/personalscripts/master/pi/setup-ramlog.sh
-[ -e setup-ramlog.sh  ] || wget https://raw.github.com/swirepe/personalscripts/master/pi/setup-googledns.sh
+[ -e setup-rootfs.sh    ] || wget https://raw.github.com/swirepe/personalscripts/master/pi/setup-rootfs.sh
+[ -e setup-tor.sh       ] || wget https://raw.github.com/swirepe/personalscripts/master/pi/setup-tor.sh
+[ -e setup-ssh.sh       ] || wget https://raw.github.com/swirepe/personalscripts/master/pi/setup-ssh.sh
+[ -e setup-motd.sh      ] || wget https://raw.github.com/swirepe/personalscripts/master/pi/setup-motd.sh
+[ -e setup-zram.sh      ] || wget https://raw.github.com/swirepe/personalscripts/master/pi/setup-zram.sh
+[ -e setup-ramlog.sh    ] || wget https://raw.github.com/swirepe/personalscripts/master/pi/setup-ramlog.sh
+[ -e setup-googledns.sh ] || wget https://raw.github.com/swirepe/personalscripts/master/pi/setup-googledns.sh
+[ -e setup-gpu.sh ] || wget https://raw.github.com/swirepe/personalscripts/master/pi/setup-gpu.sh
 
 chmod +x setup-rootfs.sh
 chmod +x setup-tor.sh
@@ -86,41 +87,45 @@ chmod +x setup-motd.sh
 chmod +x setup-zram.sh
 chmod +x setup-ramlog.sh
 chmod +x setup-googledns.sh
-
+chmod +x setup-gpu.sh
 
 echo -e "${COLOR_Blue}Setting up zram.${COLOR_off}"
-./setup-zram.sh
+sudo ./setup-zram.sh
 echo -e "${COLOR_BIBlue}Setting up zram complete.${COLOR_off}"
 
 
 echo -e "${COLOR_Blue}Setting up ramlog.${COLOR_off}"
-./setup-ramlog.sh
+sudo ./setup-ramlog.sh
 echo -e "${COLOR_BIBlue}Setting up ramlog complete.${COLOR_off}"
 
- 
+
+echo -e "${COLOR_Blue}Setting up the gpu.${COLOR_off}"
+sudo ./setup-gpu.sh
+echo -e "${COLOR_BIBlue}Setting up the gpu complete.${COLOR_off}"
+
+
 echo -e "${COLOR_Blue}Expanding the rootfs.${COLOR_off}"
-./setup-rootfs.sh
+sudo ./setup-rootfs.sh
 echo -e "${COLOR_BIBlue}Rootfs will expand on reboot.${COLOR_off}"
 
 
 echo -e "${COLOR_Blue}Setting up tor.${COLOR_off}"
-./setup-tor.sh
+sudo ./setup-tor.sh
 echo -e "${COLOR_BIBlue}Setting up tor complete.${COLOR_off}"
 
 
 echo -e "${COLOR_Blue}Setting up ssh.${COLOR_off}"
-./setup-ssh.sh
+sudo ./setup-ssh.sh
 echo -e "${COLOR_BIBlue}Setting up ssh complete.${COLOR_off}"
 
 
 echo -e "${COLOR_Blue}Setting up motd.${COLOR_off}"
-./setup-motd.sh
+sudo ./setup-motd.sh
 echo -e "${COLOR_BIBlue}Setting up motd complete.${COLOR_off}"
 
 
-
 echo -e "${COLOR_Blue}Setting up google dns.${COLOR_off}"
-./setup-googledns.sh
+sudo ./setup-googledns.sh
 echo -e "${COLOR_BIBlue}Setting up google dns complete.${COLOR_off}"
 
 
