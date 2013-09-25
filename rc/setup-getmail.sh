@@ -5,9 +5,8 @@ cd ~/getmail*
 sudo python setup.py install
 
 
-mkdir -p /media/mass/mail/cur/
-mkdir -p /media/mass/mail/new/
-mkdir -p /media/mass/mail/tmp/
+mkdir -p /media/mass/mail/
+touch /media/mass/mail/mbox
 
 
 mkdir ~/.getmail/
@@ -19,7 +18,7 @@ sudo chown swirepe /var/log/getmail.log
 chmod 700 /var/log/getmail.log
 
 
-crontab -l { cat; echo -e "\n#Added on $(date) by setup-getmail.sh\n# get new email every five minutes\n*/5 * * * * getmail --quiet"; } | crontab -
+crontab -l { cat; echo -e "\n#Added on $(date) by setup-getmail.sh\n# get new email every twenty minutes\n*/20 * * * * getmail --quiet"; } | crontab -
 
 
 mkdir -p /media/mass/backup_mail
