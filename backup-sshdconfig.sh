@@ -13,7 +13,7 @@ then
         echo "Installing."
         crontab -l | { cat; echo -e "\n# Added on $(date) by backup-sshdconfig.sh\n# backup sshd config files every day at 11am.\n0 11 * * * $HOME/pers/scripts/backup-sshdconfig.sh"; } | crontab -
     fi
-	crontab -l | grep backup-SSHDconfig.sh
+	crontab -l | grep backup-sshdconfig.sh
 	echo "Done."
 	exit 0
 fi
@@ -29,7 +29,7 @@ if [[ -d $PERS_DIR/machines ]]
 then
 	echo "Updating machines repository."
 	cd $PERS_DIR/machines
-	git pull origin master
+	git pull --no-edit origin master
 else
 	echo "No machines repository found.  Cloning."
 	git clone git@bitbucket.org:swirepe/machines.git $PERS_DIR/machines
