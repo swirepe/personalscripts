@@ -20,10 +20,11 @@ function getlines {
 
 
 TEMP_DIR=$(mktemp -d /tmp/repo_growth_XXXX)
-git clone $URL $TEMP_DIR || $(echo "Error cloning $URL" && exit 1)
+git clone $URL $TEMP_DIR > /dev/null || $(echo "Error cloning $URL" && exit 1)
 cd $TEMP_DIR
 
 
+echo -e "day\tloc\tsubmodules"
 while read -r line 
 do
     #echo -e "${line}"
@@ -36,3 +37,8 @@ do
 done <<< "$(git log --no-merges --date=iso --pretty=format:'%H %cd')"
 
 rm -rf $TEMP_DIR
+
+
+## You can put this in a database pretty easily
+# repo_growth.sh <url> | tee growth.tsv && csvsql --tabs --db sqlite:///growth.sqlite --insert growth.tsv && sqlite3 growth.sqlite
+# select day, max(loc), submodules from growth group by day order by day;
