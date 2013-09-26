@@ -32,7 +32,7 @@ do
     git checkout $HASH &> /dev/null
     
     
-    echo -e "${DATE}\t$(getlines)"
+    echo -e "${DATE}\t$(getlines)\t$(git submodule | wc -l)"
 done <<< "$(git log --no-merges --date=iso --pretty=format:'%H %cd')"
 
 rm -rf $TEMP_DIR
