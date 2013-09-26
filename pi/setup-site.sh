@@ -10,9 +10,19 @@ sudo service lighttpd force-reload
 echo -e "${COLOR_BBlue}Cloning repository${COLOR_off}"
 git archive --format=tar --remote=git@bitbucket.org:swirepe/neurokyme-site.git master | sudo tar -C /var/www -xf  -
 
-sudo chmod a+x /var/www/foreignhosts.sh
-sudo mv /var/www/foreignhosts.sh /usr/local/bin/neurokyme_foreignhosts.sh
+sudo chmod a+x /var/www/config/neurokyme_foreignhosts.sh
+sudo mv /var/www/config/neurokyme_foreignhosts.sh /usr/local/bin/neurokyme_foreignhosts.sh
 
+sudo mv /etc/lighttpd/lighttpd.conf /etc/lighttpd/lighttpd.conf.bak
+sudo mv /var/www/config/lighttpd.conf /etc/lighttpd/lighttpd.conf
+sudo mv 
+
+sudo mkdir -p /etc/lighttpd/ssl
+sudo mv /var/www/config/neurokyme.pem /etc/lighttpd/ssl/neurokyme.pem
+sudo chown root:root /etc/lighttpd/ssl/neurokyme.pem
+sudo chmod 400 /etc/lighttpd/ssl/neurokyme.pem
+
+sudo rm -rf /var/www/config/
 
 if [[ "$(crontab -l | grep netstat)" ]]
 then

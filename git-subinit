@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+TOP_LEVEL=$(git rev-parse --show-toplevel)
+cd $TOP_LEVEL
+
+git submodule sync
+git submodule update --init --recursive
+
+for submodule in $( git submodule | awk  '{ print $2 ;}' )
+do
+    cd $TOP_LEVEL/$submodule
+    echo -n "Checking out master on $submodule: " 
+    git checkout master 2>&1
+    
+    if [ -e ./setup-upstream.sh ]
+    then
+        echo "Setting up upstream for $submodule"
+        chmod +x setup-upstream.sh
+        ./setup-upstream.sh
+    fi
+    
+done

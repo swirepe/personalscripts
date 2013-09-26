@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+echo '(SayText "BOOP BOOP BOOP BOOP BOOP Your stupid job is finally finished, BEEP BOOP BOP BOOP BEEP")' | festival --pipe
