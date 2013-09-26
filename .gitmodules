@@ -1,36 +1,39 @@
 [submodule "src/stderred"]
 	path = src/stderred
-	url = git://github.com/sickill/stderred.git
+	url = git@bitbucket.org:swirepe/stderred.git
 [submodule "src/toramdisk"]
 	path = src/toramdisk
 	url = git://github.com/swirepe/toramdisk.sh.git
 [submodule "src/z"]
 	path = src/z
-	url = git://github.com/rupa/z.git
+	url = git@bitbucket.org:swirepe/z.git
 [submodule "src/silversearcher"]
 	path = src/silversearcher
-	url = https://github.com/ggreer/the_silver_searcher
+	url = git@bitbucket.org:swirepe/the_silver_searcher.git
 [submodule "src/git-extras"]
 	path = src/git-extras
-	url = https://github.com/visionmedia/git-extras.git
+	url = git@bitbucket.org:swirepe/git-extras.git
 [submodule "src/oh-my-zsh-copy"]
 	path = src/oh-my-zsh-copy
 	url = git@bitbucket.org:swirepe/oh-my-zsh-copy.git 
 [submodule "src/csvkit"]
 	path = src/csvkit
-	url = https://github.com/onyxfish/csvkit
+	url = git@bitbucket.org:swirepe/csvkit.git
 [submodule "src/fswatch"]
 	path = src/fswatch
-	url = https://github.com/alandipert/fswatch.git
+	url = git@bitbucket.org:swirepe/fswatch.git
 [submodule "src/autonav"]
 	path = src/autonav
 	url = https://github.com/swirepe/autonav.git
 [submodule "src/dreampie"]
 	path = src/dreampie
-	url = https://github.com/noamraph/dreampie.git
+	url = git@bitbucket.org:swirepe/dreampie.git
 [submodule "src/chooseln"]
 	path = src/chooseln
 	url = git@github.com:swirepe/chooseln.git
 [submodule "src/mosh"]
 	path = src/mosh
-	url = https://github.com/keithw/mosh
+	url = git@bitbucket.org:swirepe/mosh.git
+[submodule "src/pygments"]
+	path = src/pygments
+	url = git@bitbucket.org:swirepe/pygments.git
