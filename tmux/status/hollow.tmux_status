@@ -1,3 +1,4 @@
+# hollow.tmux_status
 
 
 set-option -g set-titles-string ' #H:#S.#I.#P #W #T '

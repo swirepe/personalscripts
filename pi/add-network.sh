@@ -39,7 +39,7 @@ ssh_host "warmouth"
 echo  "## ---------------------------------------" | tee --append ~/.ssh/config
 
 
-echo "\n\n## ---------------------------------------\n## added on $(date) by add-network.sh" | sudo tee --append /etc/hosts
+echo -e "\n\n## ---------------------------------------\n## added on $(date) by add-network.sh" | sudo tee --append /etc/hosts
 add_host "betta"    "192.168.1.101"
 add_host "ray"      "192.168.1.102"
 add_host "smokeshark"      "192.168.1.103"
