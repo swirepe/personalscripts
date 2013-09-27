@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+function get_speed {
+  R1=`cat /sys/class/net/$1/statistics/rx_bytes`
+  T1=`cat /sys/class/net/$1/statistics/tx_bytes`
+  sleep 1
+  R2=`cat /sys/class/net/$1/statistics/rx_bytes`
+  T2=`cat /sys/class/net/$1/statistics/tx_bytes`
+  TBPS=`expr $T2 - $T1`
+  RBPS=`expr $R2 - $R1`
+  TKBPS=`expr $TBPS / 1024`
+  RKBPS=`expr $RBPS / 1024`
+  echo "$1: U:$TKBPS kb/s D:$RKBPS kb/s"
+}
+
+if [[ -z "$1" ]]
+then
+	echo "usage: $0 network-interface"
+  echo ""
+  echo "e.g. $0 eth0"
+  echo ""
+  exit 1
+fi
+
+
+if [[ "$2" == "--watch" ]]
+then
+	while true
+	do
+		get_speed "$1"
+	done
+else
+	get_speed "$1"
+fi
+
+
+
+

@@ -1,3 +1,4 @@
+# cpu.tmux_status
 
 # everything black on magenta
 set -g status-fg yellow

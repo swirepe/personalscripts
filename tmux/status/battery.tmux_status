@@ -1,3 +1,4 @@
+# battery.tmux_status
 
 # everything blue on black
 set -g status-fg blue
