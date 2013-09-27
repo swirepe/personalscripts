@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-function add_ssh {
-    echo -e "$1" | tee --append ~/.ssh/config
-    
-}
 
 function add_host {
     NAME="$1"
@@ -23,22 +19,25 @@ function ssh_host {
     fi
     if [[ -z "$(grep $H ~/.ssh/config)" ]]
     then
-        echo "Host $H"
-        echo "    User $U"
-        echo "    Hostname $H"
-        echo "    Port 212"
-        echo -e "\n"
+        echo "Host $H"            | tee --append ~/.ssh/config
+        echo "    User $U"        | tee --append ~/.ssh/config
+        echo "    Hostname $H"    | tee --append ~/.ssh/config
+        echo "    Port 212"       | tee --append ~/.ssh/config
+        echo -e "\n"              | tee --append ~/.ssh/config
     fi
 }
 
-add_ssh "\n\n## ---------------------------------------"
-add_ssh "## added on $(date) by add-network.sh"
+echo -e "\n\n## ---------------------------------------" | tee --append ~/.ssh/config
+echo -e "## added on $(date) by add-network.sh"          | tee --append ~/.ssh/config
 
-add_ssh $(ssh_host "betta")
-add_ssh $(ssh_host "ray")
-add_ssh $(ssh_host "smokeshark")
-add_ssh $(ssh_host "snake" "root")
-add_ssh $(ssh_host "warmouth")
+ssh_host "betta"
+ssh_host "ray"
+ssh_host "smokeshark"
+ssh_host "snake" "root"
+ssh_host "warmouth"
+
+echo  "## ---------------------------------------" | tee --append ~/.ssh/config
+
 
 echo "\n\n## ---------------------------------------\n## added on $(date) by add-network.sh" | sudo tee --append /etc/hosts
 add_host "betta"    "192.168.1.101"
