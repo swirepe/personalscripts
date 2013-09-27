@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 echo "Installing ntp."
-sagi -y ntp gpg
+sudo apt-get install -y ntp gpg
 
 echo "Adding Torproject's Wheezy to the apt list."
 echo "deb     http://deb.torproject.org/torproject.org wheezy main" | sudo tee --append  /etc/apt/sources.list
@@ -10,10 +10,10 @@ gpg --keyserver keys.gnupg.net --recv 886DDD89
 gpg --export A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89 | sudo apt-key add -
 
 echo "Adding in the keyring."
-sagi -y deb.torproject.org-keyring
+sudo apt-get install -y deb.torproject.org-keyring
 
 echo "Installiing tor."
-sagi -y tor
+sudo apt-get install -y tor
 
 
 function torrc-append {
