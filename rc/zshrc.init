@@ -9,8 +9,8 @@ function echo {
 
 
 ## This mirrors scripts/rc/bashrc.init
-
-export SCRIPTS_DIR="$HOME/pers/scripts"
+export PERS_DIR="$HOME/pers"
+export SCRIPTS_DIR="$PERS_DIR/scripts"
 export BASHINCLUDES_DIR="$SCRIPTS_DIR/bashincludes"
 export ZSHINCLUDES_DIR="$SCRIPTS_DIR/zshincludes"
 
