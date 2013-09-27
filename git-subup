@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+TOP_LEVEL=$(git rev-parse --show-toplevel)
+cd $TOP_LEVEL
+
+git submodule update --init --recursive
+
+for submodule in $( git submodule | awk  '{ print $2 ;}' )
+do
+    cd $TOP_LEVEL/$submodule
+    
+    if [[ "$(git remote | grep upstream)" ]]
+    then
+        git fetch origin -v
+        git fetch upstream -v
+        git merge upstream/master
+        git pull -u origin master
+    else
+        git pull -u origin master
+    fi
+    
+done

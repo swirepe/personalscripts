@@ -48,8 +48,10 @@ fi
 
 
 cd $KEYS_DIR
+
 sudo cp ~/.ssh/*.pub .
 sudo cp ~/pers/keys/*.pub .
+sudo chown -R $(whoami) .
 git add .  
 git commit -m "$(hostname) public_keys"
 git push origin master
