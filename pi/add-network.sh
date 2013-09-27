@@ -5,7 +5,7 @@ function add_ssh {
     
 }
 
-function add_hosts {
+function add_host {
     NAME="$1"
     IP="$2"
     if [[ -z "$(grep $NAME /etc/hosts)" ]]
@@ -21,7 +21,7 @@ function ssh_host {
     then
         U="swirepe"
     fi
-    if [[ -z "$(grep $H ~/.ssh)" ]]
+    if [[ -z "$(grep $H ~/.ssh/config)" ]]
     then
         echo "Host $H"
         echo "    User $U"
