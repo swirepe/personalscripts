@@ -1,12 +1,15 @@
-# bar2.tmux_status
 
 # everything black on magenta
 set -g status-fg black
 set -g status-bg cyan
 
+set-window-option -g window-status-current-bg cyan
+set-window-option -g window-status-current-fg white
+
+
 set-option -g status-justify "left"
 
-set -g status-left-length 8
-set -g status-left '#(tmux_gitbranch.py)'
-set -g status-right '#[fg=white]#(whoami)#[fg=yellow]@#[default]#[fg=cyan bright]#H#[default] #[default][#S] #(tmux_time.py)'
+set -g status-left-length 16
+set -g status-left '[#S]'
+set -g status-right '#[fg=blue]#(whoami)#[fg=yellow bold]@#[default]#[fg=black bright]#H#[default] #[fg=colour25 bold][#(tmux_memory.sh)] #(tmux_time.py)'
 

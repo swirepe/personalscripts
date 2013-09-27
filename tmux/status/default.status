@@ -18,3 +18,7 @@ set -g status-right-bg default
 set -g status-right-fg default
 set -g status-right-length 40
 set -g status-utf8 on
+
+
+set-window-option -g window-status-current-bg green
+set-window-option -g window-status-current-fg white

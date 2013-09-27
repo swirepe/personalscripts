@@ -1,13 +1,16 @@
-# cpu.tmux_status
 
 # everything black on magenta
 set -g status-fg yellow
 set -g status-bg blue
 
+
+set -g window-status-current-bg yellow
+set -g window-status-current-fg colour25
+
 set-option -g status-justify "left"
 
-set -g status-left-length 0
+set -g status-left-length 25
 set -g status-right-length 70
-set -g status-left ''
+set -g status-left '[#S] [Running #(ps -ef | wc -l)]'
 set -g status-right '#(tmux_cpu.sh)'
 
