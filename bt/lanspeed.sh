@@ -27,7 +27,7 @@ function to_host {
     HOST=$(grep $IP /etc/hosts | awk '{print $2}')
     if [[ -z "$HOST" ]]
     then
-        echo $IP
+        echo "$IP"
     else
         echo "$HOST"
     fi
@@ -35,13 +35,13 @@ function to_host {
 
 
 function ping_and_ssh {
-    $HOST="$(to_host $1)"
+    HOST="$(to_host $1)"
     CMD="$2"
     
     echo -en "${HOST}\t"
     if ping -c 1 $HOST &> /dev/null 
     then
-        cat $(which netspeed) | ssh $HOST 
+        cat $(which netspeed) | ssh $HOST 2>/dev/null 
     else
         echo "FAIL"
     fi
@@ -51,8 +51,9 @@ function ping_and_ssh {
 
 
 
-for IP in $(lslan)
+for IP in $(lslan | grep -v "^$(gateway.sh)\$")
 do
+    #echo "$IP    $(to_host $IP)"
     ping_and_ssh $IP
 done
 

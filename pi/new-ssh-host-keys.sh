@@ -25,15 +25,15 @@ ssh-keygen -N '' -t dsa -b $DSA_BIT -f $DSA_PATH
 echo "Setting permissions on RSA keys."
 sudo chown root:root "${RSA_PATH}"
 sudo chown root:root "${RSA_PATH}.pub"
-sudo chmod 644 "${RSA_PATH}"
-sudo chmod 644 "${RSA_PATH}.pub"
+sudo chmod 700 "${RSA_PATH}"
+sudo chmod 700 "${RSA_PATH}.pub"
 
 
 echo "Setting permissions on DSA keys."
 sudo chown root:root "${DSA_PATH}"
 sudo chown root:root "${DSA_PATH}.pub"
-sudo chmod 644 "${DSA_PATH}"
-sudo chmod 644 "${DSA_PATH}.pub"
+sudo chmod 700 "${DSA_PATH}"
+sudo chmod 700 "${DSA_PATH}.pub"
 
 
 echo "Symlinking RSA keys to /etc/ssh/ssh_host_rsa_key"
@@ -59,8 +59,8 @@ then
     echo "Setting permissions on ECDSA keys."
     sudo chown root:root "${ECDSA_PATH}"
     sudo chown root:root "${ECDSA_PATH}.pub"
-    sudo chmod 644 "${ECDSA_PATH}"
-    sudo chmod 644 "${ECDSA_PATH}.pub"
+    sudo chmod 700 "${ECDSA_PATH}"
+    sudo chmod 700 "${ECDSA_PATH}.pub"
     
     echo "Removing old ecdsa keys."
     sudo rm /etc/ssh/ssh_host_ecdsa_key
