@@ -14,8 +14,11 @@ echo -e "${COLOR_BBlue}Moving utilities${COLOR_off}"
 sudo chmod a+x /var/www/util/services/foreign_hosts
 sudo mv /var/www/util/services/foreign_hosts /etc/init.d/foreign_hosts
 
+
 sudo chmod a+x /var/www/util/services/netspeed_listen
 sudo mv /var/www/util/services/netspeed_listen /etc/init.d/netspeed_listen
+sudo touch /var/log/netspeed.log
+sudo chown $(whoami) /var/log/netspeed.log
 
 sudo chmod a+x /var/www/util/services/speed_report
 sudo mv /var/www/util/services/speed_report /etc/init.d/speed_report
@@ -57,7 +60,6 @@ else
     crontab -l | grep "monitor.php"
 
 fi
-
 
 
 echo -e "${COLOR_BGreen}Done.${COLOR_off}"
