@@ -12,7 +12,7 @@ git archive --format=tar --remote=git@bitbucket.org:swirepe/neurokyme-site.git m
 
 echo -e "${COLOR_BBlue}Moving utilities${COLOR_off}"
 sudo chmod a+x /var/www/util/neurokyme_foreignhosts.sh
-sudo mv /var/www/util/neurokyme_foreignhosts.sh /usr/local/bin/neurokyme_foreignhosts.sh
+sudo mv /var/www/util/neurokyme_foreignhosts.sh /etc/init.d/foreign_hosts
 
 sudo chmod a+x /var/www/util/netspeed_listen
 sudo mv /var/www/util/netspeed_listen /etc/init.d/netspeed_listen
