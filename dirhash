@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+if [[ -z "$1" ]]
+then
+	DIR='.'
+else
+	DIR="$1"
+fi
+
+if [ ! -d $DIR ]
+then
+	echo "Warning: $DIR is not a directory." > /dev/stderr
+	shasum $DIR 
+else
+  find $DIR -type f -exec cat '{}' + | shasum | cut -f1 -d' '
+fi
