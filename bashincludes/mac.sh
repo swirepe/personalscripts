@@ -8,10 +8,11 @@ then
 
 		function infinder {
 			  if [[ -z "$1" ]]
+				then
 					 open -a Finder .
-				 else
+				else
 					 open -a Finder "$1"
-				 fi
+				fi
   	}	
 
 		function interm {
