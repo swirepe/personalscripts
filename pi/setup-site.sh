@@ -11,19 +11,22 @@ echo -e "${COLOR_BBlue}Cloning repository${COLOR_off}"
 git archive --format=tar --remote=git@bitbucket.org:swirepe/neurokyme-site.git master | sudo tar -C /var/www -xf  -
 
 echo -e "${COLOR_BBlue}Moving utilities${COLOR_off}"
-sudo chmod a+x /var/www/util/neurokyme_foreignhosts.sh
-sudo mv /var/www/util/neurokyme_foreignhosts.sh /etc/init.d/foreign_hosts
+sudo chmod a+x /var/www/util/services/foreign_hosts
+sudo mv /var/www/util/services/foreign_hosts /etc/init.d/foreign_hosts
 
-sudo chmod a+x /var/www/util/netspeed_listen
-sudo mv /var/www/util/netspeed_listen /etc/init.d/netspeed_listen
+sudo chmod a+x /var/www/util/services/netspeed_listen
+sudo mv /var/www/util/services/netspeed_listen /etc/init.d/netspeed_listen
 
-sudo chmod a+x /var/www/util/speed_report
-sudo mv /var/www/util/speed_report /etc/init.d/speed_report
+sudo chmod a+x /var/www/util/services/speed_report
+sudo mv /var/www/util/services/speed_report /etc/init.d/speed_report
 
 
-echo -e "${COLOR_BBlue}Putting the config file in place${COLOR_off}"
+echo -e "${COLOR_BBlue}Putting the config files in place${COLOR_off}"
 sudo mv /etc/lighttpd/lighttpd.conf /etc/lighttpd/lighttpd.conf.bak
 sudo mv /var/www/config/lighttpd.conf /etc/lighttpd/lighttpd.conf
+
+sudo mv /etc/php5/cgi/php.ini /etc/php5/cgi/php.ini.bak
+sudo mv /var/www/config/php.ini /etc/php5/cgi/php.ini
 
 
 echo -e "${COLOR_BBlue}Setting up https${COLOR_off}"
@@ -38,21 +41,6 @@ mkdir -p /var/log/lighttpd/main
 mkdir -p /var/log/lighttpd/dragonet
 sudo chown -R www-data:www-data /var/log/lightppd
 
-
-if [[ "$(crontab -l | grep neurokyme_foreignhosts.sh)" ]]
-then
-    echo "Crontab may already be installed."
-else
-    echo -e "${COLOR_BBlue}Installing crontab for foreign hosts${COLOR_off}"
-    sudo touch /var/log/foreignhosts.log
-    sudo touch /var/log/foreignhosts.tmp
-    sudo chown $(whoami) /var/log/foreignhosts.log
-    sudo chown $(whoami) /var/log/foreignhosts.tmp    
-    
-    crontab -l | { cat; echo -e "\n#Added on $(date) by setup-site.sh\n#Get a record of connected foreign hosts every five minutes\n# for traffic reporting on neurokyme\n*/5 * * * * neurokyme_foreignhosts.sh"; } | crontab -
-    crontab -l | grep "neurokyme_foreignhosts.sh"
-
-fi
 
 
 if [[ "$(crontab -l | grep monitor.php)" ]]
