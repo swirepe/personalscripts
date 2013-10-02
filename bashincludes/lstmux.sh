@@ -1,13 +1,8 @@
 #!/bin/bash
-
+# tmux list-sessions | while read x; do echo $x; done
 function lstmux {
-# http://wi-fizzle.com/article/276
-# IFS: Coax a BASH shell script into splitting for-loop elements by newline
-# instead of whitespace (whitespace is the default behaviour).
-local IFS="
-"
 
-	local SESSIONS=$(tmux list-sessions 2> /dev/null)
+	SESSIONS=$(tmux list-sessions 2> /dev/null)
 
 	if [[ ! -z "$TMUX" ]]
 	then
@@ -21,7 +16,7 @@ local IFS="
 		echo "Available Tmux Sessions: "
 		echo -en "$COLOR_off"
 
-		for session_line in "$SESSIONS"
+		echo $SESSIONS | while read session_line 
 		do
 		    
 		    if [[ ! -z $(echo "$session_line" | grep "^$CURRENT_SESSION:" ) ]]
@@ -41,6 +36,6 @@ if [[ ! -z  "$SSH_CONNECTION" ]]
 then
     if [ ! -f ~/.hushlogin ]
     then
-	lstmux
+        lstmux
     fi
 fi
