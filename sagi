@@ -34,9 +34,29 @@ fi
 
 }
 
+for package in $@
+do
+    if [[ "$package" == "-"* ]] || ! dpkg -s $package &> /dev/null
+    then
+        packages+=($package)
+    else
+        echo "Warning: Package already installed: $package" >/dev/stderr
+    fi        
+done
+
+if [ ${#packages[@]} = 0 ]
+then
+    echo "Nothing to install. Exiting."
+    exit 0
+else
+    echo "Installing packages: $packages"
+fi
+
+
+
 sudo apt-get update
 
-sudo apt-get install "$@" && ( 
+sudo apt-get install $packages && ( 
     update_machines &&
     cd "$SAGIRECORD_DIR" &&
     dpkg --get-selections > aptlist.txt &&
