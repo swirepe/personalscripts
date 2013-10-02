@@ -11,21 +11,26 @@ echo -e "${COLOR_BBlue}Cloning repository${COLOR_off}"
 git archive --format=tar --remote=git@bitbucket.org:swirepe/neurokyme-site.git master | sudo tar -C /var/www -xf  -
 
 echo -e "${COLOR_BBlue}Moving utilities${COLOR_off}"
+
 # foreign hosts
 sudo chmod a+x /var/www/util/services/foreign_hosts
-sudo mv /var/www/util/services/foreign_hosts /etc/init.d/foreign_hosts
+sudo cp /var/www/util/services/foreign_hosts /etc/init.d/foreign_hosts
 sudo touch /var/log/foreignhosts.log
 sudo chown $(whoami) /var/log/foreignhosts.log
 
 # netspeed listen
 sudo chmod a+x /var/www/util/services/netspeed_listen
-sudo mv /var/www/util/services/netspeed_listen /etc/init.d/netspeed_listen
+sudo cp /var/www/util/services/netspeed_listen /etc/init.d/netspeed_listen
 sudo touch /var/log/netspeed.log
 sudo chown $(whoami) /var/log/netspeed.log
 
 # speed report
 sudo chmod a+x /var/www/util/services/speed_report
-sudo mv /var/www/util/services/speed_report /etc/init.d/speed_report
+sudo cp /var/www/util/services/speed_report /etc/init.d/speed_report
+
+# nmap report
+sudo chmod a+x /var/www/util/services/nmap_report
+sudo cp /var/www/util/services/nmap_report /etc/init.d/nmap_report
 
 # torrent log
 sudo chmod a+x /var/www/util/services/torrent_log
