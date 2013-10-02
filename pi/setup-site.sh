@@ -1,5 +1,34 @@
 #!/usr/bin/env bash
 
+function add_service {
+    SERVICE="$1"
+    echo -e "${COLOR_Blue}Adding service ${SERVICE}${COLOR_off}."
+    sudo chmod a+x $SERVICE
+    
+    SERVICE_BASE=$(basename $SERVICE)
+    if [ -e /etc/init.d/$SERVICE_BASE ]
+    then
+        echo -e "${COLOR_Blue}/etc/init.d/$SERVICE_BASE found.  Stopping ${SERVICE_BASE}${COLOR_off}."
+        sudo /etc/init.d/$SERVICE_BASE stop
+    fi
+    sudo cp $SERVICE /etc/init.d/
+    echo -e "${COLOR_Blue}Starting service ${SERVICE_BASE}${COLOR_off}."
+    sudo /etc/init.d/$SERVICE_BASE start
+}
+
+function add_log {
+    LOGNAME="$1"
+    echo -e "${COLOR_Blue}Adding log ${LOGNAME}${COLOR_off}."
+    LOGDIR=$(dirname)
+    echo -e "${COLOR_Blue}Making log directory ${LOGDIR}${COLOR_off}."
+    sudo mkdir -p $LOGDIR
+    
+    sudo touch $LOGNAME
+    sudo chown $(whoami) $LOGNAME
+    sudo chmod a+rw $LOGNAME
+}
+
+
 echo -e "${COLOR_BBlue}Installing lighttpd and php${COLOR_off}"
 sagi -y lighttpd php5-cgi php5-common php5-gd php5-cli xsltproc
 
@@ -12,45 +41,32 @@ git archive --format=tar --remote=git@bitbucket.org:swirepe/neurokyme-site.git m
 
 echo -e "${COLOR_BBlue}Moving utilities${COLOR_off}"
 
+
 # foreign hosts
-sudo chmod a+x /var/www/util/services/foreign_hosts
-sudo cp /var/www/util/services/foreign_hosts /etc/init.d/foreign_hosts
-sudo touch /var/log/foreignhosts.log
-sudo chown $(whoami) /var/log/foreignhosts.log
-sudo chmod a+rw /var/log/foreignhosts.log
-sudo /etc/init.d/foreign_hosts start
+add_log /var/log/foreignhosts.log
+add_service /var/www/util/services/foreign_hosts
 
 # netspeed listen
-sudo chmod a+x /var/www/util/services/netspeed_listen
-sudo cp /var/www/util/services/netspeed_listen /etc/init.d/netspeed_listen
-sudo touch /var/log/netspeed.log
-sudo chown $(whoami) /var/log/netspeed.log
-sudo chmod a+rw  /var/log/netspeed.log
-sudo /etc/init.d/netspeed_listen start
+add_log /var/log/netspeed.log
+add_service /var/www/util/services/netspeed_listen
+
 
 # speed report
-sudo chmod a+x /var/www/util/services/speed_report
-sudo cp /var/www/util/services/speed_report /etc/init.d/speed_report
-sudo /etc/init.d/speed_report start
+add_service /var/www/util/services/speed_report
+
 
 # nmap report
-sudo chmod a+x /var/www/util/services/nmap_report
-sudo cp /var/www/util/services/nmap_report /etc/init.d/nmap_report
-sudo /etc/init.d/nmap_report start
+add_log /var/log/nmap_report.html
+add_log /var/log/nmap_report.xml
+add_service /var/www/util/services/nmap_report
+
 
 # torrent log
-sudo chmod a+x /var/www/util/services/torrent_log
-sudo mv /var/www/util/services/torrent_log /etc/init.d/torrent_log
-sudo touch /var/log/torrents.log
-sudo touch /var/log/torrents_info.log
-sudo touch /var/log/torrents_stats.log
-sudo chmod a+rw /var/log/torrents.log
-sudo chmod a+rw /var/log/torrents_info.log
-sudo chmod a+rw /var/log/torrents_stats.log
-sudo chown $(whoami) /var/log/torrents.log
-sudo chown $(whoami) /var/log/torrents_info.log
-sudo chown $(whoami) /var/log/torrents_stats.log
-sudo /etc/init.d/torrent_log start
+add_log /var/log/torrents.log
+add_log /var/log/torrents_info.log
+add_log /var/log/torrents_stats.log
+add_service /var/www/util/services/torrent_log
+
 
 echo -e "${COLOR_BBlue}Putting the config files in place${COLOR_off}"
 sudo mv /etc/lighttpd/lighttpd.conf /etc/lighttpd/lighttpd.conf.bak
