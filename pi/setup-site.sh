@@ -17,20 +17,26 @@ sudo chmod a+x /var/www/util/services/foreign_hosts
 sudo cp /var/www/util/services/foreign_hosts /etc/init.d/foreign_hosts
 sudo touch /var/log/foreignhosts.log
 sudo chown $(whoami) /var/log/foreignhosts.log
+sudo chmod a+rw /var/log/foreignhosts.log
+sudo /etc/init.d/foreign_hosts start
 
 # netspeed listen
 sudo chmod a+x /var/www/util/services/netspeed_listen
 sudo cp /var/www/util/services/netspeed_listen /etc/init.d/netspeed_listen
 sudo touch /var/log/netspeed.log
 sudo chown $(whoami) /var/log/netspeed.log
+sudo chmod a+rw  /var/log/netspeed.log
+sudo /etc/init.d/netspeed_listen start
 
 # speed report
 sudo chmod a+x /var/www/util/services/speed_report
 sudo cp /var/www/util/services/speed_report /etc/init.d/speed_report
+sudo /etc/init.d/speed_report start
 
 # nmap report
 sudo chmod a+x /var/www/util/services/nmap_report
 sudo cp /var/www/util/services/nmap_report /etc/init.d/nmap_report
+sudo /etc/init.d/nmap_report start
 
 # torrent log
 sudo chmod a+x /var/www/util/services/torrent_log
@@ -38,10 +44,13 @@ sudo mv /var/www/util/services/torrent_log /etc/init.d/torrent_log
 sudo touch /var/log/torrents.log
 sudo touch /var/log/torrents_info.log
 sudo touch /var/log/torrents_stats.log
+sudo chmod a+rw /var/log/torrents.log
+sudo chmod a+rw /var/log/torrents_info.log
+sudo chmod a+rw /var/log/torrents_stats.log
 sudo chown $(whoami) /var/log/torrents.log
 sudo chown $(whoami) /var/log/torrents_info.log
 sudo chown $(whoami) /var/log/torrents_stats.log
-
+sudo /etc/init.d/torrent_log start
 
 echo -e "${COLOR_BBlue}Putting the config files in place${COLOR_off}"
 sudo mv /etc/lighttpd/lighttpd.conf /etc/lighttpd/lighttpd.conf.bak
@@ -59,9 +68,9 @@ sudo chmod 400 /etc/lighttpd/ssl/neurokyme.pem
 
 
 echo -e "${COLOR_BBlue}Setting up logging${COLOR_off}"
-mkdir -p /var/log/lighttpd/main
-mkdir -p /var/log/lighttpd/dragonet
-sudo chown -R www-data:www-data /var/log/lightppd
+sudo mkdir -p /var/log/lighttpd/main
+sudo mkdir -p /var/log/lighttpd/dragonet
+sudo chown -R www-data:www-data /var/log/lighttpd
 
 
 
@@ -80,6 +89,7 @@ else
 
 fi
 
+/etc/init.d/lighttpd force-reload
 
 echo -e "${COLOR_BGreen}Done.${COLOR_off}"
 
