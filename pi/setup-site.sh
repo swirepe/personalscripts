@@ -19,7 +19,7 @@ function add_service {
 function add_log {
     LOGNAME="$1"
     echo -e "${COLOR_Blue}Adding log ${LOGNAME}${COLOR_off}."
-    LOGDIR=$(dirname)
+    LOGDIR=$(dirname $LOGNAME)
     echo -e "${COLOR_Blue}Making log directory ${LOGDIR}${COLOR_off}."
     sudo mkdir -p $LOGDIR
     
