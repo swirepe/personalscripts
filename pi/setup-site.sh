@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 echo -e "${COLOR_BBlue}Installing lighttpd and php${COLOR_off}"
-sagi -y lighttpd php5-cgi php5-common php5-gd php5-cli
+sagi -y lighttpd php5-cgi php5-common php5-gd php5-cli xsltproc
 
 sudo lighty-enable-mod fastcgi
 sudo lighty-enable-mod fastcgi-php
@@ -11,17 +11,31 @@ echo -e "${COLOR_BBlue}Cloning repository${COLOR_off}"
 git archive --format=tar --remote=git@bitbucket.org:swirepe/neurokyme-site.git master | sudo tar -C /var/www -xf  -
 
 echo -e "${COLOR_BBlue}Moving utilities${COLOR_off}"
+# foreign hosts
 sudo chmod a+x /var/www/util/services/foreign_hosts
 sudo mv /var/www/util/services/foreign_hosts /etc/init.d/foreign_hosts
+sudo touch /var/log/foreignhosts.log
+sudo chown $(whoami) /var/log/foreignhosts.log
 
-
+# netspeed listen
 sudo chmod a+x /var/www/util/services/netspeed_listen
 sudo mv /var/www/util/services/netspeed_listen /etc/init.d/netspeed_listen
 sudo touch /var/log/netspeed.log
 sudo chown $(whoami) /var/log/netspeed.log
 
+# speed report
 sudo chmod a+x /var/www/util/services/speed_report
 sudo mv /var/www/util/services/speed_report /etc/init.d/speed_report
+
+# torrent log
+sudo chmod a+x /var/www/util/services/torrent_log
+sudo mv /var/www/util/services/torrent_log /etc/init.d/torrent_log
+sudo touch /var/log/torrents.log
+sudo touch /var/log/torrents_info.log
+sudo touch /var/log/torrents_stats.log
+sudo chown $(whoami) /var/log/torrents.log
+sudo chown $(whoami) /var/log/torrents_info.log
+sudo chown $(whoami) /var/log/torrents_stats.log
 
 
 echo -e "${COLOR_BBlue}Putting the config files in place${COLOR_off}"
