@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+#transmission-remote snake --auth admin:snake --list
+
+#sshpass -p 'snake' ssh -o StrictHostKeyChecking=no snake ls -l /usb/sda1/torrents/torrentwatch
+sshpass -p 'snake' ssh -o StrictHostKeyChecking=no snake ls -lh /usb/sda1/torrents/torrentwatch/ | awk '{  print ($9 ~ /.added$/) ? "added" : "not added", $6,$7,$8,$9}'

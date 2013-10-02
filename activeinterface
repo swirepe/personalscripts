@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+# get the current active network interface
+route -n | grep "^0.0.0.0" | rev | cut -d' ' -f1 | rev

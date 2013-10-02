@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+transmission-remote snake --auth admin:snake --session-stats

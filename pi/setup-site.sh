@@ -39,6 +39,11 @@ else
 
 fi
 
+sudo touch /var/log/netspeed.log
+sudo chown $(whoami) /var/log/netspeed.log
+sudo chmod +x /var/www/netspeed_listen
+sudo mv /var/www/netspeed_listen /etc/init.d/netspeed_listen
+
 echo -e "${COLOR_BGreen}Done.${COLOR_off}"
 
 

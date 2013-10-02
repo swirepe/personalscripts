@@ -3,9 +3,12 @@
 set -g status-fg blue
 set -g status-bg black
 
+set -g window-status-current-bg black
+set -g window-status-current-fg white
+
 set-option -g status-justify "left"
 
-set -g status-left-length 12
-set -g status-left '#(tmux_battery.py bars) '
-set -g status-right '#[fg=white]#(whoami)#[fg=yellow]@#[default]#[fg=cyan bright]#H#[default] #[default][B: #(tmux_battery.py capacity-percent)]'
+set -g status-left-length 18
+set -g status-left '[#S] #(tmux_battery.py bars) '
+set -g status-right '#[fg=white]#(whoami)#[fg=yellow]@#[default]#[fg=cyan bright]#H#[default] #[fg=green][#(tmux_temperature.sh)]#[default][B: #(tmux_battery.py capacity-percent)]'
 

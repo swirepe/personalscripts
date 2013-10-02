@@ -1,4 +1,23 @@
 #!/usr/bin/env bash
 # echo "nmap -sP 192.168.1.1-254"
-nmap -sP 192.168.1.1-254 |grep --extended-regex --only-match '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+'
+
+
+function fake_route {
+    if route -n &> /dev/null
+    then
+        route -n
+    else
+        echo '0.0.0.0       192.168.1.1'
+        # error case    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+        # my mac doesn't know about route -n, so we gotta give it something to work with
+        # by defaulting to what my network at home is
+    fi
+}
+
+GATEWAY=$( fake_route | grep '^0.0.0.0' | awk '{print $2}')
+
+CLIPPED_GATEWAY="$(echo $GATEWAY | cut -f1,2,3 -d.).1"
+
+
+nmap -sP ${CLIPPED_GATEWAY}-254 |grep --extended-regex --only-match '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+'
 
