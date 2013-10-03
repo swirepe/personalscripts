@@ -85,3 +85,4 @@ function highlight {
     perl -pe "s/$1/$COLOR_BRed$&$COLOR_off/g"
 }
 
+export EDITOR="vim"
