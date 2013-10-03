@@ -65,6 +65,7 @@ add_service /var/www/util/services/nmap_report
 add_log /var/log/torrents.log
 add_log /var/log/torrents_info.log
 add_log /var/log/torrents_stats.log
+add_log /var/log/torrents_individual.log
 add_service /var/www/util/services/torrent_log
 
 
