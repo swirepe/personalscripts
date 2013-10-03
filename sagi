@@ -38,6 +38,7 @@ NON_ARG_PACKAGE="false"
 for package in $@
 do
     if [[ "$package" == "-"* ]]
+		then
         packages+=($package)
     elif dpkg -s $package &> /dev/null
     then
