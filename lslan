@@ -16,8 +16,29 @@ function fake_route {
 
 GATEWAY=$( fake_route | grep '^0.0.0.0' | awk '{print $2}')
 
-CLIPPED_GATEWAY="$(echo $GATEWAY | cut -f1,2,3 -d.).1"
+# I learned a few things
+# First, 192.168.1.1-254 is all of the networks on my local whatever, but so is 192.168.1.1/24
+# that /24 is a subnetmask, ie 192.168.0.*
+# for a bigger reach, i could do /16, ie 192.168.*.*
+
+# from http://everything2.com/title/192.168.0.0%252F16
+## The class C address range set aside for internal use. The private addresses are described in RFC 1918, and also include 10.* (10.0.0.0/8) and 172.16.* (172.16.0.0/12).
+
+##As to the naming convention:
+##Short answer: 192.168.* == 192.168.0.0/16 and 192.168.0.* == 192.168.0.0/24
+
+## Long answer:
+
+## An IP address is composed of two parts: the network name and the host name. In order to derive the network name from an IP address, the TCP/IP stack bitwise ANDs the IP address with the subnet mask. The result is the network name. If the network name is the same as the network name for the network adapter, then it proceeds to look at the host name (the bitwise complement of the network name ANDed with the IP address) to see who to give it to, otherwise it sends it along its predestined route.
+
+## Now that we know all that, we can explain the little /x at the end of the network name. That is the subnet mask, with the first x bits of the 32-bit number (in IPv4) set to 1, and the remaining bits set to 0. So, for 192.168.0.0/16, the subnet mask is 11111111.11111111.00000000.00000000 in binary, or 255.255.0.0 in decimal. This means that the first two numbers, 192.168, are the network name, and all the rest of the numbers designate different hosts on that network. 
 
 
-nmap -sP ${CLIPPED_GATEWAY}/24 |grep --extended-regex --only-match '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+'
+# see also
+## http://security.stackexchange.com/questions/36198/how-to-find-live-hosts-on-my-network
+
+
+
+
+nmap -sP ${GATEWAY}/24 |grep --extended-regex --only-match '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+'
 
