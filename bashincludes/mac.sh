@@ -6,4 +6,21 @@ then
 
     alias airport="/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport"
 
+		function infinder {
+			  if [[ -z "$1" ]]
+				then
+					 open -a Finder .
+				else
+					 open -a Finder "$1"
+				fi
+  	}	
+
+		function interm {
+				if [[ -z "$1" ]]
+				then
+					open -a iTerm ~
+				else
+					open -a iTerm "$1"
+				fi
+		}
 fi
