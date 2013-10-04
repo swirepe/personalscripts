@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+psql -U tripmonster -d tripmonster -h tm01n
