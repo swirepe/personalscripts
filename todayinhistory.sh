@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-echo "Today In history, $(date +'%B_%-d'):"
+echo "Today In history, $(date +'%B %-d'):"
 
 # between events and births
 # remove brackets
