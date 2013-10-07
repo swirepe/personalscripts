@@ -11,5 +11,5 @@ else
     awk '$2~/^flags/{_1=$1;getline;if($1~/^inet/){print _1" "$2}}'
 fi
 
-echo "ifconfig.me: $(curl ifconfig.me)"
-echo "ipogre:      $(curl ipv4.ipogre.com)"
+echo "ifconfig.me: $(curl ifconfig.me 2>/dev/null)"
+echo "ipogre:      $(curl ipv4.ipogre.com 2>/dev/null)"
