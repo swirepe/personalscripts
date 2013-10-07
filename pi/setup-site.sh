@@ -30,7 +30,7 @@ function add_log {
 
 
 echo -e "${COLOR_BBlue}Installing lighttpd and php${COLOR_off}"
-sagi -y lighttpd php5-cgi php5-common php5-gd php5-cli xsltproc
+sagi -y lighttpd php5-cgi php5-common php5-gd php5-cli php5-pgsql xsltproc python-psycopg2 postgresql libpq-dev
 
 sudo lighty-enable-mod fastcgi
 sudo lighty-enable-mod fastcgi-php
@@ -45,6 +45,12 @@ echo -e "${COLOR_BBlue}Moving utilities${COLOR_off}"
 # foreign hosts
 add_log /var/log/foreignhosts.log
 add_service /var/www/util/services/foreign_hosts
+
+# foreign hosts for db
+add_service /var/www/util/services/foreign_hosts_db
+sudo cp /var/www/util/sql/hosts.py /usr/local/bin/foreign_hosts_db
+sudo chmod a+x /usr/local/bin/foreign_hosts_db
+
 
 # netspeed listen
 add_log /var/log/netspeed.log
@@ -90,6 +96,16 @@ sudo mkdir -p /var/log/lighttpd/dragonet
 sudo chown -R www-data:www-data /var/log/lighttpd
 
 
+echo -e "${COLOR_BBlue}Setting up postgresql${COLOR_off}"
+sudo mkdir /media/mass/postgres
+sudo chown -R postgres /media/mass/postgres
+sudo -u postgres initdb --pgdata=/media/mass/postgres
+sudo mkdir /media/mass/postgres_logs
+sudo chown -R postgres /media/mass/postgres_logs
+sudo sed -i "s,^data_directory.*,data_directory = '/media/mass/postgres'," /etc/postgresql/*/main/postgresql.conf
+sudo -u postgres psql --dbname hosts -f /var/www/util/sql/hosts.sql
+
+sudo /etc/init.d/postgres* restart
 
 if [[ "$(crontab -l | grep monitor.php)" ]]
 then
