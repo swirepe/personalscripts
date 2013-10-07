@@ -56,12 +56,12 @@ fi
 echo "Torrent found in location $LOCATION" > /dev/stderr
 
 
-NAME_COL_OFFSET=$(transmission-remote snake --auth admin:snake  -t 1 --files  | grep Name | sed 's/Name.*//' | wc -c)
+NAME_COL_OFFSET=$(transmission-remote snake --auth admin:snake  -t $TORRENT_ID --files  | grep Name | sed 's/Name.*//' | wc -c)
 
 while read remote_file 
 do
     remote_file="root@snake:'${LOCATION}/${remote_file}'"
     echo "Pulling $remote_file" > /dev/stderr
     scp -r "$remote_file" $DESTINATION
-done < <(transmission-remote snake --auth admin:snake  -t 1 --files  | tail -n +3 | cut -c"$NAME_COL_OFFSET"- )
+done < <(transmission-remote snake --auth admin:snake  -t $TORRENT_ID --files  | tail -n +3 | cut -c"$NAME_COL_OFFSET"- )
 
