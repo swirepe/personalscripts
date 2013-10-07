@@ -62,6 +62,6 @@ while read remote_file
 do
     remote_file="root@snake:'${LOCATION}/${remote_file}'"
     echo "Pulling $remote_file" > /dev/stderr
-    scp -r "$remote_file" $DESTINATION
+    rsync --recursive --compress --progress --partial "$remote_file" $DESTINATION
 done < <(transmission-remote snake --auth admin:snake  -t $TORRENT_ID --files  | tail -n +3 | cut -c"$NAME_COL_OFFSET"- )
 
