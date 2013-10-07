@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+
+TORRENT_ID="$1"
+DESTINATION="$2"
+
+if [[ -z "$TORRENT_ID" ]]
+then
+    echo "Usage: btpull torrent_id destination" > /dev/stderr
+    exit 0
+fi
+
+if [[ -z "$DESTINATION" ]]
+then
+    DESTINATION="."
+fi
+
+
+found="false"
+complete=""
+while read torrent 
+do
+    if [[ "$TORRENT_ID" == $(echo $torrent | awk '{print $1}') ]]
+    then
+        found="true"
+        echo "Fetching $torrent"
+
+        complete=$(echo $torrent | awk '{print $2}')
+    fi
+done <  <(lstorrents | tail -n +2 | head -n -1)
+  
+
+if [[ "$found" == "false" ]]
+then
+    echo "Available torrents:" > /dev/stderr
+    lstorrents > /dev/stderr
+    echo "Error: Torrent ID not found: $TORRENT_ID" > /dev/stderr
+    exit 1
+fi
+
+
+if [[ "100%" != "$complete" ]]
+then
+    echo "Error: Torrent ID  $TORRENT_ID is not complete: $complete" > /dev/stderr
+    exit 2
+fi
+
+
+LOCATION=$(transmission-remote snake --auth admin:snake -t $TORRENT_ID -i | grep Location | awk '{print $2}')
+
+if [[ -z "$LOCATION" ]]
+then
+    echo "Error finding location of $TORRENT_ID" > /dev/stderr
+    exit 3
+fi
+
+echo "Torrent found in location $LOCATION" > /dev/stderr
+
+
+NAME_COL_OFFSET=$(transmission-remote snake --auth admin:snake  -t 1 --files  | grep Name | sed 's/Name.*//' | wc -c)
+
+while read remote_file 
+do
+    remote_file="root@snake:'${LOCATION}/${remote_file}'"
+    echo "Pulling $remote_file" > /dev/stderr
+    scp -r "$remote_file" $DESTINATION
+done < <(transmission-remote snake --auth admin:snake  -t 1 --files  | tail -n +3 | cut -c"$NAME_COL_OFFSET"- )
+
