@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+# stop a torrent
+# pull its contents down
+# remove it from the server
+
+TORRENT_ID="$1"
+DESTINATION="$2"
+
+if ! btdone $TORRENT_ID
+then
+    echo "Error: Torrrent is not done: $TORRENT_ID" > /dev/stderr
+    exit 1
+fi
+
+
+if btpull $TORRENT_ID $DESTINATION
+then
+    btrm $TORRENT_ID
+fi

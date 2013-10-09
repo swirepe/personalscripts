@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# remote a torrent and delete its content on disk
+
 if [ -e $HOME/.btrc ]
 then
     source $HOME/.btrc
@@ -10,4 +12,6 @@ else
 fi
 
 
-transmission-remote $BT_HOST --auth $BT_AUTH --add $*
+TORRENT_ID="$1"
+
+transmission-remote $BT_HOST --auth $BT_AUTH -t $TORRENT_ID --remove-and-delete

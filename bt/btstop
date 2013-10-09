@@ -10,4 +10,4 @@ else
 fi
 
 
-transmission-remote $BT_HOST --auth $BT_AUTH --add $*
+transmission-remote $BT_HOST --auth $BT_AUTH  -t $TORRENT_ID --stop

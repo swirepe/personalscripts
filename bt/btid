@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+# no arguments: show all ids
+# single argument: exit 0 if found, exit 1 otherwise
+
+if [ -e $HOME/.btrc ]
+then
+    source $HOME/.btrc
+else
+    echo "Using defaults for snake." > /dev/stderr
+    BT_HOST="snake"
+    BT_AUTH="admin:snake"
+fi
+
+
+if [[ -z "$1" ]]
+then 
+    # remove top line, remove bottom line
+    lstorrents | tail -n +2 | head -n -1 | awk '{print $1}'
+    exit 0
+else
+    TORRENT_ID="$1"
+    
+    for found_id in $(lstorrents | tail -n +2 | head -n -1 | awk '{print $1}')
+    do
+        if [[ "$found_id" == "$TORRENT_ID" ]]
+        then
+            echo "Found torrent id: $found_id" > /dev/stderr
+            exit 0
+        fi
+        
+    done
+    echo "Torrent id NOT found: $TORRENT_ID" > /dev/stderr
+    exit 1
+fi

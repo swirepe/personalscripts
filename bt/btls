@@ -1,15 +1,81 @@
 #!/usr/bin/env bash
 #transmission-remote snake --auth admin:snake --list
 
-#sshpass -p 'snake' ssh -o StrictHostKeyChecking=no snake ls -l /usb/sda1/torrents/torrentwatch
-#sshpass -p 'snake' ssh -o StrictHostKeyChecking=no snake ls -lh /usb/sda1/torrents/torrentwatch/ | awk '{  print ($9 ~ /.added$/) ? "added" : "not added", $6,$7,$8,$9}'
+# no arguments: list all torrents
+# torrent ids: list files for those ids
+# --all-files: list files for all ids
+# --bare: show only the files, not the other fluff
+
+if [ -e $HOME/.btrc ]
+then
+    source $HOME/.btrc
+else
+    echo "Using defaults for snake." > /dev/stderr
+    BT_HOST="snake"
+    BT_AUTH="admin:snake"
+fi
+
+
+function bare {
+    $TORRENT_ID="$1"
+    
+    if [[ "$TORRENT_ID"  == "-" ]]
+    then
+        return
+    fi
+    
+    NAME_COL_OFFSET=$(transmission-remote $BT_HOST --auth $BT_AUTH  -t $TORRENT_ID --files  | grep Name | sed 's/Name.*//' | wc -c)
+    
+    while read remote_file
+    do
+        
+    done < <(transmission-remote $BT_HOST --auth $BT_AUTH  -t $TORRENT_ID --files  | tail -n +3 | cut -c"$NAME_COL_OFFSET"- )
+    
+}
+
+
+BARE="false"
+ALL_FILES="false"
+if [[ "$1" == "--bare" ]] || [[ "$2" == "--bare" ]]
+then
+    BARE="true"
+fi
+
+if [[ "$1" == "--all-files" ]] || [[ "$2" == "--all-files" ]]
+then
+    ALL_FILES="true"
+fi
+
 
 if [[ -z "$1" ]]
 then
-	transmission-remote snake --auth admin:snake --list
+	transmission-remote $BT_HOST --auth $BT_AUTH --list
+elif [[ "$1" == "--all-files" ]]
+
+    if [[ "$BARE" == "true" ]]
+    then
+        for torrent in $(btid)
+        do
+            bare $torrent
+        done
+    else
+        for torrent in $(btid)
+        do
+            transmission-remote $BT_HOST --auth $BT_AUTH -t $torrent --files
+        done
+    fi
+        
 else
-	for torrent in $@
-	do
-		transmission-remote snake --auth admin:snake -t $torrent --files
-	done
+    if [[ "$BARE" == "true" ]]
+    then
+        for torrent in $@
+        do
+            bare $torrent
+        done
+    else
+        for torrent in $@
+        do
+            transmission-remote $BT_HOST --auth $BT_AUTH -t $torrent --files
+        done
+    fi
 fi

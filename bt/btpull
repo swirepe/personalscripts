@@ -1,5 +1,15 @@
 #!/usr/bin/env bash
 
+if [ -e $HOME/.btrc ]
+then
+    source $HOME/.btrc
+else
+    echo "Using defaults for snake." > /dev/stderr
+    BT_HOST="snake"
+    BT_AUTH="admin:snake"
+fi
+
+
 TORRENT_ID="$1"
 DESTINATION="$2"
 
@@ -45,7 +55,7 @@ then
 fi
 
 
-LOCATION=$(transmission-remote snake --auth admin:snake -t $TORRENT_ID -i | grep Location | awk '{print $2}')
+LOCATION=$(transmission-remote $BT_HOST --auth $BT_AUTH -t $TORRENT_ID -i | grep Location | awk '{print $2}')
 
 if [[ -z "$LOCATION" ]]
 then
@@ -56,12 +66,19 @@ fi
 echo "Torrent found in location $LOCATION" > /dev/stderr
 
 
-NAME_COL_OFFSET=$(transmission-remote snake --auth admin:snake  -t $TORRENT_ID --files  | grep Name | sed 's/Name.*//' | wc -c)
+NAME_COL_OFFSET=$(transmission-remote $BT_HOST --auth $BT_AUTH  -t $TORRENT_ID --files  | grep Name | sed 's/Name.*//' | wc -c)
+
+function rsync_die {
+    echo "Error rsyncing $1 to $2" > /dev/stderr
+    exit 1
+}
+
+
 
 while read remote_file 
 do
     remote_file="root@snake:'${LOCATION}/${remote_file}'"
     echo "Pulling $remote_file" > /dev/stderr
-    rsync --recursive --compress --progress --partial "$remote_file" $DESTINATION
-done < <(transmission-remote snake --auth admin:snake  -t $TORRENT_ID --files  | tail -n +3 | cut -c"$NAME_COL_OFFSET"- )
+    rsync --recursive --compress --progress --partial "$remote_file" $DESTINATION || rsync_die "$remote_file" $DESTINATION
+done < <(transmission-remote $BT_HOST --auth $BT_AUTH  -t $TORRENT_ID --files  | tail -n +3 | cut -c"$NAME_COL_OFFSET"- )
 

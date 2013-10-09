@@ -1,2 +1,12 @@
 #!/usr/bin/env bash
-transmission-remote snake --auth admin:snake --list
+
+if [ -e $HOME/.btrc ]
+then
+    source $HOME/.btrc
+else
+    echo "Using defaults for snake." > /dev/stderr
+    BT_HOST="snake"
+    BT_AUTH="admin:snake"
+fi
+
+transmission-remote $BT_HOST --auth $BT_AUTH --list
