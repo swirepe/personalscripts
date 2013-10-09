@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 CURRDIR="$(pwd)"
 
+PATH="$PATH:$HOME/pers/scripts:$HOME/pers/scripts/scriptinclude"
+
+source ssh_tmp_agent.sh
+source update_machines.sh
 
 
 

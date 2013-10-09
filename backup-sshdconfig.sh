@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 CURRDIR="$(pwd)"
 
+PATH="$PATH:$HOME/pers/scripts:$HOME/pers/scripts/scriptinclude"
 
+
+source ssh_tmp_agent.sh
+source update_machines.sh
 
 
 if [[ "$1" == "--install" ]]
@@ -19,21 +23,7 @@ then
 fi
 
 
-if [[ -z "$PERS_DIR" ]]
-then
-    PERS_DIR="$HOME/pers"
-fi
 
-
-if [[ -d $PERS_DIR/machines ]]
-then
-	echo "Updating machines repository."
-	cd $PERS_DIR/machines
-	git pull --no-edit origin master
-else
-	echo "No machines repository found.  Cloning."
-	git clone git@bitbucket.org:swirepe/machines.git $PERS_DIR/machines
-fi
 
 
 SSHDCONFIG_DIR="$PERS_DIR/machines/sshdconfig/$(hostname)"

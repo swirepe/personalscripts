@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 CURRDIR="$(pwd)"
-PATH="$PATH:$HOME/pers/scripts"
+PATH="$PATH:$HOME/pers/scripts:$HOME/pers/scripts/scriptinclude"
+
+
+source ssh_tmp_agent.sh
+source update_machines.sh
+
 
 ## note: this will not pick up on crons for deleted users.  for that, you 
 ## need to poke around in /var/spool/cron
@@ -37,22 +42,6 @@ then
 	exit 0
 fi
 
-
-if [[ -z "$PERS_DIR" ]]
-then
-    PERS_DIR="$HOME/pers"
-fi
-
-
-if [[ -d $PERS_DIR/machines ]]
-then
-	echo "Updating machines repository."
-	cd $PERS_DIR/machines
-	git pull --no-edit origin master
-else
-	echo "No machines repository found.  Cloning."
-	git clone git@bitbucket.org:swirepe/machines.git $PERS_DIR/machines
-fi
 
 
 CRON_DIR="$PERS_DIR/machines/cron/$(hostname)"
