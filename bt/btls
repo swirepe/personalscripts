@@ -17,7 +17,7 @@ fi
 
 
 function bare {
-    $TORRENT_ID="$1"
+    TORRENT_ID="$1"
     
     if [[ "$TORRENT_ID"  == "-" ]]
     then
@@ -28,7 +28,7 @@ function bare {
     
     while read remote_file
     do
-        
+			echo $remote_file    
     done < <(transmission-remote $BT_HOST --auth $BT_AUTH  -t $TORRENT_ID --files  | tail -n +3 | cut -c"$NAME_COL_OFFSET"- )
     
 }
@@ -50,8 +50,8 @@ fi
 if [[ -z "$1" ]]
 then
 	transmission-remote $BT_HOST --auth $BT_AUTH --list
-elif [[ "$1" == "--all-files" ]]
-
+elif [[ "$ALL_FILES" == "true" ]]
+then
     if [[ "$BARE" == "true" ]]
     then
         for torrent in $(btid)
