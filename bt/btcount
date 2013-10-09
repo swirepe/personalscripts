@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+expr -2 + $(lstorrents | wc -l)
