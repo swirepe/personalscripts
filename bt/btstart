@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+if [ -e $HOME/.btrc ]
+then
+    source $HOME/.btrc
+else
+    echo "Using defaults for snake." > /dev/stderr
+    BT_HOST="snake"
+    BT_AUTH="admin:snake"
+fi
+
+TORRENT_ID="$1"
+
+transmission-remote $BT_HOST --auth $BT_AUTH -t $TORRENT_ID --start
