@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+lstorrents | grep -i sum | awk '{print $2, $3}'
