@@ -107,6 +107,13 @@ sudo -u postgres psql --dbname hosts -f /var/www/util/sql/hosts.sql
 
 sudo /etc/init.d/postgres* restart
 
+# set up jenny's upload directory
+sudo mkdir -p /media/mass/jenny/downloads
+sudo chmod -R a+rw /media/mass/jenny/downloads
+sudo ln -s /media/mass/jenny/downloads /var/www/jenny/downloads
+sudo cp /var/www/config/jenny-upload-HEADER.txt /media/mass/jenny/downloads/HEADER.txt
+
+
 if [[ "$(crontab -l | grep monitor.php)" ]]
 then
     echo "Crontab may already be installed."
