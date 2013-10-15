@@ -16,12 +16,12 @@ fi
 if [[ -z "$1" ]]
 then 
     # remove top line, remove bottom line
-    lstorrents | tail -n +2 | head -n -1 | awk '{print $1}'
+    lstorrents | tail -n +2 | head -n -1 | awk '{print $1}' | sed 's/\*//'
     exit 0
 else
     TORRENT_ID="$1"
     
-    for found_id in $(lstorrents | tail -n +2 | head -n -1 | awk '{print $1}')
+    for found_id in $(lstorrents | tail -n +2 | head -n -1 | awk '{print $1}'| sed 's/\*//')
     do
         if [[ "$found_id" == "$TORRENT_ID" ]]
         then
