@@ -56,14 +56,14 @@ then
     echo "Nothing to install. Exiting."
     exit 0
 else
-    echo "Installing packages: $packages"
+    echo "Installing packages: ${#packages[@]}"
 fi
 
 
 
 sudo apt-fast update
 
-sudo apt-fast install -y $packages && ( 
+sudo apt-fast install -y ${packages[@]} && ( 
     update_machines &&
     cd "$SAGIRECORD_DIR" &&
     dpkg --get-selections > aptlist.txt &&

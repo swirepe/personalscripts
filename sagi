@@ -38,7 +38,7 @@ NON_ARG_PACKAGE="false"
 for package in $@
 do
     if [[ "$package" == "-"* ]]
-		then
+    then
         packages+=($package)
     elif ! dpkg -s $package &> /dev/null
     then
@@ -56,18 +56,18 @@ then
     exit 0
 elif [[ $NON_ARG_PACKAGE == "false" ]]
 then
-    echo "Only arguments remaining: $packages"
+    echo "Only arguments remaining: ${packages[@]}"
     echo "Exiting."
     exit 0
 else
-    echo "Installing packages: $packages"
+    echo "Installing packages: ${packages[@]}"
 fi
 
 
 
 sudo apt-get update
 
-sudo apt-get install $packages && ( 
+sudo apt-get install ${packages[@]} && ( 
     update_machines &&
     cd "$SAGIRECORD_DIR" &&
     dpkg --get-selections > aptlist.txt &&
