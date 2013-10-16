@@ -77,15 +77,15 @@ add_service /var/www/util/services/torrent_log
 
 echo -e "${COLOR_BBlue}Putting the config files in place${COLOR_off}"
 sudo mv /etc/lighttpd/lighttpd.conf /etc/lighttpd/lighttpd.conf.bak
-sudo mv /var/www/config/lighttpd.conf /etc/lighttpd/lighttpd.conf
+sudo cp /var/www/config/lighttpd.conf /etc/lighttpd/lighttpd.conf
 
 sudo mv /etc/php5/cgi/php.ini /etc/php5/cgi/php.ini.bak
-sudo mv /var/www/config/php.ini /etc/php5/cgi/php.ini
+sudo cp /var/www/config/php.ini /etc/php5/cgi/php.ini
 
 
 echo -e "${COLOR_BBlue}Setting up https${COLOR_off}"
 sudo mkdir -p /etc/lighttpd/ssl
-sudo mv /var/www/config/neurokyme.pem /etc/lighttpd/ssl/neurokyme.pem
+sudo cp /var/www/config/neurokyme.pem /etc/lighttpd/ssl/neurokyme.pem
 sudo chown root:root /etc/lighttpd/ssl/neurokyme.pem
 sudo chmod 400 /etc/lighttpd/ssl/neurokyme.pem
 
@@ -93,6 +93,7 @@ sudo chmod 400 /etc/lighttpd/ssl/neurokyme.pem
 echo -e "${COLOR_BBlue}Setting up logging${COLOR_off}"
 sudo mkdir -p /var/log/lighttpd/main
 sudo mkdir -p /var/log/lighttpd/dragonet
+sudo mkdir -p /var/log/lighttpd/jenny
 sudo chown -R www-data:www-data /var/log/lighttpd
 
 
@@ -109,6 +110,8 @@ sudo /etc/init.d/postgres* restart
 
 # set up jenny's upload directory
 sudo mkdir -p /media/mass/jenny/downloads
+sudo mkdir /var/www/jenny
+sudo chown -R www-data:www-data /var/www/jenny
 sudo chmod -R a+rw /media/mass/jenny/downloads
 sudo ln -s /media/mass/jenny/downloads /var/www/jenny/downloads
 sudo cp /var/www/config/jenny-upload-HEADER.txt /media/mass/jenny/downloads/HEADER.txt
