@@ -72,8 +72,13 @@ do
     elif [[ "$FILE" == *"sshd_config"* ]]
     then
         sudo sshd -t -f $FILE && echo "OK"
-			
+	elif [[ "$FILE" == *"lighttpd.conf"* ]]
+	then
+	    lighttpd -t -f $FILE
+	elif [[ "$FILE" == *"torrc"* ]]
+	then	    
+	    tor --verify-config -f $FILE
 	else
-			echo "parser not found."
+		echo "parser not found."
 	fi
 done

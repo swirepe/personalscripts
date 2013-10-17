@@ -20,4 +20,8 @@ add_export "/media/mass 192.168.1.0/255.255.255.0(rw,sync,no_subtree_check)"
 add_export "## -------------------------------" 
 
 sudo exportfs -ra
+
+sudo update-rc.d rpcbind enable 
+sudo update-rc.d nfs-common enable
+sudo service rpcbind restart
 sudo service nfs-kernel-server restart
