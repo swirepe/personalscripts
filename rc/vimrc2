@@ -96,5 +96,31 @@ noremap <F4> :set hlsearch! hlsearch?<CR>
 vnoremap <silent> * :call VisualSelection('f')<CR>
 vnoremap <silent> # :call VisualSelection('b')<CR>
 
-
+" cron
 au FileType crontab set nobackup nowritebackup
+
+" reload this when i save
+autocmd! bufwritepost .vimrc source %
+
+" quicksave
+noremap <C-Z> :update<CR>
+
+" new tab
+noremap <C-T> :tabnew<CR>
+
+" easier moving of code blockes
+vnoremap < <gv
+vnoremap > >gv
+
+" tab navigation
+" next tab as shift tab (note: ctrl tab seems to ntow work
+map <S-Tab> :tabnext<cr>
+" split navigation with ctrl
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+
+" splits
+set splitbelow
+set splitright
