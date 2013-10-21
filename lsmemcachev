@@ -1,0 +1,41 @@
+#!/usr/bin/env ruby
+
+# List all keys stored in memcache. 
+# Credit to Graham King at http://www.darkcoding.net/software/memcached-list-all-keys/ for the original article on how to get the data from memcache in the first place.
+
+require 'net/telnet'
+
+headings = %w(id expires bytes cache_key value)
+rows = []
+
+host = "localhost"
+port = 11211
+
+if ARGV.length > 0
+    host = ARGV[0]
+    port = ARGV[1].to_i
+end
+
+host = Net::Telnet::new("Host" => host, "Port" => port, "Timeout" => 3)
+matches   = host.cmd("String" => "stats items", "Match" => /^END/).scan(/STAT items:(\d+):number (\d+)/)
+
+slabs = matches.inject([]) { |items, item| items << Hash[*['id','items'].zip(item).flatten]; items }
+
+longest_key_len = 0
+slabs.each do |slab|
+  host.cmd("String" => "stats cachedump #{slab['id']} #{slab['items']}", "Match" => /^END/) do |c|
+    matches = c.scan(/^ITEM (.+?) \[(\d+) b; (\d+) s\]$/).each do |key_data|
+      cache_key, bytes, expires_time = key_data
+			value = host.cmd("String" => "get #{cache_key}", "Match" => /^END/).lines.to_a[1][0,10].strip
+      rows << [slab['id'], Time.at(expires_time.to_i), bytes, cache_key, value]
+      longest_key_len = [longest_key_len,cache_key.length].max
+    end
+  end
+end
+
+row_format = %Q(|%4s | %28s | %12s | %-#{longest_key_len}s | %-11s |)
+puts row_format%headings
+rows.each{|row| puts row_format%row}
+
+host.close
+

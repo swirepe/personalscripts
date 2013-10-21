@@ -23,4 +23,8 @@ sudo sed -i 's/^tcp6/#tcp6/' /etc/netconfig
 sudo sed -i 's/^udp6/#udp6/' /etc/netconfig
 
 sudo exportfs -ra
+
+sudo update-rc.d rpcbind enable 
+sudo update-rc.d nfs-common enable
+sudo service rpcbind restart
 sudo service nfs-kernel-server restart
