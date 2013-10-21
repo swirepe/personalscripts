@@ -15,9 +15,12 @@ function add_export {
 
 add_export "## -------------------------------" 
 add_export "## added on $(date) by setup-nfs.sh" 
-add_export "/home 192.168.1.0/255.255.255.0(rw,sync,no_subtree_check)" 
-add_export "/media/mass 192.168.1.0/255.255.255.0(rw,sync,no_subtree_check)" 
+add_export "/home 192.168.1.0/255.255.255.0(rw,sync,no_subtree_check,no_root_squash)" 
+add_export "/media/mass 192.168.1.0/255.255.255.0(rw,sync,no_subtree_check,no_root_squash)" 
 add_export "## -------------------------------" 
+
+sudo sed -i 's/^tcp6/#tcp6/' /etc/netconfig
+sudo sed -i 's/^udp6/#udp6/' /etc/netconfig
 
 sudo exportfs -ra
 sudo service nfs-kernel-server restart
