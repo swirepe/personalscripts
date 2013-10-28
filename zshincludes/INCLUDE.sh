@@ -85,3 +85,4 @@ source_include $BASHINCLUDES_DIR/ssh-agent.sh
 source_include $BASHINCLUDES_DIR/mac.sh
 source_include $BASHINCLUDES_DIR/fortunes.sh
 source_include $BASHINCLUDES_DIR/bt.sh
+source_include $BASHINCLUDES_DIR/psql.sh
