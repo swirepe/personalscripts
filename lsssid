@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+if which nmcli &> /dev/null
+then
+	nmcli dev wifi list
+	exit 0
+fi
+
+if which iwlist &> /dev/null
+then
+	sudo iwlist wlan0 scan | grep ESSID
+  exit 0
+fi
+
+if [ -e /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport ]
+then
+	/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -s
+  exit 0
+fi

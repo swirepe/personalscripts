@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+if [[ -z "$1" ]]
+then
+	for id in $(btid)
+	do
+		btmagnet $id
+	done
+else
+	btinfo $1 | grep 'magnet:.*' | cut -c 11-
+fi
+
+
+
