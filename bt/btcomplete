@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+btinfo $1 | grep "Percent Done" | cut -d: -f2 | sed 's/ //g'
