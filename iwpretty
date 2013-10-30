@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+sudo iwlist wlan0 scan | $SCRIPTS_DIR/src/iwlistparse2.py
