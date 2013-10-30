@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+TORRENT_ID="$1"
+btinfo $TORRENT_ID | grep Name: | sed 's/.*Name: //'
+
+
