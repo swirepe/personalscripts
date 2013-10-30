@@ -30,5 +30,4 @@ then
     exit 1
 fi
 
-echo "Failed: rsync $*" >/dev/stderr
-exit 1
+exit 0
