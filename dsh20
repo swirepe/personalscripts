@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# https://gist.github.com/davedash/4075665
+# http://explainshell.com/explain?cmd=dsh+-r+ssh+-o+%22-o+ConnectTimeout%3D10%22+-o+%22-o+CheckHostIP%3Dno%22+-o+%22-o+StrictHostKeyChecking%3Dno%22+-F+20+-M+-c+-g+%22%241%22+%22%242%22
+# 20 concurrent connections
+usage="$0 cmd"
+[ -z "$1" ] && echo $usage && exit 1
+if [[ "$1" == "--help" ]]
+then
+	echo "Use dsh to run a command on all machines"
+	echo "See ~/.dsh/machines.list"
+	echo $usage
+fi
+dsh -r ssh -o "-o ConnectTimeout=10" -o "-o CheckHostIP=no" -o "-o StrictHostKeyChecking=no" -F 20 -aM -c "$1" 
