@@ -31,6 +31,6 @@ then
 fi
 
 
-pygmentize $LEXER "$FILE" 2> /dev/null || cat $FILE 
+( pygmentize $LEXER "$FILE" 2> /dev/null | less -F -X -R ) || cat $FILE
 
 
