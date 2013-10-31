@@ -30,7 +30,14 @@ then
     LEXER="-l ruby"
 fi
 
-
-( pygmentize $LEXER "$FILE" 2> /dev/null | less -F -X -R ) || cat $FILE
+# less
+# http://explainshell.com/explain?cmd=less+-F+-X+-R
+# -F or --quit-if-one-screen
+# Causes less to automatically exit if the entire file can be displayed on the first screen.
+# -X or --no-init
+# Disables sending the termcap initialization and deinitialization strings to the terminal.  This is sometimes desirable if the deinitialization string does something unnecessary, like  clearing  the screen.
+# -R or --RAW-CONTROL-CHARS
+# Like -r, but only ANSI "color" escape sequences are output in "raw" form.  Unlike -r,  the  screen appearance  is maintained correctly in most cases.
+( pygmentize $LEXER "$FILE" 2> /dev/null | less --quit-if-one-screen --no-init --RAW-CONTROL-CHARS ) || cat $FILE
 
 
