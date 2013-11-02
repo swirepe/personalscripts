@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+LOCATION="."
+NUM_BIGGEST=10
+RECURSIVE='-maxdepth 1'
+TYPES='-type f'
+while [ $# -gt 0 ]
+do
+	case "$1" in
+		--recursive|-r)
+			RECURSIVE=''
+			;;
+	  --path|-p)
+			shift
+			LOCATION="$1"
+			;;
+		--num-biggest|-n)
+			shift
+			NUM_BIGGEST="$1"
+			;;
+		--only-directories|-D)
+			TYPES="-type d"
+			;;
+		--directories|-d)
+			TYPES='-type d -o -type f'
+			;;
+	  --help|-h)
+echo "biggest - print the biggest files."
+echo "        -h  --help              This message"
+echo "        -p  --path              The root directory to search."
+echo "                                (default is the current directory)"
+echo "        -d  --directories       Include directories"
+echo "        -D  --only-directories  Only include directories."
+echo "        -n  --num-biggest       The number of biggest files to print."
+echo "                                (default is 10)"
+exit 0
+			;;
+
+	esac
+	shift
+done
+
+find "$LOCATION" $RECURSIVE $TYPES -printf '%s %p\n'|sort -nr|head -n $NUM_BIGGEST | sed 's/^[0-9]* //'
+
