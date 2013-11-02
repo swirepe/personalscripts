@@ -71,7 +71,7 @@ function rsync_die {
     exit 1
 }
 
-DESTINATION="'$DESTINATION/$(btname $TORRENT_ID)'"
+DESTINATION="$DESTINATION/$(btname $TORRENT_ID)"
 mkdir -p "$DESTINATION"
 
 BT_USER=$(echo $BT_AUTH | cut -d: -f1)
