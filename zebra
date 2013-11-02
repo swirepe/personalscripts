@@ -1,4 +1,4 @@
-#!/usr/bin/env awk -f
+#!/usr/bin/awk -f
 
 # learned about invert from here
 # http://misc.flogisoft.com/bash/tip_colors_and_formatting
