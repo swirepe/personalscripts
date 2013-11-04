@@ -80,7 +80,7 @@ BT_PASS=$(echo $BT_AUTH | cut -d: -f2)
 while read remote_file 
 do
     remote_file="root@snake:${LOCATION}/${remote_file}"
-    remote_file=$(echo "$remote_file" | sed 's/ /\\ /g')
+    remote_file=$(printf "%q" "$remote_file" )
     echo "Pulling $remote_file" > /dev/stderr
     rsync_retry --rsh="/usr/bin/sshpass -p $BT_PASS ssh -o StrictHostKeyChecking=no -l $BT_USER" --archive --compress --progress --partial "$remote_file" "$DESTINATION" || rsync_die "$remote_file" "$DESTINATION"
 done < <(transmission-remote $BT_HOST --auth $BT_AUTH  -t $TORRENT_ID --files  | tail -n +3 | cut -c"$NAME_COL_OFFSET"- )

@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+SOURCE="$1"
+DESTINATION="$2"
+
+usage="$0 source destination"
+if [ -z "$SOURCE" ]
+then
+	echo "Error: missing source" > /dev/stderr
+	echo "Usage: $usage"
+	exit 1
+fi
+
+if [ -z "$DESTINATION" ]
+then
+	echo "Error: missing destination" > /dev/stderr
+	echo "Usage: $usage"
+	exit 2
+fi
+
+
+rsync -a --progress --remove-source-files "$SOURCE" "$DESTINATION"

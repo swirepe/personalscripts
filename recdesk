@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# http://unix.stackexchange.com/questions/11702/how-to-record-skype-video-calls-on-linux
+# https://trac.ffmpeg.org/wiki/How%20to%20grab%20the%20desktop%20(screen)%20with%20FFmpeg
+# http://nirbheek.in/files/record_screen.sh
+# http://blog.nirbheek.in/2012/12/pulseaudio-and-avconv-to-record-voip.html
+
+echo "Recording desktop"
+DESTINATION="$1"
+if [[ -z "$DESTINATION" ]]
+then
+	DESTINATION=/tmp/out.mkv
+fi
+echo "Destination: $DESTINATION"
+#ffmpeg -f x11grab -s wxga -r 25 -i :0.0 -sameq $DESTINATION  
+#ffmpeg -video_size 1024x768 -framerate 25 -f x11grab -i :0.0+100,200 -f alsa -ac 2 -i pulse $DESTINATION 
+
+screen_regex='s/.*current \([0-9]\+\) x \([0-9]\+\),.*/\1x\2/p'
+screen_size=$(xrandr -q | sed -n -e "$screen_regex")
+
+avconv -f alsa -i pulse -f x11grab -r 25 -s $screen_size -i :0.0+0,0 -acodec libvorbis -vcodec libx264 -pre:0 lossless_ultrafast -threads 0 $DESTINATION

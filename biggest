@@ -3,6 +3,7 @@ LOCATION="."
 NUM_BIGGEST=10
 RECURSIVE='-maxdepth 1'
 TYPES='-type f'
+EXEC=''
 while [ $# -gt 0 ]
 do
 	case "$1" in
@@ -39,5 +40,5 @@ exit 0
 	shift
 done
 
-find "$LOCATION" $RECURSIVE $TYPES -printf '%s %p\n'|sort -nr|head -n $NUM_BIGGEST | sed 's/^[0-9]* //'
+find "$LOCATION" $RECURSIVE $TYPES -printf '%s %p\n' |sort -nr|head -n $NUM_BIGGEST | sed 's/^[0-9]* //'
 

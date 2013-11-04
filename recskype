@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+mkdir -p ~/Pictures/Skype
+recdesk ~/Pictures/Skype/skype-date-$(date -I).mkv

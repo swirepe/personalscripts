@@ -1,3 +1,10 @@
 #!/usr/bin/env bash
-
+if [ -e $SCRIPTS_DIR/$1 ]
+then
+	vim + $SCRIPTS_DIR/$1
+else
 echo -e "#!/usr/bin/env bash\n\n" >> $SCRIPTS_DIR/$1 && vim + $SCRIPTS_DIR/$1 && chmod +x $SCRIPTS_DIR/$1
+
+fi
+
+
