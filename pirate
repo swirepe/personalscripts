@@ -1,0 +1,57 @@
+#!/usr/bin/env python
+
+import sys
+import libxml2
+from lxml import etree, html as HTML
+import urllib
+import urllib2
+
+try:
+    query = urllib.quote(sys.argv[1])
+except:
+    sys.stderr.write( "No query specified.\n")
+    sys.exit(1)
+    
+response = urllib2.urlopen('http://thepiratebay.sx/search/' + query + '/0/7/0')
+html = response.read()
+doc = HTML.document_fromstring(html)
+
+
+def getElement(doc, xpath):
+    return doc.xpath(xpath)
+        
+        
+magnetXpath = '//*[@id="searchResult"]/tr[1]/td[2]/a'
+detailsXpath = '//*[@id="searchResult"]/tr[1]/td[2]/div/a'
+seedsXpath = '//*[@id="searchResult"]/tr[1]/td[3]'
+leechesXpath = '//*[@id="searchResult"]/tr[1]/td[4]'
+
+
+name = getElement(doc, detailsXpath )[0].text
+seeds = getElement(doc, seedsXpath   )[0].text
+leeches = getElement(doc, leechesXpath )[0].text
+sys.stderr.write("Name: " + name)
+sys.stderr.write("\nSeeds: " + seeds)
+sys.stderr.write("\nLeeches: "+ leeches)
+sys.stderr.write("\n")
+print getElement(doc[0], magnetXpath)[0].get("href")
+
+
+#  http://thepiratebay.sx/search/sword/0/7/0
+#  
+#  magnet
+#  #searchResult > tbody:nth-child(2) > tr:nth-child(1) > td:nth-child(2) > a:nth-child(2)
+#  descendant-or-self::*[@id = 'searchResult']/*[name() = 'tbody' and (position() = 2)]/*[name() = 'tr' and (position() = 1)]/*[name() = 'td' and (position() = 2)]/*[name() = 'a' and (position() = 2)]
+
+
+#  details
+#  #searchResult > tbody:nth-child(2) > tr:nth-child(1) > td:nth-child(2) > div:nth-child(1) > a:nth-child(1)
+#  descendant-or-self::*[@id = 'searchResult']/*[name() = 'tbody' and (position() = 2)]/*[name() = 'tr' and (position() = 1)]/*[name() = 'td' and (position() = 2)]/*[name() = 'div' and (position() = 1)]/*[name() = 'a' and (position() = 1)]
+
+#  seeds
+#  #searchResult > tbody:nth-child(2) > tr:nth-child(1) > td:nth-child(3)
+#  descendant-or-self::*[@id = 'searchResult']/*[name() = 'tbody' and (position() = 2)]/*[name() = 'tr' and (position() = 1)]/*[name() = 'td' and (position() = 3)]
+#  
+#  leeches
+#  #searchResult > tbody:nth-child(2) > tr:nth-child(1) > td:nth-child(4)
+#  descendant-or-self::*[@id = 'searchResult']/*[name() = 'tbody' and (position() = 2)]/*[name() = 'tr' and (position() = 1)]/*[name() = 'td' and (position() = 4)]
