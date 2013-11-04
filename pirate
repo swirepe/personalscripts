@@ -1,26 +1,26 @@
 #!/usr/bin/env python
 
 import sys
-import libxml2
-from lxml import etree, html as HTML
-import urllib
+from lxml import html as HTML
 import urllib2
 
+def getElement(doc, xpath):
+    return doc.xpath(xpath)
+
 try:
-    query = urllib.quote(sys.argv[1])
+    query = urllib2.quote(sys.argv[1])
 except:
     sys.stderr.write( "No query specified.\n")
     sys.exit(1)
+    
+    
     
 response = urllib2.urlopen('http://thepiratebay.sx/search/' + query + '/0/7/0')
 html = response.read()
 doc = HTML.document_fromstring(html)
 
 
-def getElement(doc, xpath):
-    return doc.xpath(xpath)
-        
-        
+
 magnetXpath = '//*[@id="searchResult"]/tr[1]/td[2]/a'
 detailsXpath = '//*[@id="searchResult"]/tr[1]/td[2]/div/a'
 seedsXpath = '//*[@id="searchResult"]/tr[1]/td[3]'
