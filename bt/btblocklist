@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+if [ -e $HOME/.btrc ]
+then
+    source $HOME/.btrc
+else
+    echo "Using defaults for snake." > /dev/stderr
+    BT_HOST="snake"
+    BT_AUTH="admin:snake"
+fi
+
+echo "Updating blocklist." > /dev/stderr
+transmission-remote $BT_HOST --auth $BT_AUTH --blocklist-update
