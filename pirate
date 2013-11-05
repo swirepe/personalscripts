@@ -25,11 +25,13 @@ magnetXpath = '//*[@id="searchResult"]/tr[1]/td[2]/a'
 detailsXpath = '//*[@id="searchResult"]/tr[1]/td[2]/div/a'
 seedsXpath = '//*[@id="searchResult"]/tr[1]/td[3]'
 leechesXpath = '//*[@id="searchResult"]/tr[1]/td[4]'
+sizeXpath = '//*[@id="searchResult"]/tr[1]/td[2]/font'
 
 try:
     name = getElement(doc, detailsXpath )[0].text
     seeds = getElement(doc, seedsXpath   )[0].text
     leeches = getElement(doc, leechesXpath )[0].text
+    size = getElement(doc, sizeXpath)[0].text.split(",")[1].replace("Size", "").strip()
 except:
     sys.stderr.write("No torrents found.\n")
     sys.exit(1)
@@ -37,6 +39,7 @@ except:
 sys.stderr.write("Name: " + name)
 sys.stderr.write("\nSeeds: " + seeds)
 sys.stderr.write("\nLeeches: "+ leeches)
+sys.stderr.write("\nSize: "+ size)
 if int(seeds) < 1:
     sys.stderr.write("\nWARNING: Inviable number of seeds.")
 sys.stderr.write("\n")
