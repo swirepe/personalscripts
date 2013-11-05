@@ -26,10 +26,14 @@ detailsXpath = '//*[@id="searchResult"]/tr[1]/td[2]/div/a'
 seedsXpath = '//*[@id="searchResult"]/tr[1]/td[3]'
 leechesXpath = '//*[@id="searchResult"]/tr[1]/td[4]'
 
+try:
+    name = getElement(doc, detailsXpath )[0].text
+    seeds = getElement(doc, seedsXpath   )[0].text
+    leeches = getElement(doc, leechesXpath )[0].text
+except:
+    sys.stderr.write("No torrents found.\n")
+    sys.exit(1)
 
-name = getElement(doc, detailsXpath )[0].text
-seeds = getElement(doc, seedsXpath   )[0].text
-leeches = getElement(doc, leechesXpath )[0].text
 sys.stderr.write("Name: " + name)
 sys.stderr.write("\nSeeds: " + seeds)
 sys.stderr.write("\nLeeches: "+ leeches)
