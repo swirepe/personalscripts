@@ -8,7 +8,7 @@ def getElement(doc, xpath):
     return doc.xpath(xpath)
 
 try:
-    query = urllib2.quote(sys.argv[1])
+    query = urllib2.quote(" ".join(sys.argv[1:]))
 except:
     sys.stderr.write( "No query specified.\n")
     sys.exit(1)
@@ -33,6 +33,8 @@ leeches = getElement(doc, leechesXpath )[0].text
 sys.stderr.write("Name: " + name)
 sys.stderr.write("\nSeeds: " + seeds)
 sys.stderr.write("\nLeeches: "+ leeches)
+if int(seeds) < 1:
+    sys.stderr.write("\nWARNING: Inviable number of seeds.")
 sys.stderr.write("\n")
 print getElement(doc[0], magnetXpath)[0].get("href")
 
