@@ -37,9 +37,9 @@ except:
     sys.exit(1)
 
 sys.stderr.write("Name: " + name)
+sys.stderr.write("\nSize: "+ size)
 sys.stderr.write("\nSeeds: " + seeds)
 sys.stderr.write("\nLeeches: "+ leeches)
-sys.stderr.write("\nSize: "+ size)
 if int(seeds) < 1:
     sys.stderr.write("\nWARNING: Inviable number of seeds.")
 sys.stderr.write("\n")
