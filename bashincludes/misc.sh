@@ -85,4 +85,22 @@ function highlight {
     perl -pe "s/$1/$COLOR_BRed$&$COLOR_off/g"
 }
 
+
+# from google io 2013
+# http://www.youtube.com/watch?feature=player_detailpage&v=Mk-tFn2Ix6g#t=399
+function server {
+	local port="${1:-8000}"
+
+	OPEN_CMD="xdg-open"
+	if [[ $(uname) == *"Darwin"* ]]
+	then
+		OPEN_CMD="open"
+	fi
+	$OPEN_CMD "http://localhost:${port}/"
+
+	python -m SimpleHTTPServer "$port"
+}
+
+
+
 export EDITOR="vim"
