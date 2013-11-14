@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+if [[ "$(uname)" == *"Darwin"* ]]
+then
+	$SCRIPTS_DIR/src/lnav-osx "$@"
+else
+	$SCRIPTS_DIR/src/lnav-linux "$@"
+fi
