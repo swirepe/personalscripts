@@ -72,7 +72,7 @@ function c {
 }
 
 # make a mirror of a site using wget
-alias "wmirror"="wget -mk -w1"
+alias "wmirror"="wget --mirror --convert-links --tries=10 --retry-connrefused --wait=1"
 
 # show a bash function definition
 alias "viewfn"="declare -f"
