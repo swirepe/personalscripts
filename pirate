@@ -15,7 +15,7 @@ except:
     
     
     
-response = urllib2.urlopen('http://thepiratebay.sx/search/' + query + '/0/7/0')
+response = urllib2.urlopen('http://thepiratebay.org/search/' + query + '/0/7/0')
 html = response.read()
 doc = HTML.document_fromstring(html)
 

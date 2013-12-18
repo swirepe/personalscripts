@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+nohup firefox --no-remote -P &> /dev/null & 
+

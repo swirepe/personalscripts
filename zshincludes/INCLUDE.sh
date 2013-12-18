@@ -73,7 +73,6 @@ source_include $BASHINCLUDES_DIR/vagrant.sh
 source_include $BASHINCLUDES_DIR/jlanguage.sh
 source_include $BASHINCLUDES_DIR/gitfn.sh
 source_include $BASHINCLUDES_DIR/autonavigation.sh  
-source_include $BASHINCLUDES_DIR/firefox.sh
 source_include $BASHINCLUDES_DIR/headtail.sh
 source_include $BASHINCLUDES_DIR/ramdiskscripts.sh
 source_include $BASHINCLUDES_DIR/virtualenvs.sh
