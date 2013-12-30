@@ -49,6 +49,7 @@ source_include $ZSHINCLUDES_DIR/completedots.sh
 source_include $ZSHINCLUDES_DIR/cachecompletion.sh
 source_include $ZSHINCLUDES_DIR/usercompletion.sh
 source_include $ZSHINCLUDES_DIR/cachecompletion.sh
+source_include $ZSHINCLUDES_DIR/somefile.sh
 
 
 source_include $BASHINCLUDES_DIR/color.sh
