@@ -1,5 +1,25 @@
 #!/usr/bin/env bash
 
+if [[ "$1" == "--help" ]]
+then
+    echo -e "$(basename $0)"
+    echo -e "    Peter Swire - swirepe.com"
+    echo -e "    Part of a suite of command line tools for manipulating transmission."
+    $0 --help-oneline
+    echo "Note: you can update a blocklist remotely, but you cannot set it."
+    echo "To set it, modify on a snakeos machine:"
+    echo "/etc/settings.json"
+    echo '    "blocklist-enabled": true,'
+    echo '    "blocklist-url": "http://www.bluetack.co.uk/config/level1.gz",' 
+    exit 0    
+fi
+
+if [[ "$1" == "--help-oneline" ]]
+then
+    echo -e "$(basename $0)\tUpdate the blocklist that has been previously set."
+    exit 0
+fi
+
 if [ -e $HOME/.btrc ]
 then
     source $HOME/.btrc

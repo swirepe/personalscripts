@@ -6,14 +6,13 @@ then
     echo -e "    Peter Swire - swirepe.com"
     echo -e "    Part of a suite of command line tools for manipulating transmission."
     $0 --help-oneline
-    echo -e "$(basename $0) <id>\tGet the percent that a given torrent is done."
     exit 0    
 fi
 
 if [[ "$1" == "--help-oneline" ]]
 then
-    echo -e "$(basename $0)\tList the ids of completed torrents."
+    echo -e "$(basename $0)\tDisplay free space remaining."
     exit 0
 fi
 
-btinfo $@ | grep "Percent Done" | cut -d: -f2 | sed 's/ //g'
+btinfo | grep "Download directory free space" | cut -d: -f2

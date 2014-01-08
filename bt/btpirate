@@ -1,3 +1,19 @@
 #!/usr/bin/env bash
 
+if [[ "$1" == "--help" ]]
+then
+    echo -e "$(basename $0)"
+    echo -e "    Peter Swire - swirepe.com"
+    echo -e "    Part of a suite of command line tools for manipulating transmission."
+    echo -e "    This tool uses thepiratebay.org."
+    $0 --help-oneline
+    exit 0    
+fi
+
+if [[ "$1" == "--help-oneline" ]]
+then
+    echo -e "$(basename $0) <title>\tFind and add the matching torrent with the most seeds."
+    exit 0
+fi
+
 btadd $(pirate "$*")

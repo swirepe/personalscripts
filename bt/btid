@@ -1,5 +1,22 @@
 #!/usr/bin/env bash
 
+if [[ "$1" == "--help" ]]
+then
+    echo -e "$(basename $0)"
+    echo -e "    Peter Swire - swirepe.com"
+    echo -e "    Part of a suite of command line tools for manipulating transmission."
+    $0 --help-oneline
+    echo -e "$(basename $0) <id>\tExit 0 if found, 1 otherwise."
+    exit 0    
+fi
+
+if [[ "$1" == "--help-oneline" ]]
+then
+    echo -e "$(basename $0)\tShow all ids."
+    exit 0
+fi
+
+
 # no arguments: show all ids
 # single argument: exit 0 if found, exit 1 otherwise
 

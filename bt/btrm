@@ -1,5 +1,20 @@
 #!/usr/bin/env bash
 
+if [[ "$1" == "--help" ]]
+then
+    echo -e "$(basename $0)"
+    echo -e "    Peter Swire - swirepe.com"
+    echo -e "    Part of a suite of command line tools for manipulating transmission."
+    $0 --help-oneline
+    exit 0    
+fi
+
+if [[ "$1" == "--help-oneline" ]]
+then
+    echo -e "$(basename $0) <id>\tRemove a torrent and delete its content on disk."
+    exit 0
+fi
+
 # remote a torrent and delete its content on disk
 
 if [ -e $HOME/.btrc ]

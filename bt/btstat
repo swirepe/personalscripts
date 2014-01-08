@@ -1,4 +1,18 @@
 #!/usr/bin/env bash
+if [[ "$1" == "--help" ]]
+then
+    echo -e "$(basename $0)"
+    echo -e "    Peter Swire - swirepe.com"
+    echo -e "    Part of a suite of command line tools for manipulating transmission."
+    $0 --help-oneline
+    exit 0    
+fi
+
+if [[ "$1" == "--help-oneline" ]]
+then
+    echo -e "$(basename $0)\tRetrieve session statistics."
+    exit 0
+fi
 
 if [ -e $HOME/.btrc ]
 then

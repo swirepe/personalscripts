@@ -1,4 +1,19 @@
 #!/usr/bin/env bash
+if [[ "$1" == "--help" ]]
+then
+    echo -e "$(basename $0)"
+    echo -e "    Peter Swire - swirepe.com"
+    echo -e "    Part of a suite of command line tools for manipulating transmission."
+    $0 --help-oneline
+    exit 0    
+fi
+
+if [[ "$1" == "--help-oneline" ]]
+then
+    echo -e "$(basename $0) <ids>\tRetrieve information on selected torrents."
+    exit 0
+fi
+
 
 if [ -e $HOME/.btrc ]
 then
@@ -14,6 +29,8 @@ if [[ -z "$1" ]]
 then
     transmission-remote $BT_HOST --auth $BT_AUTH --session-info
 else
-    TORRENT_ID="$1"
-    transmission-remote $BT_HOST --auth $BT_AUTH -t $TORRENT_ID --info
+    for TORRENT_ID in $@
+    do
+        transmission-remote $BT_HOST --auth $BT_AUTH -t $TORRENT_ID --info
+    done
 fi

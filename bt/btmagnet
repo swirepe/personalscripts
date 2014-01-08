@@ -1,4 +1,20 @@
 #!/usr/bin/env bash
+if [[ "$1" == "--help" ]]
+then
+    echo -e "$(basename $0)"
+    echo -e "    Peter Swire - swirepe.com"
+    echo -e "    Part of a suite of command line tools for manipulating transmission."
+    echo -e "$(basename $0)\tRetrieve the magnet link for all torrents."
+    $0 --help-oneline
+    exit 0    
+fi
+
+if [[ "$1" == "--help-oneline" ]]
+then
+    echo -e "$(basename $0) <id>\tRetrieve the magnet link for a selected torrent."
+    exit 0
+fi
+
 
 if [[ -z "$1" ]]
 then

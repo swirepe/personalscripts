@@ -1,3 +1,18 @@
 #!/usr/bin/env bash
 
-lstorrents | grep -i sum | awk '{print $2, $3}'
+if [[ "$1" == "--help" ]]
+then
+    echo -e "$(basename $0)"
+    echo -e "    Peter Swire - swirepe.com"
+    echo -e "    Part of a suite of command line tools for manipulating transmission."
+    $0 --help-oneline
+    exit 0    
+fi
+
+if [[ "$1" == "--help-oneline" ]]
+then
+    echo -e "$(basename $0)\tShow total size of torrents"
+    exit 0
+fi
+
+btls | grep -i sum | awk '{print $2, $3}'

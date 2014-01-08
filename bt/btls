@@ -6,6 +6,26 @@
 # --all-files: list files for all ids
 # --bare: show only the files, not the other fluff
 
+if [[ "$1" == "--help" ]]
+then
+    echo -e "$(basename $0)"
+    echo -e "    Peter Swire - swirepe.com"
+    echo -e "    Part of a suite of command line tools for manipulating transmission."
+    $0 --help-oneline
+    echo -e "$(basename $0) <ids>\tList files for torrents with these ids."
+    echo -e "$(basename $0) --all-files\tList files for all torrents."
+    echo -e "$(basename $0) --bare\tShow only files, nothing else."
+    exit 0    
+fi
+
+if [[ "$1" == "--help-oneline" ]]
+then
+    echo -e "$(basename $0)\tList all torrents."
+    exit 0
+fi
+
+
+
 if [ -e $HOME/.btrc ]
 then
     source $HOME/.btrc

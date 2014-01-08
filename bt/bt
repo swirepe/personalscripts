@@ -6,14 +6,22 @@ then
     echo -e "    Peter Swire - swirepe.com"
     echo -e "    Part of a suite of command line tools for manipulating transmission."
     $0 --help-oneline
-    echo -e "$(basename $0) <id>\tGet the percent that a given torrent is done."
     exit 0    
 fi
 
 if [[ "$1" == "--help-oneline" ]]
 then
-    echo -e "$(basename $0)\tList the ids of completed torrents."
+    echo -e "$(basename $0) <command>\tA wrapper for other commands. Try 'bt commands'"
     exit 0
 fi
 
-btinfo $@ | grep "Percent Done" | cut -d: -f2 | sed 's/ //g'
+CMD_PART="$1"
+CMD="bt$CMD_PART"
+shift
+if [[ $(which $CMD) == "" ]]
+then
+	echo "ERROR: bt $CMD_PART not a command." > /dev/stderr
+  exit 1
+else
+	$CMD $@
+fi

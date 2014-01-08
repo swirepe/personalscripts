@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+if [[ "$1" == "--help-oneline" ]]
+then
+    echo -e "$(basename $0)\tAn alias for 'btsize'"
+    exit 0
+fi
+
+btsize $@

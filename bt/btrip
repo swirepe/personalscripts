@@ -1,5 +1,24 @@
 #!/usr/bin/env bash
 
+if [[ "$1" == "--help" ]]
+then
+    echo -e "$(basename $0)"
+    echo -e "    Peter Swire - swirepe.com"
+    echo -e "    Part of a suite of command line tools for manipulating transmission."
+    echo -e "$(basename $0) <id>"
+    echo -e "    If torrent <id> has completed:"
+    echo -e "        1. Stop that torrent from downloading."
+    echo -e "        2. Download it to local disk."
+    echo -e "        3. Remove it from local disk."
+    exit 0    
+fi
+
+if [[ "$1" == "--help-oneline" ]]
+then
+    echo -e "$(basename $0) <id>\tStop a torrent, transfer it locally, and remove it remotely."
+    exit 0
+fi
+
 # stop a torrent
 # pull its contents down
 # remove it from the server
