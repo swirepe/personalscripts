@@ -2,19 +2,20 @@
 # http://dotfiles.org/~pseup/.zshrc
 for FILE in $@
 do
-	if [ -f $FILE ] ; then
-		case $FILE in
-			*.tar.bz2) tar xjf $FILE ;;
-			*.tar.gz) tar xzf $FILE ;;
-			*.bz2) bunzip2 $FILE ;;
-			*.rar) unrar e $FILE ;;
-			*.gz) gunzip $FILE ;;
-			*.tar) tar xf $FILE ;;
-			*.tbz2) tar xjf $FILE ;;
-			*.tgz) tar xzf $FILE ;;
+	if [ -f "$FILE" ] ; then
+		case "$FILE" in
+			*.tar.bz2) tar xjf "$FILE" ;;
+			*.tar.gz) tar xzf "$FILE" ;;
+			*.bz2) bunzip2 "$FILE" ;;
+			*.rar) unrar e "$FILE" ;;
+			*.gz) gunzip "$FILE" ;;
+			*.tar) tar xf "$FILE" ;;
+			*.tbz2) tar xjf "$FILE" ;;
+			*.tgz) tar xzf "$FILE" ;;
 			*.zip) unzip "$FILE" ;;
-			*.Z) uncompress $FILE ;;
-			*.7z) 7z x $FILE ;;
+			*.Z) uncompress "$FILE" ;;
+			*.7z) 7z x "$FILE" ;;
+		  *.xz) xz --decompress --verbose --keep "$FILE" ;;
 			*) echo "'$FILE' cannot be extracted via extract" ;;
 		esac
 	else
