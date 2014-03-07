@@ -87,7 +87,7 @@ then
 				# rss feeds
         (probexit 0.05 && ping -c 1 google.com &> /dev/null && feedfortune --timeout 2) ||
         (probexit 0.05 && ping -c 1 google.com &> /dev/null && feedfortune --timeout 2 --deep) ||
-				(probexit 0.5 && pinc -c 1 neuroky.me &> /dev/null && curl --insecure https://betta.neuroky.me/fortunes/index.php )
+				(probexit 0.5 && pinc -c 1 neuroky.me &> /dev/null && curl --insecure https://betta.neuroky.me/fortunes/one.php )
         echo -en $COLOR_off
         
         # 20% probability of not getting a fortune when not using the arxiv stuff
