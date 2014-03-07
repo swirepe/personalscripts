@@ -45,7 +45,18 @@ function unmount-fortunes {
 # sudo apt-get install fortune-mod fortunes-off
 if [ ! -f ~/.hushlogin ]
 then
-    
+
+		if [[ "$(date)" == *"Jan 18"* ]]
+		then
+			if [[ ! -z "$(which toilet)" ]]
+			then
+				toilet --gay happy birthday!
+			else
+				echo Happy Birthday!
+			fi
+		fi
+
+
     if [ -f ~/.bashrc_sfwfortunes ]
     then
         
@@ -73,8 +84,10 @@ then
         # long offensive
         (probexit 0.1 && fortune -o "$FORTUNES_DIR" | fold -s) ||
         (probexit 0.1 && fortune -o "$FORTUNES_PERS_DIR" | fold -s) ||
+				# rss feeds
         (probexit 0.05 && ping -c 1 google.com &> /dev/null && feedfortune --timeout 2) ||
-        (probexit 0.05 && ping -c 1 google.com &> /dev/null && feedfortune --timeout 2 --deep)
+        (probexit 0.05 && ping -c 1 google.com &> /dev/null && feedfortune --timeout 2 --deep) ||
+				(probexit 0.5 && pinc -c 1 neuroky.me &> /dev/null && curl --insecure https://betta.neuroky.me/fortunes/index.php )
         echo -en $COLOR_off
         
         # 20% probability of not getting a fortune when not using the arxiv stuff
