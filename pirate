@@ -4,46 +4,64 @@ import sys
 from lxml import html as HTML
 import urllib2
 
+COUNT = 1
+
 def getElement(doc, xpath):
     return doc.xpath(xpath)
 
-try:
-    query = urllib2.quote(" ".join(sys.argv[1:]))
-except:
-    sys.stderr.write( "No query specified.\n")
-    sys.exit(1)
+
+def getDocument(args):
+    try:
+        query = urllib2.quote(" ".join(args))
+    except:
+        sys.stderr.write( "No query specified.\n")
+        sys.exit(1)
+       
+    response = urllib2.urlopen('http://thepiratebay.org/search/' + query + '/0/7/0')
+    html = response.read()
+    doc = HTML.document_fromstring(html)
+    return doc
     
+
+def getTorrent(index, doc):
+    magnetXpath = '//*[@id="searchResult"]/tr[' + str(index) + ']/td[2]/a'
+    detailsXpath = '//*[@id="searchResult"]/tr[' + str(index) + ']/td[2]/div/a'
+    seedsXpath = '//*[@id="searchResult"]/tr[' + str(index) + ']/td[3]'
+    leechesXpath = '//*[@id="searchResult"]/tr[' + str(index) + ']/td[4]'
+    sizeXpath = '//*[@id="searchResult"]/tr[' + str(index) + ']/td[2]/font'
     
+    try:
+        name = getElement(doc, detailsXpath )[0].text
+        seeds = getElement(doc, seedsXpath   )[0].text
+        leeches = getElement(doc, leechesXpath )[0].text
+        size = getElement(doc, sizeXpath)[0].text.split(",")[1].replace("Size", "").strip()
+    except:
+        sys.stderr.write("No torrents found.\n")
+        sys.exit(1)
     
-response = urllib2.urlopen('http://thepiratebay.org/search/' + query + '/0/7/0')
-html = response.read()
-doc = HTML.document_fromstring(html)
+    sys.stderr.write("Name: " + name)
+    sys.stderr.write("\nSize: "+ size)
+    sys.stderr.write("\nSeeds: " + seeds)
+    sys.stderr.write("\nLeeches: "+ leeches)
+    if int(seeds) < 1:
+        sys.stderr.write("\nWARNING: Inviable number of seeds.")
+    sys.stderr.write("\n")
+    print getElement(doc[0], magnetXpath)[0].get("href")
 
 
-
-magnetXpath = '//*[@id="searchResult"]/tr[1]/td[2]/a'
-detailsXpath = '//*[@id="searchResult"]/tr[1]/td[2]/div/a'
-seedsXpath = '//*[@id="searchResult"]/tr[1]/td[3]'
-leechesXpath = '//*[@id="searchResult"]/tr[1]/td[4]'
-sizeXpath = '//*[@id="searchResult"]/tr[1]/td[2]/font'
-
-try:
-    name = getElement(doc, detailsXpath )[0].text
-    seeds = getElement(doc, seedsXpath   )[0].text
-    leeches = getElement(doc, leechesXpath )[0].text
-    size = getElement(doc, sizeXpath)[0].text.split(",")[1].replace("Size", "").strip()
-except:
-    sys.stderr.write("No torrents found.\n")
-    sys.exit(1)
-
-sys.stderr.write("Name: " + name)
-sys.stderr.write("\nSize: "+ size)
-sys.stderr.write("\nSeeds: " + seeds)
-sys.stderr.write("\nLeeches: "+ leeches)
-if int(seeds) < 1:
-    sys.stderr.write("\nWARNING: Inviable number of seeds.")
-sys.stderr.write("\n")
-print getElement(doc[0], magnetXpath)[0].get("href")
+if __name__ == "__main__":
+    args = sys.argv[1:]
+    
+    if "--count" in args:
+        countIndex = args.index("--count")
+        COUNT = int( args[countIndex + 1] )
+        del args[countIndex + 1]
+        del args[countIndex]
+    
+    doc = getDocument(args)
+    for i in range(COUNT):
+        getTorrent(i+1, doc)
+    
 
 
 #  http://thepiratebay.sx/search/sword/0/7/0

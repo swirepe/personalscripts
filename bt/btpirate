@@ -16,4 +16,7 @@ then
     exit 0
 fi
 
-btadd $(pirate "$*")
+for TORRENT in $(pirate $@)
+do
+    btadd $TORRENT
+done
