@@ -4,7 +4,7 @@ if [[  -d "$file" ]]
 then
   tar -cvf "${file}.tar" $file && xz --compress --extreme -9 --threads=4 --verbose "${file}.tar"
 else
-  xz --compress --extreme -9 --threads=4 --verbose "${file}"
+  xz --compress --keep --extreme -9 --threads=4 --verbose "${file}"
 fi
 
 ## todo: tar --transform to take a bunch of files and put them in a directory

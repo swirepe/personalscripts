@@ -1,21 +1,23 @@
 #!/usr/bin/env bash
 
-
-if [ -f $1 ] ; then
-	case $1 in
-		*.tar.bz2) tar -jtvf $1 ;;
-		*.tar.gz) tar -ztvf $1 ;;
-		*.bz2) bz2 - $1 ;;
-		*.rar) unrar lb $1 ;;
-		*.gz) gunzip --list $1 ;;
-		*.tar) tar -tvf  $1 ;;
-		*.tbz2) tar -jtvf $1 ;;
-		*.tgz) tar -ztvf $1 ;;
-		*.zip) unzip -l "$1" ;;
-		*.Z) gunzip --list $1 ;;
-		*.7z) 7z l $1 ;;
-		*) echo "'$1' cannot be listed via lszip" ;;
-	esac
-else
-	echo "'$1' is not a valid file"
-fi
+for FILE in "$@"
+do
+	if [ -f "$FILE" ] ; then
+		case "$FILE" in
+			*.tar.bz2) tar -jtvf "$FILE" ;;
+			*.tar.gz) tar -ztvf "$FILE" ;;
+			*.bz2) bz2 - "$FILE" ;;
+			*.rar) unrar lb "$FILE" ;;
+			*.gz) gunzip --list "$FILE" ;;
+			*.tar) tar -tvf  "$FILE" ;;
+			*.tbz2) tar -jtvf "$FILE" ;;
+			*.tgz) tar -ztvf "$FILE" ;;
+			*.zip) unzip -l "$FILE" ;;
+			*.Z) gunzip --list "$FILE" ;;
+			*.7z) 7z l "$FILE" ;;
+			*) echo "'$FILE' cannot be listed via lszip" ;;
+		esac
+	else
+		echo "'$FILE' is not a valid file"
+	fi
+done

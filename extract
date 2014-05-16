@@ -15,6 +15,7 @@ do
 			*.zip) unzip "$FILE" ;;
 			*.Z) uncompress "$FILE" ;;
 			*.7z) 7z x "$FILE" ;;
+		  *.tar.xz) tar xJf "$FILE" ;; 
 		  *.xz) xz --decompress --verbose --keep "$FILE" ;;
 			*) echo "'$FILE' cannot be extracted via extract" ;;
 		esac
