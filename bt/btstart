@@ -25,6 +25,7 @@ else
     BT_AUTH="admin:snake"
 fi
 
-TORRENT_ID="$1"
-
-transmission-remote $BT_HOST --auth $BT_AUTH -t $TORRENT_ID --start
+for TORRENT_ID in $@
+do
+	transmission-remote $BT_HOST --auth $BT_AUTH -t $TORRENT_ID --start
+done
