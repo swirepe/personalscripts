@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # http://dotfiles.org/~pseup/.zshrc
-for FILE in $@
+for FILE in "$@"
 do
 	if [ -f "$FILE" ] ; then
 		case "$FILE" in
