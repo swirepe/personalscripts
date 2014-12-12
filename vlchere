@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+# This also works as a nautilus script!
+# put it in one of these two places
+# ~/.local/share/nautilus/scripts
+# ~/.gnome2/nautilus-scripts
 LOCATION="$1"
 if [[ -z "$LOCATION" ]]
 then
