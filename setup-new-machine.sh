@@ -382,7 +382,7 @@ function debian_core {
         echo -e "${COLOR_Blue}Program apt-get found.  Assuming Debian.${COLOR_off}"
         echo -e "${COLOR_Blue}Upgrading and installing core packages.${COLOR_off}"
         sudo apt-get update
-        sudo apt-get install -y automake pkg-config libpcre3-dev zlib1g-dev liblzma-dev git-core build-essential cmake openssl ecryptfs-utils
+        sudo apt-get install -y automake pkg-config libpcre3-dev zlib1g-dev liblzma-dev git-core build-essential cmake openssl ecryptfs-utils python-dev python-setuptools
     fi
 
 }
