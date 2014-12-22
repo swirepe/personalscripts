@@ -67,7 +67,7 @@ fi
 
 sudo apt-get update
 
-sudo apt-get install ${packages[@]} && ( 
+sudo apt-get install -y ${packages[@]} && ( 
     update_machines &&
     cd "$SAGIRECORD_DIR" &&
     dpkg --get-selections > aptlist.txt &&
