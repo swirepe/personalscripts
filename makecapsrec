@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+set +H
+find . -type f -iname '*.mov' -exec sh -c '
+for FILE do
+	echo "PROCESSING $FILE"
+	DIRNAME=$(dirname "$FILE")
+	BASENAME=$(basename "$FILE")
+	mkdir -p "${DIRNAME}/caps"
+	avconv -i "$FILE" -vsync 1 -r 1 -an -y "${DIRNAME}/caps/${BASENAME}-image-%5d.jpg"
+done
+' sh {} +
+

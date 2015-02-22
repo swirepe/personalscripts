@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+mkdir -p caps
+for FILE in *.MOV ; do avconv -i $FILE -vsync 1 -r 1 -an -y caps/$FILE-image-%5d.jpg ; done

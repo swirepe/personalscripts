@@ -4,7 +4,19 @@
 ### ABOUT
 ### Runs rsync, retrying on errors up to a maximum number of tries.
 ### Simply edit the rsync line in the script to whatever parameters you need.
- 
+
+DIR_TO_SYNC="~/sftp"
+if [[ "$1" ]]
+then
+	DIR_TO_SYNC="$1"
+fi
+
+echo "Syncing $DIR_TO_SYNC"
+if [[ ! -d "$DIR_TO_SYNC" ]]
+then
+	echo "Error: $DIR_TO_SYNC not found." > /dev/stderr
+fi
+
 # Trap interrupts and exit instead of continuing the loop
 trap "echo Exited! > /dev/stderr ; exit 1;" SIGINT SIGTERM
  
@@ -23,7 +35,7 @@ while [ $RSYNC_STATUS -ne 0 -a $i -lt $MAX_RETRIES ]
 do
 	i=$(($i+1))
 	echo "Attempt $i" > /dev/stderr
-	rsync --protocol=26 --size-only --protect-args --partial --recursive --progress --verbose --inplace ~/sftp ~/gdrive
+	rsync --protocol=26 --size-only --protect-args --partial --recursive --progress --verbose --inplace "$DIR_TO_SYNC" ~/gdrive
 	RSYNC_STATUS=$?
 	if [ $RSYNC_STATUS -ne 0 ]
 	then

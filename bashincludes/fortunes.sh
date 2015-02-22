@@ -72,6 +72,8 @@ then
         echo -en $COLOR_White
         # default: believe in yourself
         (probexit 0.1 && echo "Believe in yourself.") ||
+				# a new default: Lori Deshene
+				(probexit 0.1 && echo "We can't hate ourselves into a version of ourselves we can love." ) ||
         # short
         (probexit 0.3 && fortune -s "$FORTUNES_DIR" | fold -s) ||
         (probexit 0.3 && fortune -s "$FORTUNES_PERS_DIR" | fold -s) ||
