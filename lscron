@@ -27,7 +27,7 @@ function clean_cron_lines() {
 # fields.
 function pad() {
     while read line ; do
-        match=$(echo "${line}" | egrep -o '^@\w+\t')
+        match=$(echo "${line}" | egrep -o '^@\S+\s')
         if [[ -z "${match}" ]] ; then
             echo "${line}"
         else
