@@ -38,7 +38,13 @@ GATEWAY=$( fake_route | grep '^0.0.0.0' | awk '{print $2}')
 ## http://security.stackexchange.com/questions/36198/how-to-find-live-hosts-on-my-network
 
 
-
-
+if [[ $1 == "--host"* ]]
+then
+	for ip in $(nmap -sP ${GATEWAY}/24 |grep --extended-regex --only-match '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+')
+	do
+		arp -a $ip
+	done
+  exit 0
+fi
 nmap -sP ${GATEWAY}/24 |grep --extended-regex --only-match '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+'
 

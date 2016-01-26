@@ -8,7 +8,7 @@
 # Trap interrupts and exit instead of continuing the loop
 trap "echo Exited! > /dev/stderr ; exit 1;" SIGINT SIGTERM
  
-MAX_RETRIES=50
+MAX_RETRIES=500
 i=0
 
 echo "Attempting rsync $*" >/dev/stderr

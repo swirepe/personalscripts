@@ -32,7 +32,7 @@ autoload -Uz add-zsh-hook || return
 
 
 # initialize zbell_ignore if not set
-(( ${+zbell_ignore} )) || zbell_ignore=($EDITOR $PAGER ls watch htop top ssh iotop dstat vmstat nano emacs vi bwm-ng less more fdisk audacious play aplay sqlite3 wine mtr ping traceroute vlc mplayer smplayer tail tmux screen man sawfish-config powertop g glances w3m vim eclipse newscript aria2c eclipse ipython)
+(( ${+zbell_ignore} )) || zbell_ignore=($EDITOR $PAGER ls watch htop top ssh iotop dstat vmstat nano emacs vi bwm-ng less more fdisk audacious play aplay sqlite3 wine mtr ping traceroute vlc mplayer smplayer tail tmux screen man sawfish-config powertop g glances w3m vim eclipse newscript aria2c eclipse ipython R mit-scheme bash zsh viewsh psql eog)
  
 zbell_email() {
 curl --ssl-reqd \

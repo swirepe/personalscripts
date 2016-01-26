@@ -10,14 +10,14 @@ source update_machines.sh
 
 if [[ "$1" == "--install" ]]
 then
-    if [[ "$(crontab -l | grep backup-varmail.sh)" ]]
+    if [[ "$(crontab -l | grep backup-mail.sh)" ]]
     then
-        echo "backup-varmail.sh already installed."
+        echo "backup-mail.sh already installed."
     else
         echo "Installing."
-        crontab -l | { cat; echo -e "\n# Added on $(date) by backup-varmail.sh\n# backup ssh public key files every day at 9am.\n0 9 * * * $HOME/pers/scripts/backup-varmail.sh"; } | crontab -
+        crontab -l | { cat; echo -e "\n# Added on $(date) by backup-mail.sh\n# backup ssh public key files every day at 9am.\n0 9 * * * $HOME/pers/scripts/backup-mail.sh"; } | crontab -
     fi
-	crontab -l | grep backup-varmail.sh
+	crontab -l | grep backup-mail.sh
 	echo "Done."
 	exit 0
 fi

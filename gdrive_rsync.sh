@@ -24,6 +24,7 @@ MAX_RETRIES=5000
 i=0
 
 echo "Mounting google drive."
+sudo killall google-drive-ocamlfuse
 google-drive-ocamlfuse /home/swirepe/gdrive || $(echo "Failed to mount /home/swirepe/gdrive" > /dev/stderr && exit 1)
 
 
@@ -35,13 +36,16 @@ while [ $RSYNC_STATUS -ne 0 -a $i -lt $MAX_RETRIES ]
 do
 	i=$(($i+1))
 	echo "Attempt $i" > /dev/stderr
+	#rsyncp "$DIR_TO_SYNC" ~/gdrive 
 	rsync --protocol=26 --size-only --protect-args --partial --recursive --progress --verbose --inplace "$DIR_TO_SYNC" ~/gdrive
 	RSYNC_STATUS=$?
 	if [ $RSYNC_STATUS -ne 0 ]
 	then
 		echo "Remounting." > /dev/stderr
 		fusermount /home/swirepe/gdrive
-		sudo umount /home/swirepe/gdrive &&
+		sudo umount /home/swirepe/gdrive
+		sudo killall google-drive-ocamlfuse &&
+		sudo umount /home/swirepe/gdrive 
 		google-drive-ocamlfuse /home/swirepe/gdrive 
 	fi
 done

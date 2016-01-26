@@ -1,7 +1,16 @@
 #!/usr/bin/env bash
+#	ROOT_DIR="."
+#	if [[ ! -z "$1" ]]
+#	then
+#		ROOT_DIR="$1"
+#	fi
+#	echo "Starting in $ROOT_DIR"
 
 set +H
-find . -type f -iname '*.mov' -exec sh -c '
+find . -type f \
+  -iname '*.mov' \
+	-o -iname '*.avi' \
+	-exec sh -c '
 for FILE do
 	echo "PROCESSING $FILE"
 	DIRNAME=$(dirname "$FILE")

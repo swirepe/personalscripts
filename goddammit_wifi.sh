@@ -1,4 +1,11 @@
 #!/usr/bin/env bash
+if [[ "$1" == "--short" ]]
+then
+	sudo rmmod rtl8192se
+	sudo modprobe rtl8192se
+	exit
+fi
+
 echo "Seeing if we can already access the internet."
 ping -c 1 google.com && exit 
 

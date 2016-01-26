@@ -2,6 +2,20 @@
 # sudo apt-get update ; sudo apt-get install
 
 CURRDIR=$(pwd)
+AUTOREMOVE=1
+
+USE_COLORS=1
+COLOR_off='\033[0m'
+COLOR_BBlue='\033[1;34m'
+
+function say {
+  if [[ "$USE_COLORS" == 1 ]]
+	then
+		echo -e "${COLOR_BBlue}[sagi] $@ ${COLOR_off}"
+	else
+		echo "$@"
+	fi
+}
 
 function update_machines {
     
@@ -13,11 +27,11 @@ function update_machines {
     if [[ -d $PERS_DIR/machines      ]] &&
        [[ -d $PERS_DIR/machines/.git ]]
     then
-      echo "Updating machines repository."
+      say "Updating machines repository."
       cd $PERS_DIR/machines
       git pull --no-edit origin master
     else
-      echo "No machines repository found.  Cloning."
+      say "No machines repository found.  Cloning."
       git clone git@bitbucket.org:swirepe/machines.git $PERS_DIR/machines
     fi
     
@@ -28,11 +42,21 @@ function update_machines {
     
     if [ ! -d $SAGIRECORD_DIR ]
     then
-        echo "[sagi] $SAGIRECORD_DIR does not exist: creating."
+        say "$SAGIRECORD_DIR does not exist: creating."
         mkdir -p $SAGIRECORD_DIR
 fi
 
 }
+
+if [[ "$AUTOREMOVE" == 1 ]]
+then
+	say "Autoremoving."
+	sudo apt-get autoremove -y
+fi
+
+say "Updating"
+sudo apt-get update
+
 
 NON_ARG_PACKAGE="false"
 for package in $@
@@ -52,20 +76,16 @@ done
 
 if [ ${#packages[@]} = 0 ]
 then
-    echo "Nothing to install. Exiting."
+    say "Nothing to install. Exiting."
     exit 0
 elif [[ $NON_ARG_PACKAGE == "false" ]]
 then
-    echo "Only arguments remaining: ${packages[@]}"
-    echo "Exiting."
+    say "Only arguments remaining: ${packages[@]}"
+    say "Exiting."
     exit 0
 else
-    echo "Installing packages: ${packages[@]}"
+    say "Installing packages: ${packages[@]}"
 fi
-
-
-
-sudo apt-get update
 
 sudo apt-get install -y ${packages[@]} && ( 
     update_machines &&

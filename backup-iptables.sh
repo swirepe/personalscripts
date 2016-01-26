@@ -17,7 +17,7 @@ then
         echo "Installing."
         crontab -l | { cat; echo -e "\n# Added on $(date) by backup-iptables.sh\n# backup iptables rules every day.\n@daily $HOME/pers/scripts/backup-iptables.sh"; } | crontab -
     fi
-	crontab -l | grep backup-cron.sh
+	crontab -l | grep backup-iptables.sh
 	echo "Done."
 	exit 0
 fi
