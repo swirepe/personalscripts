@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+DIR="."
+MAX_DEPTH="-maxdepth 1"
+TYPE="d"
+
+while [ $# -gt 0 ]
+do
+  case "$1" in
+    --help|-h)
+    
+    exit
+    ;;
+    -r|--recursive)
+      MAX_DEPTH=""
+    ;;
+      -f|--files-only)
+      TYPE="f"
+    ;;
+    -l)
+      LONG="1"
+    ;;
+    *)
+      DIR="$1"
+    ;;
+  esac
+  shift
+done
+
+
+
+##-t fd True if file descriptor fd is open and refers to a terminal.
+## The usual file descriptor assignments
+## 0:     stdin  
+## 1:     stdout  
+## 2:     stderr
+
+if [ -t 1 ] # not in a pipe
+then
+  if [[ "$LONG" ]]
+  then
+    find "$DIR" $MAX_DEPTH -type "$TYPE" -exec ls -ld --format=l {} \; | sort | column
+  else
+    find "$DIR" $MAX_DEPTH -type "$TYPE" -exec basename {} \; | sort | column
+  fi
+else
+  find "$DIR" $MAX_DEPTH -type "$TYPE"
+fi
