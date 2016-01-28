@@ -1,4 +1,8 @@
 #!/usr/bin/env python
+"""
+A not-really-machine-readable summary of what files take up what space, by extension
+"""
+
 from collections import defaultdict
 import os
 import sys
