@@ -6,5 +6,6 @@
 LOCATION="$1"
 if [[ -z "$LOCATION" ]]
 then
-   LOCATION="."
-find "$LOCATION" -type f -iregex '.*\.\(mkv\|mp4\|wmv\|flv\|webm\|mov\)' -print0 | xargs -0 vlc
+	LOCATION="."
+fi
+find "$LOCATION" -type f -iregex '.*\.\(mkv\|mp4\|wmv\|flv\|webm\|mov\|avi\)' -print0 | xargs -0 vlc
