@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+DIR="."
+
+while [ $# -gt 0 ]
+do
+	case "$1" in
+		--human|-h)
+			HUMAN="TRUE"
+		;;
+		*)
+			DIR="$1"
+		;;
+	esac
+	shift
+done
+
+if [[ "$HUMAN" ]]
+then
+	find "$DIR" -type f -iname '*.nef' -print0 | xargs -r0 du -a| awk '{sum+=$1} END {print sum}' | xargs numfmt --to=iec 
+else
+	find "$DIR" -type f -iname '*.nef' -print0 | xargs -r0 du -a| awk '{sum+=$1} END {print sum}' 
+fi
