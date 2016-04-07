@@ -21,6 +21,22 @@ function clean_cron_lines() {
     done;
 }
 
+# Given a stream of crontab lines, if any are of the form
+# `@reboot run-something`
+# adds dummy fields and padding so the line has the regular number of cron
+# fields.
+function pad() {
+    while read line ; do
+        match=$(echo "${line}" | egrep -o '^@\S+\s')
+        if [[ -z "${match}" ]] ; then
+            echo "${line}"
+        else
+            cmd=$(echo "${line}" | cut -f2- -d' ')
+            echo "${match} x x x x ${cmd}"
+        fi
+    done;
+}
+
 # Given a stream of cleaned crontab lines, echo any that don't include the
 # run-parts command, and for those that do, show each job file in the run-parts
 # directory as if it were scheduled explicitly.
@@ -64,6 +80,7 @@ done < <(cut --fields=1 --delimiter=: /etc/passwd)
 # fields with tab characters, sort the lines by hour and minute, insert the
 # header line, and format the results as a table.
 cat "${temp}" |
+    pad |
     sed --regexp-extended "s/^(\S+) +(\S+) +(\S+) +(\S+) +(\S+) +(\S+) +(.*)$/\1\t\2\t\3\t\4\t\5\t\6\t\7/" |
     sort --numeric-sort --field-separator="${tab}" --key=2,1 |
     sed "1i\mi\th\td\tm\tw\tuser\tcommand" |
