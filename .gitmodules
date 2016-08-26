@@ -37,3 +37,6 @@
 [submodule "src/pygments"]
 	path = src/pygments
 	url = git@bitbucket.org:swirepe/pygments.git
+[submodule "src/oh-my-zsh"]
+	path = src/oh-my-zsh
+	url = https://github.com/robbyrussell/oh-my-zsh.git
