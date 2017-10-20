@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+ROOT="."
+if [[ ! -z "$1" ]]
+then
+	ROOT="$1"
+fi
+
+for dir in $(find "$ROOT" -maxdepth 1 -type d ) 
+do 
+ 	 sudo du -h "$dir" | tail -n1 
+done | sort -h
