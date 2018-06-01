@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+ts=$(date +"%Y%m%d_%H%M%S")
+
+ffmpeg -f video4linux2 -s vga -i /dev/video0 -vframes 3 /tmp/selfie-$ts.%01d.jpg
