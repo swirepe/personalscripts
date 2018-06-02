@@ -87,3 +87,5 @@ source_include $BASHINCLUDES_DIR/mac.sh
 source_include $BASHINCLUDES_DIR/fortunes.sh
 source_include $BASHINCLUDES_DIR/bt.sh
 source_include $BASHINCLUDES_DIR/psql.sh
+source_include $BASHINCLUDES_DIR/tiny-care-terminal.sh
+source_include $BASHINCLUDES_DIR/gopath.sh
