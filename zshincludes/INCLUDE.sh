@@ -89,3 +89,4 @@ source_include $BASHINCLUDES_DIR/bt.sh
 source_include $BASHINCLUDES_DIR/psql.sh
 source_include $BASHINCLUDES_DIR/tiny-care-terminal.sh
 source_include $BASHINCLUDES_DIR/gopath.sh
+source_include $BASHINCLUDES_DIR/bin.sh
