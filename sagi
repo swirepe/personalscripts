@@ -93,6 +93,8 @@ sudo apt-get install -y ${packages[@]} && (
     cd "$SAGIRECORD_DIR" &&
     dpkg --get-selections > aptlist.txt &&
     git add aptlist.txt &&
+    grep -h ^deb /etc/apt/sources.list /etc/apt/sources.list.d/* > repos.txt &&
+    git add repos.txt &&
     git commit -m "sagi $(hostname) $*" &&
     git push origin master
 )
