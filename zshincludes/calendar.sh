@@ -1,4 +1,4 @@
-if [[ ! -e ~/.calendar.calendar ]] 
+if [[ ! -f ~/.calendar.calendar ]] 
 then
 	echo "#include <calendar.argentina>" >> ~/.calendar.calendar
 	echo "#include <calendar.australia>" >> ~/.calendar.calendar
@@ -29,5 +29,9 @@ then
 	echo "#include <calendar.usholiday>" >> ~/.calendar.calendar
 	echo "#include <calendar.world>" >> ~/.calendar.calendar
 fi
-
-probexit 0.1 && (echo -en "${COLOR_BBlack}"; calendar -w | shuf -n 1; echo -en "${COLOR_off}" )
+if [ ! -f ~/.hushlogin ]
+then
+	probexit 0.1 && (echo -en "${COLOR_BBlack}";
+		calendar -w | shuf -n 1;
+		echo -e "${COLOR_off}" )
+fi
