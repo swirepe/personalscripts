@@ -4,6 +4,12 @@ echo "$*" > $FILE
 if read -t 0 ; then
 	cat >> $FILE
 fi
-kitty +kitten panel --lines 60 sh -c "printf \"\n\n\n\n\n\" ; cat $FILE ; sleep 5s; read"
+if [[ -e $(which kitty) ]]
+then
+	OUTPUT_LENGTH=$(wc -l $FILE | cut -f1 -d' ')
+	echo $OUTPUT_LENGTH
+	NUM_NEWLINES=$((60 - 5 - $OUTPUT_LENGTH))
+	kitty +kitten panel --lines 60 sh -c "printf \"\n\n\n\n\n\" ; cat $FILE; for i in \$(seq 1 $NUM_NEWLINES) ; do printf \"\n\"; done;  sleep 5s"
+fi
 cat $FILE
 rm $FILE
