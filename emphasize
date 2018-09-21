@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
-OUTPUT="$*"
+FILE=$(mktemp -q -t emphasize.XXXXXX)
+echo "$*" > $FILE
 if read -t 0 ; then
-IFS= read OUTPUT << EOF
-$(cat)
-EOF
+	cat >> $FILE
 fi
-kitty +kitten panel --lines 60 sh -c "printf \"\n\n\n$OUTPUT\" ; sleep 5s"
+kitty +kitten panel --lines 60 sh -c "printf \"\n\n\n\n\n\" ; cat $FILE ; sleep 5s; read"
+cat $FILE
+rm $FILE
