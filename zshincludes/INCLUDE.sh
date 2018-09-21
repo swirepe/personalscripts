@@ -52,6 +52,7 @@ source_include $ZSHINCLUDES_DIR/usercompletion.sh
 source_include $ZSHINCLUDES_DIR/cachecompletion.sh
 source_include $ZSHINCLUDES_DIR/somefile.sh
 #source_include $ZSHINCLUDES_DIR/fbinfer.sh
+source_include $ZSHINCLUDES_DIR/kittycompletion.sh
 
 source_include $ZSHINCLUDES_DIR/calendar.sh
 
