@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+OUTPUT="$*"
+if read -t 0 ; then
+IFS= read OUTPUT << EOF
+$(cat)
+EOF
+fi
+kitty +kitten panel --lines 60 sh -c "printf \"\n\n\n$OUTPUT\" ; sleep 5s"
