@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+COLOR_BIBlack='\033[1;90m'
+COLOR_BIRed='\033[1;91m'
+COLOR_off='\033[0m'       # Text Reset
+
 FILE=$(mktemp -q -t emphasize.XXXXXX)
 echo "$*" > $FILE
 if read -t 0 ; then
@@ -7,9 +11,11 @@ fi
 if [[ -e $(which kitty) ]]
 then
 	OUTPUT_LENGTH=$(wc -l $FILE | cut -f1 -d' ')
-	echo $OUTPUT_LENGTH
 	NUM_NEWLINES=$((60 - 5 - $OUTPUT_LENGTH))
 	kitty +kitten panel --lines 60 sh -c "printf \"\n\n\n\n\n\" ; cat $FILE; for i in \$(seq 1 $NUM_NEWLINES) ; do printf \"\n\"; done;  sleep 5s"
 fi
+echo -en "${COLOR_BIBlack}"
+echo -en "${COLOR_BIRed}"
 cat $FILE
+echo -en "${COLOR_off}"
 rm $FILE
