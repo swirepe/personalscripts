@@ -850,7 +850,7 @@ function setup_rsyslogd {
 			echo -e "\n\n## added on $(date) by $0" | sudo tee --append /etc/rsyslog.d/50-default.conf
 			echo -e "## sends remote logs to neuroky.me over tcp" | sudo tee --append /etc/rsyslog.d/50-default.conf
 			echo -e "*.* @@neuroky.me:514" | sudo tee --append /etc/rsyslog.d/50-default.conf
-
+			echo -e "*.* @@neuroky.me:8167;RSYSLOG_SyslogProtocol23Format" | sudo tee --append /etc/rsyslog.d/50-default.conf
 			echo -e "${COLOR_Blue}Restarting rsyslogd${COLOR_off}"
 			sudo service rsyslogd restart
 
