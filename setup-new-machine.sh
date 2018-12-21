@@ -838,7 +838,29 @@ function bashrc_nomem {
 
 
 }
+### ----------------------------------------------------------------------------
+## setup rsyslogd 
 ## ----------------------------------------------------------------------------
+function setup_rsyslogd {
+    checkpoint 'setup_rsyslogd'
+
+		echo -e "${COLOR_Blue}Setting up remote logging via rsyslogd${COLOR_off}"
+		if [[ -e /etc/rsyslog.d/50-default.conf ]] 
+		then 
+			echo -e "\n\n## added on $(date) by $0" | sudo tee --append /etc/rsyslog.d/50-default.conf
+			echo -e "## sends remote logs to neuroky.me over tcp" | sudo tee --append /etc/rsyslog.d/50-default.conf
+			echo -e "*.* @@neuroky.me:514" | sudo tee --append /etc/rsyslog.d/50-default.conf
+
+			echo -e "${COLOR_Blue}Restarting rsyslogd${COLOR_off}"
+			sudo service rsyslogd restart
+
+			echo -e "${COLOR_BBGreen}Done setting up remote logging via rsyslogd${COLOR_off}"
+		else
+			echo -e "${COLOR_BYellow}WARNING: rsyslogd package not installed${COLOR_off}"
+		fi
+
+}
+# ----------------------------------------------------------------------------
 ## done.
 ## ----------------------------------------------------------------------------
 
@@ -897,6 +919,7 @@ function gammut {
     install_backup_hosts          
     compile_fortunes              
     bashrc_nomem                  
+		setup_rsyslogd
     all_done                      
 }
 
@@ -964,7 +987,9 @@ case  $STARTING_POINT  in
     install_backup_hosts)          install_backup_hosts           ;&
     compile_fortunes)              compile_fortunes               ;&
     bashrc_nomem)                  bashrc_nomem                   ;&
+		setup_rsyslogd)                setup_rsyslogd                 ;&
     all_done)                      all_done                       ;;
+
         
     # these ones should not fall through
     # build_scripts, for example, just calls the build for a bunch of other stuff    
