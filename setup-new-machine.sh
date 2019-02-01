@@ -845,13 +845,16 @@ function setup_rsyslogd {
     checkpoint 'setup_rsyslogd'
 
 		echo -e "${COLOR_Blue}Setting up remote logging via rsyslogd${COLOR_off}"
-		if [[ -e /etc/rsyslog.d/50-default.conf ]] 
+		CONFIG_FILE="/etc/rsyslog.d/nk.conf"
+		if [[ -d /etc/rsyslog.d ]] 
 		then 
-			echo -e "\n\n## added on $(date) by $0" | sudo tee --append /etc/rsyslog.d/50-default.conf
-			echo -e "## sends remote logs to neuroky.me over tcp" | sudo tee --append /etc/rsyslog.d/50-default.conf
-			echo -e "*.* @@neuroky.me:514" | sudo tee --append /etc/rsyslog.d/50-default.conf
-			echo -e "# *.* @@neuroky.me:8167;RSYSLOG_SyslogProtocol23Format" | sudo tee --append /etc/rsyslog.d/50-default.conf
+			echo -e "\n\n## added on $(date) by $0" | sudo tee --append $CONFIG_FILE
+			echo -e "## sends remote logs to neuroky.me over tcp" | sudo tee --append $CONFIG_FILE
+			echo -e "#*.* @@neuroky.me:514" | sudo tee --append $CONFIG_FILE
+			echo -e "*.* @@192.168.1.20:514" | sudo tee --append $CONFIG_FILE
 			echo -e "${COLOR_Blue}Restarting rsyslogd${COLOR_off}"
+			echo -e "# *.* @@neuroky.me:8167;RSYSLOG_SyslogProtocol23Format" | sudo tee --append $CONFIG_FILE
+			echo -e "*.* @@192.168.1.20:8167;RSYSLOG_SyslogProtocol23Format" | sudo tee --append $CONFIG_FILE
 			sudo service rsyslogd restart
 
 			echo -e "${COLOR_BBGreen}Done setting up remote logging via rsyslogd${COLOR_off}"
