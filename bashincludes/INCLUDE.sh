@@ -50,6 +50,7 @@ source_include $BASHINCLUDES_DIR/work.sh
 # show recent emails
 source_include $BASHINCLUDES_DIR/email.sh
 
+source_include $BASHINCLUDES_DIR/kitty.sh
 source_include $BASHINCLUDES_DIR/misc.sh
 source_include $BASHINCLUDES_DIR/alwaysontop.sh
 source_include $BASHINCLUDES_DIR/navigation.sh

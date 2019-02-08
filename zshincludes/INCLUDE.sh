@@ -53,7 +53,7 @@ source_include $ZSHINCLUDES_DIR/cachecompletion.sh
 source_include $ZSHINCLUDES_DIR/somefile.sh
 #source_include $ZSHINCLUDES_DIR/fbinfer.sh
 source_include $ZSHINCLUDES_DIR/kittycompletion.sh
-
+source_include $BASHINCLUDES_DIR/kitty.sh
 source_include $ZSHINCLUDES_DIR/calendar.sh
 
 source_include $BASHINCLUDES_DIR/color.sh
