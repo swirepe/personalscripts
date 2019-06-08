@@ -2,11 +2,12 @@
 # sudo apt-get update ; sudo apt-get install
 
 CURRDIR=$(pwd)
-AUTOREMOVE=1
 
 USE_COLORS=1
 COLOR_off='\033[0m'
 COLOR_BBlue='\033[1;34m'
+COLOR_BYellow='\033[1;33m'
+COLOR_BRed='\033[1;31m'
 
 function say {
   if [[ "$USE_COLORS" == 1 ]]
@@ -17,8 +18,29 @@ function say {
 	fi
 }
 
+function warn {
+  if [[ "$USE_COLORS" == 1 ]]
+	then
+		echo -e "${COLOR_BYellow}[sagi] WARN: $@ ${COLOR_off}"
+	else
+		echo "$@"
+	fi
+}
+
+function fail {
+	cd "$CURRDIR"
+  if [[ "$USE_COLORS" == 1 ]]
+	then
+		echo -e "${COLOR_BRed}[sagi] FAIL: $@ ${COLOR_off}"
+		exit 1
+	else
+		echo "$@"
+		exit 1
+	fi
+}
+
 function update_machines {
-    
+    # update the repository
     if [[ -z "$PERS_DIR" ]]
     then
         PERS_DIR="$HOME/pers"
@@ -32,72 +54,73 @@ function update_machines {
       git pull --no-edit origin master
     else
       say "No machines repository found.  Cloning."
-      git clone git@bitbucket.org:swirepe/machines.git $PERS_DIR/machines
+      git clone git@bitbucket.org:swirepe/machines.git $PERS_DIR/machines || fail "Couldn't clone machines repository."
     fi
     
-    
     SAGIRECORD_DIR="$PERS_DIR/machines/apt/$(hostname)"
-    
-    
-    
     if [ ! -d $SAGIRECORD_DIR ]
     then
         say "$SAGIRECORD_DIR does not exist: creating."
         mkdir -p $SAGIRECORD_DIR
-fi
-
+		fi
+    
+		# Record the changes
+    cd "$SAGIRECORD_DIR"
+		say "Recording aptlist.txt from dpkg --get-selections"
+    dpkg --get-selections > aptlist.txt 
+    git add aptlist.txt
+		say "Recording repos.txt from /etc/apt/sources.list*"
+    grep -h ^deb /etc/apt/sources.list /etc/apt/sources.list.d/* > repos.txt 
+    git add repos.txt 
+		git commit -m "sagi $(hostname) $*" -m "$(uname -a)" -m "$(apt-cache show $@)" 
+		say "Pushing changes to master"
+    git push origin master
 }
 
-if [[ "$AUTOREMOVE" == 1 ]]
-then
-	say "Autoremoving."
-	sudo apt-get autoremove -y
-fi
-
-say "Updating"
-sudo apt-get update
 
 
 NON_ARG_PACKAGE="false"
 for package in $@
 do
-    if [[ "$package" == "-"* ]]
-    then
-        packages+=($package)
-    elif ! dpkg -s $package &> /dev/null
-    then
-        packages+=($package)
-        NON_ARG_PACKAGE="true"
-    else
-        echo "Warning: Package already installed: $package" >/dev/stderr
-    fi        
+		packages+=($package)
+    if [[ "$package" != "-"* ]]
+		then
+			if [[ "$(apt-cache search $package)" == "" ]]
+			then
+				warn "$package not in apt cache yet."
+			fi
+
+			if dpkg -s $package &> /dev/null
+			then
+        warn "Package already installed: $package" 
+			fi        
+		fi
 done
+
+say "Autoremoving."
+sudo apt-get autoremove -y
+
+say "Updating"
+sudo apt-get update
 
 
 if [ ${#packages[@]} = 0 ]
 then
     say "Nothing to install. Exiting."
     exit 0
-elif [[ $NON_ARG_PACKAGE == "false" ]]
-then
-    say "Only arguments remaining: ${packages[@]}"
-    say "Exiting."
-    exit 0
 else
     say "Installing packages: ${packages[@]}"
 fi
 
-# TODO should this be "apt list" instead of "dpgk --get-selections"?
-sudo apt-get install -y ${packages[@]} && ( 
-    update_machines &&
-    cd "$SAGIRECORD_DIR" &&
-    dpkg --get-selections > aptlist.txt &&
-    git add aptlist.txt &&
-    grep -h ^deb /etc/apt/sources.list /etc/apt/sources.list.d/* > repos.txt &&
-    git add repos.txt &&
-    git commit -m "sagi $(hostname) $*" &&
-    git push origin master
-)
-        
+sudo apt-get install -y ${packages[@]}
+EXIT_STATUS=$?
+if [[ "$EXIT_STATUS" == 0 ]] 
+then
+    update_machines ${packages[@]} 
+		say "Success."
+else
+		fail "Could not install ${packages[@]}"
+fi
+
 cd "$CURRDIR"
-    
+
