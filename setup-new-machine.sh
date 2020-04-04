@@ -855,7 +855,7 @@ function setup_rsyslogd {
 			echo -e "${COLOR_Blue}Restarting rsyslogd${COLOR_off}"
 			echo -e "# *.* @@neuroky.me:8167;RSYSLOG_SyslogProtocol23Format" | sudo tee --append $CONFIG_FILE
 			echo -e "*.* @@192.168.1.20:8167;RSYSLOG_SyslogProtocol23Format" | sudo tee --append $CONFIG_FILE
-			sudo service rsyslogd restart
+			sudo service rsyslog restart
 
 			echo -e "${COLOR_BBGreen}Done setting up remote logging via rsyslogd${COLOR_off}"
 		else
