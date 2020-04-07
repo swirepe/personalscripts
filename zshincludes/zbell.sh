@@ -55,6 +55,32 @@ Zbell
 EOF
 }
 
+set_lamp() {
+  echo $1 | sudo tee /sys/class/leds/tpacpi::thinklight/brightness > /dev/null
+}
+
+zbell_blink() {
+if [[ -e /sys/class/leds/tpacpi::thinklight/brightness ]]
+then
+	CYCLES=3
+	CYCLE_DURATION=1.2
+	BLINKS=3
+	ON_DURATION=0.3
+	OFF_DURATION=0.3
+	for _ in $(seq 1 $CYCLES)
+	do 
+		for _ in $(seq 1 $BLINKS)
+		do
+			set_lamp 255
+			sleep $ON_DURATION
+			set_lamp 0
+			sleep $OFF_DURATION
+		done
+		sleep $CYCLE_DURATION
+	done
+fi
+}
+
 
 # initialize it because otherwise we compare a date and an empty string
 # the first time we see the prompt. it's fine to have lastcmd empty on the
@@ -91,6 +117,7 @@ zbell_end() {
   
   if (( ! $has_ignored_cmd )) && (( ran_long )); then
     zbell_email
+		zbell_blink
   fi
 }
 
