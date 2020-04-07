@@ -1,0 +1,109 @@
+#!/usr/bin/env bash
+VERSION="v0.0.5"
+BLINKS=5
+ON_DURATION=2
+OFF_DURATION=2
+
+function all_leds {
+	find -L /sys/class/leds -maxdepth 1 -type d -exec test -e '{}'/brightness -a -e '{}'/max_brightness \; -print
+}
+
+function new_led_states_dir {
+	mktemp -d
+}
+
+function save_led_states {
+	led_states=$1
+	for led in $(all_leds)
+	do
+		cat $led/brightness > $led_states/$(basename $led)
+	done
+}
+
+function restore_led_states {
+	led_states=$1
+	for led in $(all_leds)
+	do
+		cat $led_states/$(basename $led) | sudo tee $led/brightness > /dev/null 
+	done
+}
+
+function all_leds_on_full {
+	for led in $(all_leds)
+	do
+		cat $led/max_brightness | sudo tee $led/brightness
+	done
+}
+
+function all_leds_off {
+	for led in $(all_leds)
+	do
+		echo 0 | sudo tee $led/brightness > /dev/null
+	done
+}
+
+function main {
+	led_states=$(new_led_states_dir)
+	save_led_states $led_states
+	for _ in $(seq 1 $BLINKS)
+	do
+		all_leds_on_full &>/dev/null
+		sleep $ON_DURATION
+		all_leds_off &>/dev/null
+		sleep $OFF_DURATION
+	done
+	restore_led_states $led_states
+	rm -rf $led_states
+}
+
+function info {
+	echo "$@" >/dev/stderr
+}
+
+function help {
+	info "blink $VERSION - find some leds and blink them" 
+	info "Usage:"
+	info "    -h|--help               This message"
+	info "       --version            This program's version"
+	info "    -b|--blinks             The number of times to turn on and off the leds"
+	info "    -c|--count              Alias for --blinks"
+	info "    -o|--on-duration        How long to keep the leds on for in each blink "
+	info "       --on                 Alias for --on-duration"
+	info "    -f|--off-duration       How long to keep the leds off for in each blink" 
+	info "       --off                Alias for --off-duration"
+	info "(Note: durations are arguments to $(which sleep))"
+}
+
+while [ $# -gt 0 ]
+do
+	case "$1" in
+	--help|-h)
+		help
+		exit 0
+	;;
+	--version)
+		echo $VERSION
+		exit 0
+	;;
+	-c|--count|-b|--blinks)
+		shift
+		BLINKS="$1"
+	;;
+	-o|--on|--on-duration)
+		shift
+		ON_DURATION="$1"
+	;;
+	-f|--off|--off-duration)
+		shift
+		OFF_DURATION="$1"
+	;;
+	*)
+		info "Unrecognized argument: $1"
+		exit 0
+	;;
+	esac
+	shift
+done
+
+main
+
