@@ -56,29 +56,30 @@ EOF
 }
 
 set_lamp() {
-  echo $1 | sudo tee /sys/class/leds/tpacpi::thinklight/brightness > /dev/null
+ 	if [[ -e /sys/class/leds/tpacpi::thinklight/brightness ]]; then
+		echo $1 | sudo tee /sys/class/leds/tpacpi::thinklight/brightness > /dev/null
+  fi
 }
 
 zbell_blink() {
-if [[ -e /sys/class/leds/tpacpi::thinklight/brightness ]]
-then
-	CYCLES=3
-	CYCLE_DURATION=1.2
-	BLINKS=3
-	ON_DURATION=0.3
-	OFF_DURATION=0.3
-	for _ in $(seq 1 $CYCLES)
-	do 
-		for _ in $(seq 1 $BLINKS)
-		do
-			set_lamp 255
-			sleep $ON_DURATION
-			set_lamp 0
-			sleep $OFF_DURATION
+	if [[ -e /sys/class/leds/tpacpi::thinklight/brightness ]]; then
+		CYCLES=3
+		CYCLE_DURATION=1.2
+		BLINKS=3
+		ON_DURATION=0.3
+		OFF_DURATION=0.3
+		for _ in $(seq 1 $CYCLES)
+		do 
+			for _ in $(seq 1 $BLINKS)
+			do
+				set_lamp 255
+				sleep $ON_DURATION
+				set_lamp 0
+				sleep $OFF_DURATION
+			done
+			sleep $CYCLE_DURATION
 		done
-		sleep $CYCLE_DURATION
-	done
-fi
+	fi
 }
 
 
