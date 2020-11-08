@@ -32,7 +32,7 @@ autoload -Uz add-zsh-hook || return
 
 
 # initialize zbell_ignore if not set
-(( ${+zbell_ignore} )) || zbell_ignore=($EDITOR $PAGER ls watch htop top ssh iotop dstat vmstat nano emacs vi bwm-ng less more fdisk audacious play aplay sqlite3 wine mtr ping traceroute vlc mplayer smplayer tail tmux screen man sawfish-config powertop g glances w3m vim eclipse newscript aria2c eclipse ipython R mit-scheme bash zsh viewsh psql eog ranger docker slay_the_spire.sh kismet)
+(( ${+zbell_ignore} )) || zbell_ignore=($EDITOR $PAGER ls watch htop top ssh iotop dstat vmstat nano emacs vi bwm-ng less more fdisk audacious play aplay sqlite3 wine mtr ping traceroute vlc mplayer smplayer tail tmux screen man sawfish-config powertop g glances w3m vim eclipse newscript aria2c eclipse ipython R mit-scheme bash zsh viewsh psql eog ranger docker slay_the_spire.sh kismet )
  
 zbell_email() {
 curl --ssl-reqd \
@@ -98,6 +98,10 @@ zbell_begin() {
 # when it finishes, if it's been running longer than $zbell_short_duration,
 # and we dont have an ignored command in the line, then print a bell.
 zbell_end() {
+	if [[ ! -z $ZBELL_OFF ]]
+	then
+		return
+	fi
   zbell_exit_status=$?
   ran_short=$(( $EPOCHSECONDS - $zbell_timestamp >= $zbell_short_duration ))
   ran_long=$(( $EPOCHSECONDS - $zbell_timestamp >= $zbell_long_duration ))
@@ -117,11 +121,44 @@ zbell_end() {
   fi
   
   if (( ! $has_ignored_cmd )) && (( ran_long )); then
-    zbell_email
-		zbell_blink
+    [[ -z $ZBELL_EMAIL_OFF ]] && zbell_email
+	[[ -z $ZBELL_BLINK_OFF ]] && zbell_blink
   fi
 }
 
+
+zbell_off() {
+	if [[ -z "${ZBELL_OFF}" ]]
+	then
+		echo "Turning off zbell: setting environment variable ZBELL_OFF=true" > /dev/stderr
+		export ZBELL_OFF=true
+	else
+		echo "Unsetting environment variable ZBELL_OFF" > /dev/stderr
+		unset ZBELL_OFF
+	fi
+}
+
+zbell_email_off() {
+	if [[ -z "${ZBELL_EMAIL_OFF}" ]]
+	then
+		echo "Turning off zbell email: setting environment variable ZBELL_EMAIL_OFF=true" > /dev/stderr
+		export ZBELL_EMAIL_OFF=true
+	else
+		echo "Unsetting environment variable ZBELL_EMAIL_OFF" > /dev/stderr
+		unset ZBELL_EMAIL_OFF
+	fi
+}
+
+zbell_blink_off() {
+	if [[ -z "${ZBELL_BLINK_OFF}" ]]
+	then
+		echo "Turning off zbell blink: setting environment variable ZBELL_BLINK_OFF=true" > /dev/stderr
+		export ZBELL_BLINK_OFF=true
+	else
+		echo "Unsetting environment variable ZBELL_BLINK_OFF" > /dev/stderr
+		unset ZBELL_OFF
+	fi
+}
 
 # register the functions as hooks
 add-zsh-hook preexec zbell_begin
