@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # sudo apt-get update ; sudo apt-get install
-
+VERSION="v0.11.5"
 CURRDIR=$(pwd)
 
 USE_COLORS=1
@@ -8,100 +8,339 @@ COLOR_off='\033[0m'
 COLOR_BBlue='\033[1;34m'
 COLOR_BYellow='\033[1;33m'
 COLOR_BRed='\033[1;31m'
+COLOR_BGreen='\033[1;32m'
+
+
+function usage {
+    echo "sagi $VERSION - sudo apt-get install"
+    echo "    sagi <no arguments>        Show most recent installations/removals"
+    echo "    sagi --report|-r           Same as no arguments"
+    echo "    sagi [packages]            Install [packages]"
+    echo "    sagi --clean|-c            Remove unused dependencies, old configuration, etc"
+    echo "    sagi --upgrade             Upgrade all upgradeable packages"
+    echo "    sagi --changelog|-L        View the changelog for the last upgraded package."
+    echo "    sagi --update-repo|-u      Update only the machines git repository"
+    echo "    sagi --list|-l             dpkg --list"
+    echo "    sagi --list-manual|-m      Show the names of manually installed packages."
+    echo "    sagi --help|-h             This message"
+    echo "    sagi --version|-v          Prints sagi version ($VERSION)"
+		echo "    sagi --inspect|-i          Brings up the graphical inspect mode "
+    echo "                               (requires fzf)"
+}
+
 
 function say {
-  if [[ "$USE_COLORS" == 1 ]]
-	then
-		echo -e "${COLOR_BBlue}[sagi] $@ ${COLOR_off}"
-	else
-		echo "$@"
-	fi
+    if [[ "$USE_COLORS" == 1 ]]
+    then
+        echo -e "${COLOR_BBlue}[sagi] $@ ${COLOR_off}"
+    else
+        echo "$@"
+    fi
+}
+
+function exclaim {
+    if [[ "$USE_COLORS" == 1 ]]
+    then
+        echo -e "${COLOR_BGreen}[sagi] $@ ${COLOR_off}"
+    else
+        echo "$@"
+    fi
 }
 
 function warn {
-  if [[ "$USE_COLORS" == 1 ]]
-	then
-		echo -e "${COLOR_BYellow}[sagi] WARN: $@ ${COLOR_off}"
-	else
-		echo "$@"
-	fi
+    if [[ "$USE_COLORS" == 1 ]]
+    then
+        echo -e "${COLOR_BYellow}[sagi] WARN: $@ ${COLOR_off}"
+    else
+        echo "$@"
+    fi
 }
 
 function fail {
-	cd "$CURRDIR"
-  if [[ "$USE_COLORS" == 1 ]]
-	then
-		echo -e "${COLOR_BRed}[sagi] FAIL: $@ ${COLOR_off}"
-		exit 1
-	else
-		echo "$@"
-		exit 1
-	fi
+    cd "$CURRDIR"
+    if [[ "$USE_COLORS" == 1 ]]
+    then
+        echo -e "${COLOR_BRed}[sagi] FAIL: $@ ${COLOR_off}"
+    else
+        echo "$@"
+    fi
 }
 
-function update_machines {
-    # update the repository
+function success {
+    cd "$CURRDIR"
+    exclaim "Success"
+}
+
+function clean {
+    START_BYTES=$(df / | sed 1d|  cut -f3 -d' ')
+    clone_machines
+    say "Cleaing up partial packages"
+    sudo apt-get autoclean -y
+
+    say "Cleaning up apt cache"
+    sudo apt-get autoremove -y
+
+    say "Removing any unused depencies"
+    sudo apt-get clean -y
+
+    # https://raymii.org/s/tutorials/Debian-apt-get-dpkg-packages-cleanup-commands.html
+    say "Removed packages that still have configuration on disk:"
+    CONFIGS_ON_DISK=$(mktemp)
+    echo "sagi-$VERSION $(hostname) CLEAN" > $CONFIGS_ON_DISK
+    dpkg --list | grep '^rc ' | tee --append $CONFIGS_ON_DISK
+
+    for package in $(dpkg --list | grep '^rc' | awk '{print $2}')
+    do
+        say "Purging configuration for $package"
+        sudo dpkg -P $package || fail $package
+    done
+
+    add_info_files
+
+    END_BYTES=$(df / | sed 1d|  cut -f3 -d' ')
+
+    echo "$START_BYTES bytes -> $END_BYTES bytes" >> $CONFIGS_ON_DISK
+    echo "Freed $(($END_BYTES-$START_BYTES)) bytes" >> $CONFIGS_ON_DISK
+    git commit -F $CONFIGS_ON_DISK
+    rm $CONFIGS_ON_DISK
+    git push origin master
+    say "Freed $(($END_BYTES-$START_BYTES)) bytes"
+    say "If you require more disk space, consider the following packages:"
+    list_large_packages
+}
+
+function list_large_packages {
+    dpkg-query -Wf '${Installed-Size}\t${Package}\n' | sort -n | numfmt --to=iec | tail -n 10
+}
+
+
+function clone_machines {
+    # update the repository and move to the right directory for recording data
     if [[ -z "$PERS_DIR" ]]
     then
         PERS_DIR="$HOME/pers"
     fi
-    
+
     if [[ -d $PERS_DIR/machines      ]] &&
        [[ -d $PERS_DIR/machines/.git ]]
     then
-      say "Updating machines repository."
-      cd $PERS_DIR/machines
-      git pull --no-edit origin master
+        say "Updating machines repository."
+        cd $PERS_DIR/machines
+        git pull --no-edit origin master
     else
-      say "No machines repository found.  Cloning."
-      git clone git@bitbucket.org:swirepe/machines.git $PERS_DIR/machines || fail "Couldn't clone machines repository."
+        say "No machines repository found.  Cloning."
+        git clone git@bitbucket.org:swirepe/machines.git $PERS_DIR/machines || fail "Couldn't clone machines repository."
     fi
-    
     SAGIRECORD_DIR="$PERS_DIR/machines/apt/$(hostname)"
     if [ ! -d $SAGIRECORD_DIR ]
     then
         say "$SAGIRECORD_DIR does not exist: creating."
         mkdir -p $SAGIRECORD_DIR
-		fi
-    
-		# Record the changes
-    cd "$SAGIRECORD_DIR"
-		say "Recording aptlist.txt from dpkg --get-selections"
-    dpkg --get-selections > aptlist.txt 
+    fi
+    cd $SAGIRECORD_DIR
+}
+
+
+function add_info_files {
+    say "Recording aptlist.txt from dpkg --get-selections"
+    dpkg --get-selections > aptlist.txt
     git add aptlist.txt
-		say "Recording repos.txt from /etc/apt/sources.list*"
-    grep -h ^deb /etc/apt/sources.list /etc/apt/sources.list.d/* > repos.txt 
-    git add repos.txt 
-		git commit -m "sagi $(hostname) $*" -m "$(uname -a)" -m "$(apt-cache show $@)" 
-		say "Pushing changes to master"
+    say "Recording repos.txt from /etc/apt/sources.list*"
+    grep -h ^deb /etc/apt/sources.list /etc/apt/sources.list.d/* > repos.txt
+    git add repos.txt
+    say "Recording lsb_release.txt from $(which lsb_release) -a"
+    lsb_release -a > lsb_release.txt 2>/dev/null
+    git add lsb_release.txt
+		say "Recording dpkg_list.txt from $(which dpkg) --list"
+		dpkg --list > dpkg_list.txt 
+		git add dpkg_list.txt 
+}
+
+function add_logs {
+	  say "Storing /var/log/apt/history.log as apt-history.log"
+    cp /var/log/apt/history.log apt-history.log
+    git add apt-history.log
+		say "Storing /var/log/dpkg.log as dpkg.log"
+    cp /var/log/dpkg.log dpkg.log
+    git add dpkg.log
+}
+
+
+function update_machines {
+    clone_machines
+    add_info_files
+    add_logs
+    git commit -m "sagi-$VERSION $(hostname) $*" -m "$(uname -a)" -m "$(apt-cache show $@ 2>/dev/null)"
+		say "Pushing changes to $(git remote get-url --push origin) on $(git branch)"
+		git push origin master || fail "Couldn't reach $(git remote get-url --push origin)"
+}
+
+
+function upgrade {
+    clone_machines
+    NUM_UPGRADEABLE=$(/usr/lib/update-notifier/apt-check 2>&1)
+    UPGRADE_LIST_FILE="apt-upgrade.txt"
+    date --rfc-email > $UPGRADE_LIST_FILE
+    apt list --upgradeable | tee --append $UPGRADE_LIST_FILE
+    sudo apt-get upgrade -y || fail "Failed to upgrade"
+    say "Done upgrading"
+    say "Recording $UPGRADE_LIST_FILE"
+    git add $UPGRADE_LIST_FILE
+    add_info_files
+    git commit -m "sagi-$VERSION $(hostname) UPGRADE $NUM_UPGRADEABLE" -m "sagi $VERSION $(date --rfc-email)"
+    say "Pushing changes to master"
     git push origin master
 }
 
 
+function report {
+    say "sagi $VERSION on $(hostname) at $(date  --rfc-3339=seconds)"
+    say "Largest packages"
+    list_large_packages
+    say "Last purged"
+    grep " purge " /var/log/dpkg.log | tail -n 5
+    say "Last removed"
+    grep " remove " /var/log/dpkg.log | tail -n 5
+    say "Last upgraded"
+    grep " upgrade " /var/log/dpkg.log | tail -n 5
+    say "Last installed"
+    grep " install " /var/log/dpkg.log | tail -n 20
 
-NON_ARG_PACKAGE="false"
+    say "Info About last installed"
+    awk '$3~/^install$/ {print $4;}' /var/log/dpkg.log | tail -n 1 | xargs apt-cache show
+}
+
+function inspect_last_installed {
+	grep " install " /var/log/dpkg.log | fzf | awk '{print $4;}' | xargs apt-cache show
+}
+
+function inspect {
+	which fzf &>/dev/null || sudo apt-get install fzf
+	LINE=$(zcat -f /var/log/dpkg.log* | fzf)
+	while [[ ! -z "$LINE" ]]
+	do
+		echo $LINE
+		STATUS=$(echo $LINE | awk '{print $3;}')
+		PACKAGE=$(echo $LINE | awk '{print $4;}') 
+		case $STATUS in
+			install)
+				 apt-cache show $PACKAGE | less
+				;;
+			upgrade)
+				apt-get changelog $PACKAGE | less 	
+				;;
+			*)
+				;;
+		esac 
+
+		LINE=$(zcat -f /var/log/dpkg.log* | fzf)
+	done 
+
+}
+
+function list_manually_installed_packages {
+    # https://askubuntu.com/questions/17012/is-it-possible-to-get-a-list-of-most-recently-installed-packages
+    zcat -f /var/log/dpkg.log* | grep " install " | sort > /tmp/dpkg.log
+    grep -F "`comm -12 <(apt-mark showmanual | sort) <(cat /tmp/dpkg.log | cut -d " " -sf4 | grep -o "^[^:]*" | sort)`" /tmp/dpkg.log | grep \<none\>
+}
+
+function changelog_for_last_upgraded {
+     awk '$3~/^upgrade$/ {print $4;}' /var/log/dpkg.log | tail -n 1 | xargs apt-get changelog
+}
+
+function upgradeable_check {
+	echo -en "$COLOR_BYellow"
+	if [ -x /usr/lib/update-notifier/apt-check ]
+	then
+		/usr/lib/update-notifier/apt-check --human-readable 2>&1 | grep --color=never -v ^0
+	fi
+	echo -en "$COLOR_off"
+}
+
+
+if [ "$#" -eq 0 ]
+then
+    report
+		upgradeable_check
+    success
+    exit 0
+fi
+
+
+case "$1" in
+    --help|-h)
+        usage
+        exit 0
+        ;;
+    --version|-v)
+        echo $VERSION
+        exit 0
+        ;;
+    --upgrade)
+        exclaim "Upgrading"
+				upgradeable_check
+        upgrade
+        success
+        exit 0
+        ;;
+    --clean|-c)
+        exclaim "Cleaning."
+        clean
+				upgradeable_check
+        success
+        exit 0
+        ;;
+    --update-repo|update-repository|--repo|-u)
+        exclaim "Updating repository without installing anything."
+        update_machines
+        success
+        exit 0
+        ;;
+    --list|-l)
+        dpkg --list
+        success
+        exit 0
+        ;;
+    --list-manual|-m)
+        say "Manually installed packages"
+        list_manually_installed_packages
+        success
+        exit 0
+        ;;
+    --changelog|--change-log|-L)
+        say "Viewing changelog for last upgraded package"
+        changelog_for_last_upgraded
+        success
+        exit 0
+        ;;
+    --report|-r)
+        report
+        success
+        exit 0
+        ;;
+		--inspect|-i)
+				inspect
+				success
+				exit 0
+esac
+
+
 for package in $@
 do
-		packages+=($package)
+    packages+=($package)
     if [[ "$package" != "-"* ]]
-		then
-			if [[ "$(apt-cache search $package)" == "" ]]
-			then
-				warn "$package not in apt cache yet."
-			fi
+    then
+        if [[ "$(apt-cache search $package)" == "" ]]
+        then
+            warn "$package not in apt cache yet."
+        fi
 
-			if dpkg -s $package &> /dev/null
-			then
-        warn "Package already installed: $package" 
-			fi        
-		fi
+        if dpkg -s $package &> /dev/null
+        then
+            warn "Package already installed: $package"
+        fi
+    fi
 done
-
-say "Autoremoving."
-sudo apt-get autoremove -y
-
-say "Updating"
-sudo apt-get update
 
 
 if [ ${#packages[@]} = 0 ]
@@ -112,15 +351,23 @@ else
     say "Installing packages: ${packages[@]}"
 fi
 
+
+say "Autoremoving"
+sudo apt-get autoremove -y
+say "Updating"
+sudo apt-get update
+
 sudo apt-get install -y ${packages[@]}
 EXIT_STATUS=$?
-if [[ "$EXIT_STATUS" == 0 ]] 
+if [[ "$EXIT_STATUS" == 0 ]]
 then
-    update_machines ${packages[@]} 
-		say "Success."
+    update_machines ${packages[@]}
+		upgradeable_check
+    success
 else
-		fail "Could not install ${packages[@]}"
+    fail "Could not install ${packages[@]}"
+		cd "$CURRDIR"
+    exit 1
 fi
 
-cd "$CURRDIR"
-
+exit 0

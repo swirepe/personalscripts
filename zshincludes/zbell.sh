@@ -156,7 +156,7 @@ zbell_blink_off() {
 		export ZBELL_BLINK_OFF=true
 	else
 		echo "Unsetting environment variable ZBELL_BLINK_OFF" > /dev/stderr
-		unset ZBELL_OFF
+		unset ZBELL_BLINK_OFF
 	fi
 }
 

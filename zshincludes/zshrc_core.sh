@@ -9,6 +9,7 @@ export CLICOLOR=1
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
 ZSH_THEME="robbyrussell2"
+#ZSH_THEME=powerlevel10k/powerlevel10k
 
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
